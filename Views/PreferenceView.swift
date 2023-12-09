@@ -13,7 +13,7 @@ struct PreferenceView: View {
     let columns = [GridItem(.adaptive(minimum: 150))]
     @State var selectedItems: [BigModel.Item] = []
     @State var tags: [BigModel.Item: Bool] = [:]
-    let categorie: Categories
+    let categorie: String
     var nextScreenName: ViewEnum
     
     var body: some View {
@@ -103,7 +103,7 @@ struct TagButton: View {
 
 struct PreferenceView_Previews: PreviewProvider {
     static var previews: some View {
-        PreferenceView(categorie: .legumes, nextScreenName: .FruitsScreen)
+        PreferenceView(categorie: "legumes", nextScreenName: .FruitsScreen)
             .environmentObject(BigModel(shouldInjectMockedData: true))
     }
 }

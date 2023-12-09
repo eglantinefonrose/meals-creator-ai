@@ -18,7 +18,8 @@ struct APIView: View {
     var body: some View {
         VStack {
             Button(action:{
-                print(bigModel.processPrompt())
+                //let response = bigModel.processPrompt()
+                //print(response)
                 jsonTest(jsonString: bigModel.processPrompt())
             }){
                 Text("Answer Question")

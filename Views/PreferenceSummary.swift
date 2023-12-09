@@ -20,25 +20,7 @@ struct PreferenceSummary: View {
             
             VStack {
                 ScrollView {
-                    ForEach(Categories.allCases, id: \.self) { category in
-                        
-                        VStack(alignment: .leading) {
-                            Text(bigModel.categoryName(categorie: category))
-                                .font(.largeTitle)
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                HStack {
-                                    ForEach(bigModel.extractItemsPerCategorie(categorie: category)) { item in
-                                        ZStack {
-                                            Rectangle()
-                                                .frame(minWidth: 75, minHeight: 75)
-                                                .foregroundColor(.gray)
-                                            Text(item.name)
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    
                 }
             }
             

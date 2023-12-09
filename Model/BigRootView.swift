@@ -18,25 +18,25 @@ struct BigRootView: View {
                 TastesView()
             }
             if bigModel.currentView == .LegumeScreen {
-                PreferenceView(categorie: .legumes, nextScreenName: .FruitsScreen)
+                PreferenceView(categorie: "legumes", nextScreenName: .FruitsScreen)
             }
             if bigModel.currentView == .FruitsScreen {
-                PreferenceView(categorie: .fruits, nextScreenName: .strachyFoodsScreen)
+                PreferenceView(categorie: "fruits", nextScreenName: .strachyFoodsScreen)
             }
             if bigModel.currentView == .strachyFoodsScreen {
-                PreferenceView(categorie: .strachyFoods, nextScreenName: .proteinsScreen)
+                PreferenceView(categorie: "strachyFoods", nextScreenName: .proteinsScreen)
             }
             if bigModel.currentView == .proteinsScreen {
-                PreferenceView(categorie: .proteins, nextScreenName: .seasonningScreen)
+                PreferenceView(categorie: "proteins", nextScreenName: .seasonningScreen)
             }
             if bigModel.currentView == .seasonningScreen {
-                PreferenceView(categorie: .seasonning, nextScreenName: .allergiesScreen)
+                PreferenceView(categorie: "seasonning", nextScreenName: .allergiesScreen)
             }
             if bigModel.currentView == .allergiesScreen {
-                PreferenceView(categorie: .allergies, nextScreenName: .cookingToolsScreen)
+                PreferenceView(categorie: "allergies", nextScreenName: .cookingToolsScreen)
             }
             if bigModel.currentView == .cookingToolsScreen {
-                PreferenceView(categorie: .cookingTools, nextScreenName: .preferencesSummary)
+                PreferenceView(categorie: "cookingTools", nextScreenName: .preferencesSummary)
             }
             if bigModel.currentView == .preferencesSummary {
                 PreferenceSummary()

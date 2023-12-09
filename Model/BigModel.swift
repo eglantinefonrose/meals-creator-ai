@@ -40,7 +40,7 @@ class BigModel: ObservableObject {
         }
         
         var id: Int
-        var category: Categories
+        var category: String
         var name: String
     }
     
@@ -64,13 +64,13 @@ class BigModel: ObservableObject {
     
     var currentUser: User?
     
-    let items = [Item(id: 0, category: .legumes, name: "Carotte"), Item(id: 1, category: .legumes, name: "Poireaux"),Item(id: 2, category: .legumes, name: "Courgette"),Item(id: 3, category: .legumes, name: "Aubergine"),Item(id: 4, category: .legumes, name: "Brocolli"),
-                 Item(id: 5, category: .fruits, name: "Pomme"), Item(id: 6, category: .fruits, name: "Poire"),
-                 Item(id: 7, category: .strachyFoods, name: "Riz"), Item(id: 8, category: .strachyFoods, name: "Pates"),
-                 Item(id: 9, category: .allergies, name: "Carbohydrate"), Item(id: 10, category: .allergies, name: "Lactose"),
-                 Item(id: 11, category: .proteins, name: "Boeuf"), Item(id: 12, category: .proteins, name: "Poisson"),
-                 Item(id: 13, category: .seasonning, name: "curry"), Item(id: 14, category: .seasonning, name: "curcuma"),
-                 Item(id: 15, category: .cookingTools, name: "Stove"), Item(id: 16, category: .cookingTools, name: "pan"), Item(id: 17, category: .cookingTools, name: "oven")
+    let items = [Item(id: 0, category: "legumes", name: "Carotte"), Item(id: 1, category: "legumes", name: "Poireaux"),Item(id: 2, category: "legumes", name: "Courgette"),Item(id: 3, category: "legumes", name: "Aubergine"),Item(id: 4, category: "legumes", name: "Brocolli"),
+                 Item(id: 5, category: "fruits", name: "Pomme"), Item(id: 6, category: "fruits", name: "Poire"),
+                 Item(id: 7, category: "strachyFoods", name: "Riz"), Item(id: 8, category: "strachyFoods", name: "Pates"),
+                 Item(id: 9, category: "allergies", name: "Carbohydrate"), Item(id: 10, category: "allergies", name: "Lactose"),
+                 Item(id: 11, category: "proteins", name: "Boeuf"), Item(id: 12, category: "proteins", name: "Poisson"),
+                 Item(id: 13, category: "seasonning", name: "curry"), Item(id: 14, category: "seasonning", name: "curcuma"),
+                 Item(id: 15, category: "cookingTools", name: "Stove"), Item(id: 16, category: "cookingTools", name: "pan"), Item(id: 17, category: "cookingTools", name: "oven")
     ]
     
     func isInTheList(item: Item) -> Bool {
@@ -112,7 +112,7 @@ class BigModel: ObservableObject {
         return resultDictionary
     }
     
-    func extractTagsPerCategorie(categorie: Categories) -> [Item:Bool] {
+    func extractTagsPerCategorie(categorie: String) -> [Item:Bool] {
         var tags: [Item:Bool] = [:]
         let tagList = compareLists()
         
@@ -124,13 +124,13 @@ class BigModel: ObservableObject {
         return tags
     }
     
-    func extractItemsPerCategorie(categorie: Categories) -> [Item] {
+    func extractItemsPerCategorie(categorie: String) -> [Item] {
         var itemList: [Item] = []
         
         for i in (0...(self.currentUser?.items.count ?? 0)-1) {
             if (self.currentUser?.items.count ?? 0) > 1 {
                 if self.currentUser?.items[i].category == categorie {
-                    itemList.append(self.currentUser?.items[i] ?? Item(id: 0, category: .legumes, name: ""))
+                    itemList.append(self.currentUser?.items[i] ?? Item(id: 0, category: "legumes", name: ""))
                 } else {
                     
                 }
@@ -156,41 +156,45 @@ class BigModel: ObservableObject {
     
     
     
-    func categoryName(categorie: Categories) -> String {
+    func categoryName(categorie: String) -> String {
         switch categorie {
-        case .legumes:
+        case "legumes":
             return "Legumes"
-        case .fruits:
+        case "fruits":
             return "Fruits"
-        case .strachyFoods:
+        case "strachyFoods":
             return "Strachy Foods"
-        case .proteins:
+        case "proteins":
             return "Proteins"
-        case .seasonning:
+        case "seasonning":
             return "Seasonning"
-        case .allergies:
+        case "allergies":
             return "Allergies"
-        case .cookingTools:
+        case "cookingTools":
             return "Cooking Tools"
+        default:
+            return "Fruits"
         }
     }
     
-    func categoryToScreenName(categorie: Categories) -> ViewEnum {
+    func categoryToScreenName(categorie: String) -> ViewEnum {
         switch categorie {
-        case .legumes:
-            return .LegumeScreen
-        case .fruits:
+            case "legumes":
+                return .LegumeScreen
+            case "fruits":
+                return .FruitsScreen
+            case "strachyFoods":
+                return .strachyFoodsScreen
+            case "proteins":
+                return .proteinsScreen
+            case "seasonning":
+                return .seasonningScreen
+            case "allergies":
+                return .allergiesScreen
+            case "cookingTools":
+                return .cookingToolsScreen
+        default:
             return .FruitsScreen
-        case .strachyFoods:
-            return .strachyFoodsScreen
-        case .proteins:
-            return .proteinsScreen
-        case .seasonning:
-            return .seasonningScreen
-        case .allergies:
-            return .allergiesScreen
-        case .cookingTools:
-            return .cookingToolsScreen
         }
     }
     
@@ -549,7 +553,7 @@ class BigModel: ObservableObject {
     public func processPrompt() -> String {
             
             var request = URLRequest(url: self.openAIURL!)
-            let prompt = "Voici mon modèle d'ingredients en swift : struct Item: Identifiable, Comparable, Hashable, Codable { var id: Int var category: Categories var name: String }. Voici mon modèle d'ItemAndQtty en swift : struct ItemAndQtty: Codable, Identifiable { var id: String var item: Item var quantity: Int } Le type Categories est une enum : enum Categories: CaseIterable, Codable { case legumes, fruits, strachyFoods, proteins, seasonning, allergies, cookingTools }. La variable 'category' doit être écrit de la forme .nomdelacategorie. Voici mon modèle de menu en swift : struct Meal: Codable, Identifiable { var id: String var name: String var itemsAndQ: [ItemAndQtty] var price: Int var spendedTime: Int var recipe: String } Peux tu me donner un tableau de chaines au format JSON d'un plat “Rillette de thon” et d'un autre plat 'Gratin dauphinois' avec un id unique d'environ 2O caractères, le prix de la recette, le temps passé et la recette complète ?"
+            let prompt = "Voici mon modèle d'ingredients en swift : struct Item: Identifiable, Comparable, Hashable, Codable { var id: Int var category: Categories var name: String }. Voici mon modèle d'ItemAndQtty en swift : struct ItemAndQtty: Codable, Identifiable { var id: String var item: Item var quantity: Int } Le type Categories est une enum : enum Categories: CaseIterable, Codable { case legumes, fruits, strachyFoods, proteins, seasonning, allergies, cookingTools }. La variable 'category' doit être écrit de la forme .nomdelacategorie. Voici mon modèle de menu en swift : struct Meal: Codable, Identifiable { var id: String var name: String var itemsAndQ: [ItemAndQtty] var price: Int var spendedTime: Int var recipe: String } Peux tu me proposer un tableau de plusieurs plats au format JSON d'un plat pour une personne qui aime les poivrons, le poulet, les aubergines, les carottes, le sel, le paprika et qui a un four et une poele avec un id unique d'environ 2O caractères, le prix de la recette, le temps passé et la recette complète ?"
             request.httpMethod = "POST"
             request.addValue("application/json", forHTTPHeaderField: "Content-Type")
             request.addValue("Bearer \(self.openAIKey)", forHTTPHeaderField: "Authorization")
@@ -577,6 +581,7 @@ class BigModel: ObservableObject {
                     ///
                     let responseHandler = OpenAIResponseHandler()
                     let jsonString = (responseHandler.decodeJson(jsonString: jsonStr)?.choices[0].text)!
+                    print(jsonString)
                     return (jsonString)
                     
                     /*if let jsonData = jsonString?.data(using: .utf8) {
