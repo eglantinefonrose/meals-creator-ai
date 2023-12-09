@@ -19,8 +19,8 @@ struct APIView: View {
         VStack {
             Button(action:{
                 //let response = bigModel.processPrompt()
-                //print(response)
-                jsonTest(jsonString: bigModel.processPrompt())
+                //bigModel.processPrompt(prompt: "Peux tu me proposer un tableau de chaines de caractères de plusieurs plats pour une personne qui aime les poivrons, le poulet, les aubergines, les carottes, le sel, le paprika et qui a un four et une poele. Donne moi une réponse dans ce format : ['repas1','repas2'etc...]")
+                jsonTest(jsonString: bigModel.processPrompt(prompt: bigModel.prompt1))
             }){
                 Text("Answer Question")
             }

@@ -550,10 +550,10 @@ class BigModel: ObservableObject {
         return requestData
     }
     
-    public func processPrompt() -> String {
+    
+    public func processPrompt(prompt: String) -> String {
             
             var request = URLRequest(url: self.openAIURL!)
-            let prompt = "Voici mon modèle d'ingredients en swift : struct Item: Identifiable, Comparable, Hashable, Codable { var id: Int var category: Categories var name: String }. Voici mon modèle d'ItemAndQtty en swift : struct ItemAndQtty: Codable, Identifiable { var id: String var item: Item var quantity: Int } Le type Categories est une enum : enum Categories: CaseIterable, Codable { case legumes, fruits, strachyFoods, proteins, seasonning, allergies, cookingTools }. La variable 'category' doit être écrit de la forme .nomdelacategorie. Voici mon modèle de menu en swift : struct Meal: Codable, Identifiable { var id: String var name: String var itemsAndQ: [ItemAndQtty] var price: Int var spendedTime: Int var recipe: String } Peux tu me proposer un tableau de plusieurs plats au format JSON d'un plat pour une personne qui aime les poivrons, le poulet, les aubergines, les carottes, le sel, le paprika et qui a un four et une poele avec un id unique d'environ 2O caractères, le prix de la recette, le temps passé et la recette complète ?"
             request.httpMethod = "POST"
             request.addValue("application/json", forHTTPHeaderField: "Content-Type")
             request.addValue("Bearer \(self.openAIKey)", forHTTPHeaderField: "Authorization")
@@ -581,20 +581,7 @@ class BigModel: ObservableObject {
                     ///
                     let responseHandler = OpenAIResponseHandler()
                     let jsonString = (responseHandler.decodeJson(jsonString: jsonStr)?.choices[0].text)!
-                    print(jsonString)
                     return (jsonString)
-                    
-                    /*if let jsonData = jsonString?.data(using: .utf8) {
-                        do {
-                            let meal = try JSONDecoder().decode(BigModel.Meal.self, from: jsonData)
-                            print(meal)
-                            return meal
-                        } catch {
-                            throw (error)
-                        }
-                    } else {
-                        print("Erreur lors de la conversion de la chaîne en données JSON")
-                    }*/
                     
                 }
             } catch {
@@ -604,6 +591,22 @@ class BigModel: ObservableObject {
         return("error")
             
         }
+    
+    func createMealsList() -> [Meal] {
+        let prompt1 = "Voici mon modèle d'ingredients en swift : struct Item: Identifiable, Comparable, Hashable, Codable { var id: Int var category: Categories var name: String }. Voici mon modèle d'ItemAndQtty en swift : struct ItemAndQtty: Codable, Identifiable { var id: String var item: Item var quantity: Int } Le type Categories est une enum : enum Categories: CaseIterable, Codable { case legumes, fruits, strachyFoods, proteins, seasonning, allergies, cookingTools }. La variable 'category' doit être écrit de la forme .nomdelacategorie. Voici mon modèle de menu en swift : struct Meal: Codable, Identifiable { var id: String var name: String var itemsAndQ: [ItemAndQtty] var price: Int var spendedTime: Int var recipe: String }"
+        //Peux tu me donner la recette des fajitas de poulet aux poivrons et aux carottes au format JSON d'un plat pour une personne qui aime les poivrons, le poulet, les aubergines, les carottes, le sel, le paprika et qui a un four et une poele avec un id unique d'environ 2O caractères, le prix de la recette, le temps passé et la recette complète ? Ne met pas de retour à la ligne dans les chaines de caractères. "
+        let meals: [Meal] = []
+        let mealsNameList: [String] = []
+        
+        //processPrompt(prompt: "")
+        
+        return meals
+        
+    }
+    
+    func likedItemsToString() -> String {
+        
+    }
     
     //
     //
