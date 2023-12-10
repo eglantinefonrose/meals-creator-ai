@@ -12,6 +12,7 @@ struct PreferenceView: View {
     @EnvironmentObject var bigModel: BigModel
     let columns = [GridItem(.adaptive(minimum: 150))]
     @State var selectedItems: [BigModel.Item] = []
+    @State var selectedTools: [BigModel.Item] = []
     @State var tags: [BigModel.Item: Bool] = [:]
     let categorie: String
     var nextScreenName: ViewEnum
@@ -58,7 +59,7 @@ struct PreferenceView: View {
                                 bigModel.currentView = nextScreenName
                             }
                             
-                            user?.items = bigModel.updatedSelectedItemsList(dict: tags)
+                            user?.items = bigModel.updatedSelectedItemsList(dict: tags, categorie: categorie)
                             bigModel.updateCurrentUserInfoInDB(user: user!)
                             
                             print(bigModel.currentUser?.items ?? 0)

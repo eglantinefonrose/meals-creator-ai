@@ -27,6 +27,7 @@ class BigModel: ObservableObject {
         var firstName: String
         var lastName: String
         var items: [Item]
+        var tools: [Item]
         var budget: Int
         var spendedTime: Int
         var proposedMeals: [Meal]
@@ -142,14 +143,20 @@ class BigModel: ObservableObject {
         return itemList
     }
     
-    func updatedSelectedItemsList(dict: [Item: Bool]) -> [Item] {
+    func updatedSelectedItemsList(dict: [Item: Bool], categorie: String) -> [Item] {
         var array: [Item] = []
         for (key, value) in dict {
             if value == true {
                 array.append(key)
             }
         }
-        array = array + (currentUser?.items ?? [])
+        
+        if categorie == "tools" {
+            array = array + (currentUser?.tools ?? [])
+        } else {
+            array = array + (currentUser?.items ?? [])
+        }
+        
         return Array(Set(array))
     }
     
@@ -265,9 +272,9 @@ class BigModel: ObservableObject {
             print("Logged In Success")
             
             guard let id = self.auth.currentUser?.uid else { return }
-            self.currentUser = User(id: id, firstName: "", lastName: "", items: [], budget: 0, spendedTime: 0, proposedMeals: [], favoriteMeals: [])
+            self.currentUser = User(id: id, firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, proposedMeals: [], favoriteMeals: [])
             
-            let newUser = User(id: id, firstName: "", lastName: "", items: [], budget: 0, spendedTime: 0, proposedMeals: [], favoriteMeals: [])
+            let newUser = User(id: id, firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, proposedMeals: [], favoriteMeals: [])
             //let _ = try self.db.collection("Users").document("user\(id)").setData(from: user)
             
             let docRef = self.db.collection("Users").document("user\(id)")
@@ -299,7 +306,7 @@ class BigModel: ObservableObject {
         
         guard let id = self.auth.currentUser?.uid else { return }
         let docRef = self.db.collection("Users").document(id)
-        let newUser = User(id: id, firstName: "", lastName: "", items: [], budget: 0, spendedTime: 0, proposedMeals: [], favoriteMeals: [])
+        let newUser = User(id: id, firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, proposedMeals: [], favoriteMeals: [])
         
         docRef.getDocument { (document, error) in
             
@@ -329,7 +336,7 @@ class BigModel: ObservableObject {
         
         guard let id = self.auth.currentUser?.uid else { return }
         let docRef = self.db.collection("Users").document(id)
-        let newUser = User(id: id, firstName: "", lastName: "", items: [], budget: 0, spendedTime: 0, proposedMeals: [], favoriteMeals: [])
+        let newUser = User(id: id, firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, proposedMeals: [], favoriteMeals: [])
         
         docRef.getDocument { (document, error) in
             
@@ -377,7 +384,7 @@ class BigModel: ObservableObject {
         
         guard let id = self.currentUser?.id else { return }
         let docRef = self.db.collection("Users").document(id)
-        let user = User(id: id, firstName: firstName, lastName: lastName, items: self.currentUser?.items ?? [], budget: self.currentUser?.budget ?? 0, spendedTime: self.currentUser?.spendedTime ?? 0, proposedMeals: self.currentUser?.proposedMeals ?? [], favoriteMeals: self.currentUser?.favoriteMeals ?? [])
+        let user = User(id: id, firstName: firstName, lastName: lastName, items: self.currentUser?.items ?? [], tools: [], budget: self.currentUser?.budget ?? 0, spendedTime: self.currentUser?.spendedTime ?? 0, proposedMeals: self.currentUser?.proposedMeals ?? [], favoriteMeals: self.currentUser?.favoriteMeals ?? [])
         
         docRef.getDocument { (document, error) in
             do {
@@ -592,20 +599,60 @@ class BigModel: ObservableObject {
             
         }
     
-    func createMealsList() -> [Meal] {
-        let prompt1 = "Voici mon modèle d'ingredients en swift : struct Item: Identifiable, Comparable, Hashable, Codable { var id: Int var category: Categories var name: String }. Voici mon modèle d'ItemAndQtty en swift : struct ItemAndQtty: Codable, Identifiable { var id: String var item: Item var quantity: Int } Le type Categories est une enum : enum Categories: CaseIterable, Codable { case legumes, fruits, strachyFoods, proteins, seasonning, allergies, cookingTools }. La variable 'category' doit être écrit de la forme .nomdelacategorie. Voici mon modèle de menu en swift : struct Meal: Codable, Identifiable { var id: String var name: String var itemsAndQ: [ItemAndQtty] var price: Int var spendedTime: Int var recipe: String }"
-        //Peux tu me donner la recette des fajitas de poulet aux poivrons et aux carottes au format JSON d'un plat pour une personne qui aime les poivrons, le poulet, les aubergines, les carottes, le sel, le paprika et qui a un four et une poele avec un id unique d'environ 2O caractères, le prix de la recette, le temps passé et la recette complète ? Ne met pas de retour à la ligne dans les chaines de caractères. "
-        let meals: [Meal] = []
-        let mealsNameList: [String] = []
+    func createMealsNameList() -> [String] {
+        let prompt1 = "Voici mon modèle d'ingredients en swift : struct Item: Identifiable, Comparable, Hashable, Codable { var id: Int var category: Categories var name: String }. Voici mon modèle d'ItemAndQtty en swift : struct ItemAndQtty: Codable, Identifiable { var id: String var item: Item var quantity: Int } Le type Categories est une enum : enum Categories: CaseIterable, Codable { case legumes, fruits, strachyFoods, proteins, seasonning, allergies, cookingTools }. La variable 'category' doit être écrit de la forme .nomdelacategorie. Voici mon modèle de menu en swift : struct Meal: Codable, Identifiable { var id: String var name: String var itemsAndQ: [ItemAndQtty] var price: Int var spendedTime: Int var recipe: String }. Peux tu me donner la recette de "
+        var meals: [Meal] = []
+        var mealsNameList: [String] = []
         
-        //processPrompt(prompt: "")
+        let response = processPrompt(prompt: "Peux tu me proposer une liste de plusieurs plats pour une personne qui aime les poivrons, le poulet, les aubergines, les carottes, le sel, le paprika et qui a un four et une poele. Donne moi une réponse sans retour à la ligne, en séparant uniquement les différents plats par des tirest (ex: repas1 - repas2 - repas3 etc...).")
+        mealsNameList = splitStringWithDash(inputString: response)
         
-        return meals
+        //let response2 = processPrompt(prompt: "\(prompt1) \(mealsNameList[0])")
+        //print("response2 \(response2)")
+        //meals.append(jsonTest(jsonString: response2) ?? Meal(id: "", name: "", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""))
+        
+        return mealsNameList
         
     }
     
-    func likedItemsToString() -> String {
+    func createMeal(i: Int, mealsNameList: [String]) -> Meal {
+        let prompt1 = "Voici mon modèle d'ingredients en swift : struct Item: Identifiable, Comparable, Hashable, Codable { var id: Int var category: Categories var name: String }. Voici mon modèle d'ItemAndQtty en swift : struct ItemAndQtty: Codable, Identifiable { var id: String var item: Item var quantity: Int } Le type Categories est une enum : enum Categories: CaseIterable, Codable { case legumes, fruits, strachyFoods, proteins, seasonning, allergies, cookingTools }. La variable 'category' doit être écrit de la forme .nomdelacategorie. Voici mon modèle de menu en swift : struct Meal: Codable, Identifiable { var id: String var name: String var itemsAndQ: [ItemAndQtty] var price: Int var spendedTime: Int var recipe: String }. Peux tu me donner la recette de "
+        var meal: Meal = Meal(id: "", name: "", itemsAndQ: [], price: 0, spendedTime: 0, recipe: "")
         
+        let response = processPrompt(prompt: "\(prompt1) \(mealsNameList[0]) en utilisant le modèle de menus que je t'ai donné et en renvoyant une réponse au format JSON ?")
+        meal = jsonTest(jsonString: response) ?? Meal(id: "", name: "", itemsAndQ: [], price: 0, spendedTime: 0, recipe: "")
+        
+        return meal
+        
+    }
+    
+    func jsonTest(jsonString: String) -> Meal? {
+        if let jsonData = jsonString.data(using: .utf8) {
+            do {
+                print(jsonString)
+                let meal = try JSONDecoder().decode(Meal.self, from: jsonData)
+                return meal
+            } catch {
+                print("Erreur lors de la désérialisation JSON :", error)
+                return nil
+            }
+        } else {
+            print("Erreur lors de la conversion de la chaîne en données JSON")
+            return nil
+        }
+    }
+    
+    func splitStringWithDash(inputString: String) -> [String] {
+        let separatedStrings = inputString.components(separatedBy: " - ")
+        return separatedStrings
+    }
+    
+    func mealsStringList() -> String {
+        var items: String = ""
+        for i in 0...(currentUser?.items.count ?? 0) {
+            items += "\(String(describing: currentUser?.items[i].name)), "
+        }
+        return items
     }
     
     //
@@ -615,7 +662,7 @@ class BigModel: ObservableObject {
     //
     
     init(shouldInjectMockedData: Bool) {
-        self.currentUser = User(firstName: "Malo", lastName: "Fonrose", items: [], budget: 0, spendedTime: 0, proposedMeals: [], favoriteMeals: [])
+        self.currentUser = User(firstName: "Malo", lastName: "Fonrose", items: [], tools: [], budget: 0, spendedTime: 0, proposedMeals: [], favoriteMeals: [])
         self.currentView = .mealsPropositionScreen
     }
     

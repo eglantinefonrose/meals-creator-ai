@@ -69,7 +69,7 @@ struct UserView: View {
                                 
                                 if isEditModeOn {
                                     //bigModel.updateUserNames(firstName: newFirstName, lastName: newLastName)
-                                    let user = BigModel.User(firstName: newFirstName, lastName: newLastName, items: bigModel.currentUser?.items ?? [], budget: bigModel.currentUser?.budget ?? 0, spendedTime: bigModel.currentUser?.spendedTime ?? 0, proposedMeals: bigModel.currentUser?.proposedMeals ?? [], favoriteMeals: bigModel.currentUser?.favoriteMeals ?? [])
+                                    let user = BigModel.User(firstName: newFirstName, lastName: newLastName, items: bigModel.currentUser?.items ?? [], tools: [], budget: bigModel.currentUser?.budget ?? 0, spendedTime: bigModel.currentUser?.spendedTime ?? 0, proposedMeals: bigModel.currentUser?.proposedMeals ?? [], favoriteMeals: bigModel.currentUser?.favoriteMeals ?? [])
                                     bigModel.updateCurrentUserInfoInDB(user: user)
                                     firstName = newFirstName
                                     lastName = newLastName

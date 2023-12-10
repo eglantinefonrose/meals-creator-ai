@@ -13,14 +13,16 @@ struct APIView: View {
     @State var degrees = 0.0
     let theopenaiclass = OpenAIConnector()
     @EnvironmentObject var bigModel: BigModel
+    let string1 = "Peux tu me proposer une liste de plusieurs plats pour une personne qui aime les poivrons, le poulet, les aubergines, les carottes, le sel, le paprika et qui a un four et une poele. Donne moi une réponse sans retour à la ligne, en séparant uniquement les différents plats par des tirets."
     let jsonString = "\n\n{  \n\"id\": \"Em23i9f7AdmHSn3K\", \n\"name\": \"Rillette de thon\",\n\"price\": 6,\n\"spendedTime\": 15,\n\"recipe\": \"1. Mettre le thon dans un saladier et l\'écraser à l\'aide d\'une fourchette. 2. Ajouter l\'oignon finement émincé, le sel, le poivre, l\'huile d\'olive et mélanger jusqu\'à ce que le mélange soit homogène. 3. Faire fondre le beurre. 4. Ajouter le beurre à la préparation de thon et bien mélanger. 5. Servir et accompagner de mini toasts.\"\n}"
     
     var body: some View {
         VStack {
             Button(action:{
-                //let response = bigModel.processPrompt()
-                //bigModel.processPrompt(prompt: "Peux tu me proposer un tableau de chaines de caractères de plusieurs plats pour une personne qui aime les poivrons, le poulet, les aubergines, les carottes, le sel, le paprika et qui a un four et une poele. Donne moi une réponse dans ce format : ['repas1','repas2'etc...]")
-                jsonTest(jsonString: bigModel.processPrompt(prompt: bigModel.prompt1))
+                
+                let response = bigModel.createMealsNameList()
+                print(bigModel.createMeal(i: 0, mealsNameList: response))
+                
             }){
                 Text("Answer Question")
             }
@@ -59,7 +61,8 @@ struct OpenAIResponseHandler {
 func jsonTest(jsonString: String) {
     if let jsonData = jsonString.data(using: .utf8) {
         do {
-            let meal = try JSONDecoder().decode(BigModel.Meal.self, from: jsonData)
+            print(jsonString)
+            let meal = try JSONDecoder().decode(String.self, from: jsonData)
             print(meal)
         } catch {
             print("Erreur lors de la désérialisation JSON :", error)
