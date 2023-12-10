@@ -615,11 +615,13 @@ class BigModel: ObservableObject {
         
     }
     
-    func createMeal(i: Int, mealsNameList: [String]) -> Meal {
+    func createMeal(i: Int) -> Meal {
+        
         let prompt1 = "Voici mon modèle d'ingredients en swift : struct Item: Identifiable, Comparable, Hashable, Codable { var id: Int var category: Categories var name: String }. Voici mon modèle d'ItemAndQtty en swift : struct ItemAndQtty: Codable, Identifiable { var id: String var item: Item var quantity: Int } Le type Categories est une enum : enum Categories: CaseIterable, Codable { case legumes, fruits, strachyFoods, proteins, seasonning, allergies, cookingTools }. La variable 'category' doit être écrit de la forme .nomdelacategorie. Voici mon modèle de menu en swift : struct Meal: Codable, Identifiable { var id: String var name: String var itemsAndQ: [ItemAndQtty] var price: Int var spendedTime: Int var recipe: String }. Peux tu me donner la recette de "
         var meal: Meal = Meal(id: "", name: "", itemsAndQ: [], price: 0, spendedTime: 0, recipe: "")
+        let mealsNameList: [String] = createMealsNameList()
         
-        let response = processPrompt(prompt: "\(prompt1) \(mealsNameList[0]) en utilisant le modèle de menus que je t'ai donné et en renvoyant une réponse au format JSON ?")
+        let response = processPrompt(prompt: "\(prompt1) \(mealsNameList[i]) en utilisant le modèle de menus que je t'ai donné et en renvoyant une réponse au format JSON ?")
         meal = jsonTest(jsonString: response) ?? Meal(id: "", name: "", itemsAndQ: [], price: 0, spendedTime: 0, recipe: "")
         
         return meal

@@ -20,8 +20,8 @@ struct APIView: View {
         VStack {
             Button(action:{
                 
-                let response = bigModel.createMealsNameList()
-                print(bigModel.createMeal(i: 0, mealsNameList: response))
+                //let response = bigModel.createMealsNameList()
+                print(bigModel.createMeal(i: 0))
                 
             }){
                 Text("Answer Question")
