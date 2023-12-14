@@ -21,7 +21,7 @@ struct APIView: View {
             Button(action:{
                 
                 //let response = bigModel.createMealsNameList()
-                print(bigModel.createMeal(i: 0))
+                //print(bigModel.createMeals())
                 
             }){
                 Text("Answer Question")
@@ -29,12 +29,6 @@ struct APIView: View {
         }
         .padding()
         
-    }
-}
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        APIView()
     }
 }
 public class OpenAIConnector {

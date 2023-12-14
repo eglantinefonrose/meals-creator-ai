@@ -10,6 +10,7 @@ import SwiftUI
 import Firebase
 import FirebaseAuth
 import FirebaseFirestore
+import FirebaseFirestoreSwift
 import AuthenticationServices
 import Combine
 import Alamofire
@@ -19,7 +20,7 @@ class BigModel: ObservableObject {
     
     public static var shared = BigModel(shouldInjectMockedData: true)
     
-    @Published var currentView: ViewEnum = .preferencesSummary
+    @Published var currentView: ViewEnum = .signInView
     @Published var screenHistory: [ViewEnum] = []
     
     struct User: Identifiable, Codable {
@@ -45,7 +46,7 @@ class BigModel: ObservableObject {
         var name: String
     }
     
-    struct Meal: Codable, Identifiable {
+    struct Meal: Codable, Identifiable, Hashable {
         
         var id: String
         var name: String
@@ -56,14 +57,14 @@ class BigModel: ObservableObject {
         
     }
     
-    struct ItemAndQtty: Codable, Identifiable {
+    struct ItemAndQtty: Codable, Identifiable, Hashable {
         var id: String
         var item: Item
         var quantity: Int
     }
             
     
-    var currentUser: User?
+    @Published var currentUser: User?
     
     let items = [Item(id: 0, category: "legumes", name: "Carotte"), Item(id: 1, category: "legumes", name: "Poireaux"),Item(id: 2, category: "legumes", name: "Courgette"),Item(id: 3, category: "legumes", name: "Aubergine"),Item(id: 4, category: "legumes", name: "Brocolli"),
                  Item(id: 5, category: "fruits", name: "Pomme"), Item(id: 6, category: "fruits", name: "Poire"),
@@ -272,34 +273,42 @@ class BigModel: ObservableObject {
             print("Logged In Success")
             
             guard let id = self.auth.currentUser?.uid else { return }
-            self.currentUser = User(id: id, firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, proposedMeals: [], favoriteMeals: [])
+            self.currentUser = User(firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, proposedMeals: [], favoriteMeals: [])
             
-            let newUser = User(id: id, firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, proposedMeals: [], favoriteMeals: [])
-            //let _ = try self.db.collection("Users").document("user\(id)").setData(from: user)
+            let newUser = User(firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, proposedMeals: [], favoriteMeals: [])
             
-            let docRef = self.db.collection("Users").document("user\(id)")
-            
+            let docRef = self.db.collection("Users").document(id)
+
             docRef.getDocument { (document, error) in
-                if ((document?.exists) != nil) {
+                
+                if let error = error as NSError? {
+                    print("Error getting document: \(error.localizedDescription)")
+                }
+                else {
+                    if let document = document
+                    , document.exists
+                    {
                     do {
-                        let user = try document!.data(as: User.self)
-                        self.currentUser = user
-                        print("Document data: \(String(describing: document!.data()))")
+                        self.currentUser = try document.data(as: User.self)
+                        self.currentView = .UserView
+                        self.screenHistory.append(.signInView)
+                        print("Document data: \(String(describing: document.data()))")
                     }
                     catch {
-                        print(error.localizedDescription)
+                      print(error)
                     }
-                } else {
-                    do {
-                        let _ = try self.db.collection("Users").document("user\(id)").setData(from: newUser)
-                    } catch {
-                        
-                    }
+                  } else {
+                      do {
+                          let _ = try self.db.collection("Users").addDocument(from: newUser)
+                      }
+                      catch {
+                          print(error)
+                      }
+                  }
                 }
             }
             
         }
-        
     }
     
     func updateUserInfo() {
@@ -330,6 +339,7 @@ class BigModel: ObservableObject {
                 }
             }
         }
+        
     }
     
     func googleSignInUserUpdate() {
@@ -600,11 +610,12 @@ class BigModel: ObservableObject {
         }
     
     func createMealsNameList() -> [String] {
+        
         let prompt1 = "Voici mon modèle d'ingredients en swift : struct Item: Identifiable, Comparable, Hashable, Codable { var id: Int var category: Categories var name: String }. Voici mon modèle d'ItemAndQtty en swift : struct ItemAndQtty: Codable, Identifiable { var id: String var item: Item var quantity: Int } Le type Categories est une enum : enum Categories: CaseIterable, Codable { case legumes, fruits, strachyFoods, proteins, seasonning, allergies, cookingTools }. La variable 'category' doit être écrit de la forme .nomdelacategorie. Voici mon modèle de menu en swift : struct Meal: Codable, Identifiable { var id: String var name: String var itemsAndQ: [ItemAndQtty] var price: Int var spendedTime: Int var recipe: String }. Peux tu me donner la recette de "
         var meals: [Meal] = []
         var mealsNameList: [String] = []
         
-        let response = processPrompt(prompt: "Peux tu me proposer une liste de plusieurs plats pour une personne qui aime les poivrons, le poulet, les aubergines, les carottes, le sel, le paprika et qui a un four et une poele. Donne moi une réponse sans retour à la ligne, en séparant uniquement les différents plats par des tirest (ex: repas1 - repas2 - repas3 etc...).")
+        let response = processPrompt(prompt: "Peux tu me proposer une liste de 20 plats pour une personne qui aime \(listToString(list: self.currentUser?.items ?? [])) et qui a \(listToString(list: self.currentUser?.tools ?? [])). Donne moi une réponse sans retour à la ligne, en séparant uniquement les différents plats par des tirest (ex: repas1 - repas2 - repas3 etc...).")
         mealsNameList = splitStringWithDash(inputString: response)
         
         //let response2 = processPrompt(prompt: "\(prompt1) \(mealsNameList[0])")
@@ -615,23 +626,56 @@ class BigModel: ObservableObject {
         
     }
     
-    func createMeal(i: Int) -> Meal {
+    @Published var isLoading = false
+    @Published var testMealList: [Meal] = [Meal(id: "", name: "Brand", itemsAndQ: [], price: 0, spendedTime: 0, recipe: "0")]
+    @Published var selectedMeal: Meal = Meal(id: "dd", name: "gagag", itemsAndQ: [ItemAndQtty(id: "e", item: Item(id: 88, category: "", name: "Carottes"), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 5, category: "", name: "Carottes"), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 0, category: "", name: "Carottes"), quantity: 200)], price: 0, spendedTime: 0, recipe: "")
+    
+    func createMeals() async {
         
+        isLoading = true
         let prompt1 = "Voici mon modèle d'ingredients en swift : struct Item: Identifiable, Comparable, Hashable, Codable { var id: Int var category: Categories var name: String }. Voici mon modèle d'ItemAndQtty en swift : struct ItemAndQtty: Codable, Identifiable { var id: String var item: Item var quantity: Int } Le type Categories est une enum : enum Categories: CaseIterable, Codable { case legumes, fruits, strachyFoods, proteins, seasonning, allergies, cookingTools }. La variable 'category' doit être écrit de la forme .nomdelacategorie. Voici mon modèle de menu en swift : struct Meal: Codable, Identifiable { var id: String var name: String var itemsAndQ: [ItemAndQtty] var price: Int var spendedTime: Int var recipe: String }. Peux tu me donner la recette de "
-        var meal: Meal = Meal(id: "", name: "", itemsAndQ: [], price: 0, spendedTime: 0, recipe: "")
         let mealsNameList: [String] = createMealsNameList()
         
-        let response = processPrompt(prompt: "\(prompt1) \(mealsNameList[i]) en utilisant le modèle de menus que je t'ai donné et en renvoyant une réponse au format JSON ?")
-        meal = jsonTest(jsonString: response) ?? Meal(id: "", name: "", itemsAndQ: [], price: 0, spendedTime: 0, recipe: "")
-        
-        return meal
-        
+        for i in 0..<mealsNameList.count {
+            let response = processPrompt(prompt: "\(prompt1) \(mealsNameList[i]) en utilisant le modèle de menus que je t'ai donné et en renvoyant une réponse au format JSON ?")
+                
+            let meal = self.jsonTest(jsonString: response) ?? Meal(id: "dd", name: "gagag", itemsAndQ: [ItemAndQtty(id: "e", item: Item(id: 88, category: "", name: "Carottes"), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 5, category: "", name: "Carottes"), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 0, category: "", name: "Carottes"), quantity: 200)], price: 0, spendedTime: 0, recipe: "")
+            if meal.id != "dd" {
+                self.currentUser?.proposedMeals.append(meal)
+                print("append")
+            }
+            print(meal.name)
+            
+        }
+             
+        DispatchQueue.main.async {
+            self.isLoading = false
+        }
+        print("done")
+    }
+    
+    func updateList() async {
+        // Modifiez votre liste ici comme vous le souhaitez
+        print("à")
+        //for i in 0...10 {
+            let meal = Meal(id: "dd", name: "Brandade", itemsAndQ: [], price: 0, spendedTime: 0, recipe: "")
+            if meal.id != "" {
+                do {
+                    try await Task.sleep(nanoseconds: 1000000000)
+                    self.testMealList.append(meal)
+                }
+                catch {
+                    
+                }
+            }
+        //}
+        print("done")
     }
     
     func jsonTest(jsonString: String) -> Meal? {
         if let jsonData = jsonString.data(using: .utf8) {
             do {
-                print(jsonString)
+                //print(jsonString)
                 let meal = try JSONDecoder().decode(Meal.self, from: jsonData)
                 return meal
             } catch {
@@ -649,12 +693,20 @@ class BigModel: ObservableObject {
         return separatedStrings
     }
     
-    func mealsStringList() -> String {
-        var items: String = ""
-        for i in 0...(currentUser?.items.count ?? 0) {
-            items += "\(String(describing: currentUser?.items[i].name)), "
+    func listToString(list: Array<Any>) -> String {
+        var itemsString: String = ""
+        for i in 0..<list.count {
+            itemsString += "\(String(describing: list[i])), "
         }
-        return items
+        return itemsString
+    }
+    
+    func toolsStringList() -> String {
+        var itemsString: String = ""
+        for i in 0...(currentUser?.tools.count ?? 0) {
+            itemsString += "\(String(describing: currentUser?.tools[i].name)), "
+        }
+        return itemsString
     }
     
     //
@@ -663,9 +715,13 @@ class BigModel: ObservableObject {
     //
     //
     
+    init() {
+        print("Constructor BigModel - default")
+    }
+    
     init(shouldInjectMockedData: Bool) {
-        self.currentUser = User(firstName: "Malo", lastName: "Fonrose", items: [], tools: [], budget: 0, spendedTime: 0, proposedMeals: [], favoriteMeals: [])
-        self.currentView = .mealsPropositionScreen
+        self.currentUser = User(firstName: "Malo", lastName: "Fonrose", items: [], tools: [], budget: 0, spendedTime: 0, proposedMeals: [BigModel.Meal(id: "", name: "Brandade", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""), BigModel.Meal(id: "", name: "Brandade", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""), BigModel.Meal(id: "", name: "Brandade", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""), BigModel.Meal(id: "", name: "Brandade", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""), BigModel.Meal(id: "", name: "Brandade", itemsAndQ: [], price: 0, spendedTime: 0, recipe: "")], favoriteMeals: [])
+        self.currentView = .signInView
     }
     
 }

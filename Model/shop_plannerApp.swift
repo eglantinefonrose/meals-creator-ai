@@ -13,8 +13,8 @@ struct shop_plannerApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     var body: some Scene {
         WindowGroup {
-            APIView()
-                .environmentObject(BigModel(shouldInjectMockedData: true))
+            MealsPropostion()
+                .environmentObject(BigModel())
         }
     }
 }

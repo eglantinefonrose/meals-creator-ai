@@ -11,55 +11,72 @@ import Combine
 struct MealsPropostion: View {
     
     @EnvironmentObject var bigModel: BigModel
-    //@State var chatMessages: [BigModel.ChatMessage] = []
-    //@State var messageText: String = "Write a tag line for an ice cream shop"
-    //@State var cancellables = Set<AnyCancellable>()
+    let meals = ["Nouilles sautées", "Omelette", "Rillettes de thon"]
+    @State var testMealList: [BigModel.Meal] = []
     
     var body: some View {
         
         VStack {
             
-        }
-        
-    }
-    
-    /*func sendMessage() {
-        let myMessage = BigModel.ChatMessage(
-                id: UUID().uuidString,
-                content: messageText,
-                dateCreated: Date(),
-                sender: .me
-            )
-            chatMessages.append(myMessage)
-
-        bigModel.sendMessage(message: messageText).sink { completion in
-                    // Handle error
-                } receiveValue: { response in
-                    guard
-                        let textResponse = response.choices.first?.text
-                            .trimmingCharacters(
-                                in: .whitespacesAndNewlines
-                                    .union(.init(charactersIn: "\""))
-                            )
-                    else { return }
-                    let gptMessage = BigModel.ChatMessage(
-                        id: response.id,
-                        content: textResponse,
-                        dateCreated: Date(),
-                        sender: .gpt
-                    )
-                    chatMessages.append(gptMessage)
-                    print("gpt messages :")
-                    print(gptMessage)
+            VStack(spacing: 10) {
+                
+                BackModel(color: Color.navyBlue, view: .mealsPropositionScreen)
+                
+                Text("MEALS")
+                    .foregroundStyle(Color.navyBlue)
+                    .font(.system(size: 100))
+                Circle()
+                    .foregroundStyle(Color.navyBlue)
+                    .onTapGesture {
+                        Task {
+                            await bigModel.createMeals()
+                        }
+                    }
+                
+                VStack(alignment: .leading) {
+                    Text("Select a meal to see the recipe")
+                        .foregroundStyle(Color.navyBlue)
+                    
+                    //if bigModel.isLoading {
+                    
+                    //}
+                    
+                    /*VStack(alignment: .leading, spacing: 10) {
+                        List(bigModel.testMealList) { item in
+                            Text(item.name)
+                        }
+                    }*/
+                    
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: 10) {
+                            ForEach(bigModel.currentUser?.proposedMeals ?? []) { item in
+                                Text(item.name)
+                                    .font(.largeTitle)
+                                    .foregroundStyle(Color.navyBlue)
+                                    .onTapGesture {
+                                       
+                                    }
+                                Rectangle().fill(Color.navyBlue).frame(height: 1)
+                            }
+                        }
+                    }
                 }
-                .store(in: &cancellables)
-        
-        }*/
-    
-}
-
-struct MealsPropostion_Previews: PreviewProvider {
-    static var previews: some View {
-        MealsPropostion()
+                
+                HStack {
+                    Spacer()
+                    if bigModel.isLoading {
+                        ProgressView()
+                                .scaleEffect(1, anchor: .center)
+                            .progressViewStyle(CircularProgressViewStyle(tint: .gray))
+                    }
+                    Spacer()
+                }
+                
+            }.padding(.leading)
+            .padding(.trailing)
+            .padding(.top)
+            
+        }//.edgesIgnoringSafeArea(.bottom)
     }
+
 }

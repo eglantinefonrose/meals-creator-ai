@@ -63,7 +63,7 @@ struct SignIN: View {
                             
                         switch result {
                             case .success(let user):
-                                print("success")
+                                //print("success")
                                 guard let credential = user.credential as? ASAuthorizationAppleIDCredential else {
                                     print("error with firebase")
                                     return
