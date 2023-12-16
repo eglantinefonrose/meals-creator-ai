@@ -137,6 +137,7 @@ struct UserView: View {
                                         .foregroundColor(Color.navyBlue)
                                         .onTapGesture {
                                             bigModel.currentView = .budgetScreen
+                                            bigModel.screenHistory.append(.UserView)
                                         }
                                 }
                                 Rectangle().fill(Color.navyBlue).frame(height: 1)
@@ -156,6 +157,7 @@ struct UserView: View {
                                         .foregroundColor(Color.navyBlue)
                                         .onTapGesture {
                                             bigModel.currentView = .timeScreen
+                                            bigModel.screenHistory.append(.UserView)
                                         }
                                 }
                                 Rectangle().fill(Color.navyBlue).frame(height: 1)
@@ -186,6 +188,12 @@ struct UserView: View {
                                             .foregroundColor(Color.navyBlue)
                                             .onTapGesture {
                                                 bigModel.currentView = .mealsPropositionScreen
+                                                bigModel.screenHistory.append(.UserView)
+                                                if bigModel.currentUser?.proposedMeals.count == 0 {
+                                                    Task {
+                                                        await bigModel.createMeals()
+                                                    }
+                                                }
                                             }
                                     }
                                     Rectangle().fill(Color.navyBlue).frame(height: 1)
@@ -215,6 +223,7 @@ struct UserView: View {
                                             .foregroundColor(Color.navyBlue)
                                             .onTapGesture {
                                                 bigModel.currentView = .mealsPropositionScreen
+                                                bigModel.screenHistory.append(.UserView)
                                             }
                                     }
                                     
@@ -230,6 +239,7 @@ struct UserView: View {
                                 .foregroundColor(.gray)
                                 .onTapGesture {
                                     bigModel.currentView = .welcomeView
+                                    bigModel.screenHistory.append(.UserView)
                                 }
                             Spacer()
                         }

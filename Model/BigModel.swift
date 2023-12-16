@@ -46,7 +46,11 @@ class BigModel: ObservableObject {
         var name: String
     }
     
-    struct Meal: Codable, Identifiable, Hashable {
+    struct Meal: Codable, Identifiable, Hashable, Comparable {
+        
+        static func < (lhs: Meal, rhs: Meal) -> Bool {
+            lhs.name < rhs.name
+        }
         
         var id: String
         var name: String
@@ -159,6 +163,18 @@ class BigModel: ObservableObject {
         }
         
         return Array(Set(array))
+    }
+    
+    func generateTags() -> [Meal: Bool] {
+        var tagsDictionary = [Meal: Bool]()
+        let meals = self.currentUser?.proposedMeals ?? []
+        let favoriteMeals = self.currentUser?.favoriteMeals ?? []
+
+        for meal in meals {
+            tagsDictionary[meal] = favoriteMeals.contains { $0.id == meal.id }
+        }
+
+        return tagsDictionary
     }
     
     
@@ -390,6 +406,20 @@ class BigModel: ObservableObject {
         
     }
     
+    func removeMealFromFavouriteMeals(meal: Meal, mealsList: [Meal]) -> [Meal] {
+        
+        var newMealsList = mealsList
+        
+        if let index = mealsList.firstIndex(where: { $0.id == meal.id }) {
+            newMealsList.remove(at: index)
+            return newMealsList
+            print("Element retiré avec succès")
+        } else {
+            print("Element non trouvé dans la liste")
+            return newMealsList
+        }
+    }
+    
     func updateUserNames(firstName: String, lastName: String) {
         
         guard let id = self.currentUser?.id else { return }
@@ -615,7 +645,7 @@ class BigModel: ObservableObject {
         var meals: [Meal] = []
         var mealsNameList: [String] = []
         
-        let response = processPrompt(prompt: "Peux tu me proposer une liste de 20 plats pour une personne qui aime \(listToString(list: self.currentUser?.items ?? [])) et qui a \(listToString(list: self.currentUser?.tools ?? [])). Donne moi une réponse sans retour à la ligne, en séparant uniquement les différents plats par des tirest (ex: repas1 - repas2 - repas3 etc...).")
+        let response = processPrompt(prompt: "Peux tu me proposer une liste de 5 plats pour une personne qui aime \(listToString(list: self.currentUser?.items ?? [])) et qui a \(listToString(list: self.currentUser?.tools ?? [])). Donne moi des meals avec des ID distincts et différents entre eux pour chaque meals. Donne moi une réponse sans retour à la ligne, en séparant uniquement les différents plats par des tirest (ex: repas1 - repas2 - repas3 etc...).")
         mealsNameList = splitStringWithDash(inputString: response)
         
         //let response2 = processPrompt(prompt: "\(prompt1) \(mealsNameList[0])")
@@ -630,6 +660,7 @@ class BigModel: ObservableObject {
     @Published var testMealList: [Meal] = [Meal(id: "", name: "Brand", itemsAndQ: [], price: 0, spendedTime: 0, recipe: "0")]
     @Published var selectedMeal: Meal = Meal(id: "dd", name: "gagag", itemsAndQ: [ItemAndQtty(id: "e", item: Item(id: 88, category: "", name: "Carottes"), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 5, category: "", name: "Carottes"), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 0, category: "", name: "Carottes"), quantity: 200)], price: 0, spendedTime: 0, recipe: "")
     
+    
     func createMeals() async {
         
         isLoading = true
@@ -637,7 +668,7 @@ class BigModel: ObservableObject {
         let mealsNameList: [String] = createMealsNameList()
         
         for i in 0..<mealsNameList.count {
-            let response = processPrompt(prompt: "\(prompt1) \(mealsNameList[i]) en utilisant le modèle de menus que je t'ai donné et en renvoyant une réponse au format JSON ?")
+            let response = processPrompt(prompt: "\(prompt1) \(mealsNameList[i]) en utilisant le modèle de menus que je t'ai donné et en renvoyant une réponse au format JSON et en donnant des id unique et distincts constitués de minimum 20 caractères et contenant au moins une majuscule, un chiffre et un caractère spécial à chaque menus crées ?")
                 
             let meal = self.jsonTest(jsonString: response) ?? Meal(id: "dd", name: "gagag", itemsAndQ: [ItemAndQtty(id: "e", item: Item(id: 88, category: "", name: "Carottes"), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 5, category: "", name: "Carottes"), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 0, category: "", name: "Carottes"), quantity: 200)], price: 0, spendedTime: 0, recipe: "")
             if meal.id != "dd" {
@@ -652,7 +683,12 @@ class BigModel: ObservableObject {
             self.isLoading = false
         }
         print("done")
+        
+        if currentUser != nil {
+            self.updateCurrentUserInfoInDB(user: currentUser ?? User(firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, proposedMeals: [], favoriteMeals: []))
+        }
     }
+    
     
     func updateList() async {
         // Modifiez votre liste ici comme vous le souhaitez
@@ -720,7 +756,7 @@ class BigModel: ObservableObject {
     }
     
     init(shouldInjectMockedData: Bool) {
-        self.currentUser = User(firstName: "Malo", lastName: "Fonrose", items: [], tools: [], budget: 0, spendedTime: 0, proposedMeals: [BigModel.Meal(id: "", name: "Brandade", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""), BigModel.Meal(id: "", name: "Brandade", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""), BigModel.Meal(id: "", name: "Brandade", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""), BigModel.Meal(id: "", name: "Brandade", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""), BigModel.Meal(id: "", name: "Brandade", itemsAndQ: [], price: 0, spendedTime: 0, recipe: "")], favoriteMeals: [])
+        self.currentUser = User(firstName: "Malo", lastName: "Fonrose", items: [], tools: [], budget: 0, spendedTime: 0, proposedMeals: [BigModel.Meal(id: "ktuyffg", name: "Brandade", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""), BigModel.Meal(id: "yjfgj", name: "Brandade", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""), BigModel.Meal(id: "sdfgjvjkuhu", name: "Brandade", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""), BigModel.Meal(id: "lyughompij", name: "Brandade", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""), BigModel.Meal(id: "ttttt", name: "Brandade", itemsAndQ: [], price: 0, spendedTime: 0, recipe: "")], favoriteMeals: [])
         self.currentView = .signInView
     }
     

@@ -60,6 +60,12 @@ struct BigRootView: View {
         if bigModel.currentView == .mealsPropositionScreen {
             MealsPropostion()
         }
+        if bigModel.currentView == .RecipeScreen {
+            RecipeScreen()
+        }
+        if bigModel.currentView == .FavoriteMealsScreen {
+            FavoriteMealsScreen()
+        }
         
     }
 }
@@ -80,4 +86,6 @@ enum ViewEnum: String {
     case signInView
     case welcomeView
     case UserView
+    case RecipeScreen
+    case FavoriteMealsScreen
 }

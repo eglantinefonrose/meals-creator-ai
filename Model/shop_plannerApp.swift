@@ -13,8 +13,8 @@ struct shop_plannerApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     var body: some Scene {
         WindowGroup {
-            MealsPropostion()
-                .environmentObject(BigModel())
+            BigRootView()
+                .environmentObject(BigModel.shared)
         }
     }
 }

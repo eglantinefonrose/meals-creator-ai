@@ -12,7 +12,7 @@ struct MealsPropostion: View {
     
     @EnvironmentObject var bigModel: BigModel
     let meals = ["Nouilles sautées", "Omelette", "Rillettes de thon"]
-    @State var testMealList: [BigModel.Meal] = []
+    @State var tags: [BigModel.Meal: Bool] = [BigModel.Meal(id: "0", name: "E", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""):false, BigModel.Meal(id: "1", name: "E", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""):false]
     
     var body: some View {
         
@@ -27,11 +27,6 @@ struct MealsPropostion: View {
                     .font(.system(size: 100))
                 Circle()
                     .foregroundStyle(Color.navyBlue)
-                    .onTapGesture {
-                        Task {
-                            await bigModel.createMeals()
-                        }
-                    }
                 
                 VStack(alignment: .leading) {
                     Text("Select a meal to see the recipe")
@@ -49,14 +44,11 @@ struct MealsPropostion: View {
                     
                     ScrollView {
                         VStack(alignment: .leading, spacing: 10) {
-                            ForEach(bigModel.currentUser?.proposedMeals ?? []) { item in
-                                Text(item.name)
-                                    .font(.largeTitle)
-                                    .foregroundStyle(Color.navyBlue)
-                                    .onTapGesture {
-                                       
-                                    }
+                            ForEach(tags.keys.sorted(), id: \.self) { item in
+                                                                
+                                MealsViewModel(bigModel: BigModel.shared, item: item, selected: self.binding(for: item))
                                 Rectangle().fill(Color.navyBlue).frame(height: 1)
+                                
                             }
                         }
                     }
@@ -76,7 +68,82 @@ struct MealsPropostion: View {
             .padding(.trailing)
             .padding(.top)
             
-        }//.edgesIgnoringSafeArea(.bottom)
+            ZStack {
+                Rectangle()
+                    .frame(height: 60)
+                    .foregroundStyle(Color.navyBlue)
+                Text("See favourites")
+                    .foregroundStyle(Color.white)
+                    .onTapGesture {
+                        bigModel.currentView = .FavoriteMealsScreen
+                        bigModel.screenHistory.append(.mealsPropositionScreen)
+                    }
+            }
+            
+        }.edgesIgnoringSafeArea(.bottom)
+        .onAppear {
+            tags = bigModel.generateTags()
+        }
+    }
+    
+    private func binding(for key: BigModel.Meal) -> Binding<Bool> {
+        return .init(
+            get: { self.tags[key, default: false] },
+            set: { self.tags[key] = $0 })
     }
 
+}
+
+
+struct MealsViewModel: View {
+    
+    var bigModel: BigModel
+    var item: BigModel.Meal
+    @Binding var selected: Bool
+    
+    var body: some View {
+        HStack {
+            Text(item.name)
+                .font(.largeTitle)
+                .foregroundStyle(Color.navyBlue)
+                .onTapGesture {
+                    bigModel.currentView = .RecipeScreen
+                    bigModel.currentView.append(.mealsPropositionScreen)
+                    bigModel.selectedMeal = item
+                }
+            Spacer()
+            Image(systemName: selected ? "heart.fill" : "heart")
+                .foregroundColor(.navyBlue)
+                .onTapGesture {
+                    selected.toggle()
+                    if isMealInList(meal: item) && selected {
+                        addToFavourite(item: item)
+                    }
+                    if !selected {
+                        var user = bigModel.currentUser
+                        let mealsList = user?.favoriteMeals ?? []
+                        user?.favoriteMeals = bigModel.removeMealFromFavouriteMeals(meal: item, mealsList: mealsList)
+                        bigModel.updateCurrentUserInfoInDB(user: user ?? BigModel.User(firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, proposedMeals: [], favoriteMeals: []))
+                    }
+                }
+        }
+    }
+    
+    private func addToFavourite(item: BigModel.Meal) {
+        var user = bigModel.currentUser
+        user?.favoriteMeals.append(item)
+        bigModel.updateCurrentUserInfoInDB(user: user ?? BigModel.User(firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, proposedMeals: [], favoriteMeals: []))
+    }
+    
+    private func isMealInList(meal: BigModel.Meal) -> Bool {
+        return ((bigModel.currentUser?.favoriteMeals.contains { $0.id == meal.id }) != nil)
+    }
+    
+}
+
+struct MealsPropostion_Previews: PreviewProvider {
+    static var previews: some View {
+        MealsPropostion()
+            .environmentObject(BigModel(shouldInjectMockedData: true))
+    }
 }

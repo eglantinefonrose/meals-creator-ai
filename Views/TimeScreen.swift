@@ -91,7 +91,9 @@ struct TimeScreen: View {
                                 var user = bigModel.currentUser
                                 user?.spendedTime = time
                                 bigModel.updateCurrentUserInfoInDB(user: user!)
-                                
+                                Task {
+                                    await bigModel.createMeals()
+                                }
                                 if bigModel.screenHistory.last == .TastesView {
                                     bigModel.currentView = .TastesView
                                     bigModel.screenHistory.append(.timeScreen)
