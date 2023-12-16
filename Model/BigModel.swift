@@ -661,18 +661,34 @@ class BigModel: ObservableObject {
     @Published var selectedMeal: Meal = Meal(id: "dd", name: "gagag", itemsAndQ: [ItemAndQtty(id: "e", item: Item(id: 88, category: "", name: "Carottes"), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 5, category: "", name: "Carottes"), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 0, category: "", name: "Carottes"), quantity: 200)], price: 0, spendedTime: 0, recipe: "")
     
     
+    @Published var currentUserTags: [Meal: Bool] = [:]
+    
     func createMeals() async {
         
-        isLoading = true
-        let prompt1 = "Voici mon modèle d'ingredients en swift : struct Item: Identifiable, Comparable, Hashable, Codable { var id: Int var category: Categories var name: String }. Voici mon modèle d'ItemAndQtty en swift : struct ItemAndQtty: Codable, Identifiable { var id: String var item: Item var quantity: Int } Le type Categories est une enum : enum Categories: CaseIterable, Codable { case legumes, fruits, strachyFoods, proteins, seasonning, allergies, cookingTools }. La variable 'category' doit être écrit de la forme .nomdelacategorie. Voici mon modèle de menu en swift : struct Meal: Codable, Identifiable { var id: String var name: String var itemsAndQ: [ItemAndQtty] var price: Int var spendedTime: Int var recipe: String }. Peux tu me donner la recette de "
-        let mealsNameList: [String] = createMealsNameList()
+        DispatchQueue.main.async {
+            self.isLoading = true
+        }
+            let prompt1 = "Voici mon modèle d'ingredients en swift : struct Item: Identifiable, Comparable, Hashable, Codable { var id: Int var category: Categories var name: String }. Voici mon modèle d'ItemAndQtty en swift : struct ItemAndQtty: Codable, Identifiable { var id: String var item: Item var quantity: Int } Le type Categories est une enum : enum Categories: CaseIterable, Codable { case legumes, fruits, strachyFoods, proteins, seasonning, allergies, cookingTools }. La variable 'category' doit être écrit de la forme .nomdelacategorie. Voici mon modèle de menu en swift : struct Meal: Codable, Identifiable { var id: String var name: String var itemsAndQ: [ItemAndQtty] var price: Int var spendedTime: Int var recipe: String }. Peux tu me donner la recette de "
+            let mealsNameList: [String] = createMealsNameList()
+            currentUserTags = [:]
+            
+            var user = currentUser
+            user?.proposedMeals = []
+            user?.favoriteMeals = []
+            if self.currentUser != nil {
+                self.updateCurrentUserInfoInDB(user: user ?? User(firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, proposedMeals: [], favoriteMeals: []))
+            }
         
         for i in 0..<mealsNameList.count {
             let response = processPrompt(prompt: "\(prompt1) \(mealsNameList[i]) en utilisant le modèle de menus que je t'ai donné et en renvoyant une réponse au format JSON et en donnant des id unique et distincts constitués de minimum 20 caractères et contenant au moins une majuscule, un chiffre et un caractère spécial à chaque menus crées ?")
                 
             let meal = self.jsonTest(jsonString: response) ?? Meal(id: "dd", name: "gagag", itemsAndQ: [ItemAndQtty(id: "e", item: Item(id: 88, category: "", name: "Carottes"), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 5, category: "", name: "Carottes"), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 0, category: "", name: "Carottes"), quantity: 200)], price: 0, spendedTime: 0, recipe: "")
             if meal.id != "dd" {
+                self.currentUserTags[meal] = false
                 self.currentUser?.proposedMeals.append(meal)
+                if currentUser != nil {
+                    self.updateCurrentUserInfoInDB(user: currentUser ?? User(firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, proposedMeals: [], favoriteMeals: []))
+                }
                 print("append")
             }
             print(meal.name)
@@ -684,9 +700,7 @@ class BigModel: ObservableObject {
         }
         print("done")
         
-        if currentUser != nil {
-            self.updateCurrentUserInfoInDB(user: currentUser ?? User(firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, proposedMeals: [], favoriteMeals: []))
-        }
+        
     }
     
     

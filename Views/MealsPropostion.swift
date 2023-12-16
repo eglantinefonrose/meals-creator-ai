@@ -44,8 +44,7 @@ struct MealsPropostion: View {
                     
                     ScrollView {
                         VStack(alignment: .leading, spacing: 10) {
-                            ForEach(tags.keys.sorted(), id: \.self) { item in
-                                                                
+                            ForEach(bigModel.currentUserTags.keys.sorted(), id: \.self) { item in
                                 MealsViewModel(bigModel: BigModel.shared, item: item, selected: self.binding(for: item))
                                 Rectangle().fill(Color.navyBlue).frame(height: 1)
                                 
@@ -72,17 +71,24 @@ struct MealsPropostion: View {
                 Rectangle()
                     .frame(height: 60)
                     .foregroundStyle(Color.navyBlue)
-                Text("See favourites")
+                Text("Generate new meals")
                     .foregroundStyle(Color.white)
                     .onTapGesture {
-                        bigModel.currentView = .FavoriteMealsScreen
-                        bigModel.screenHistory.append(.mealsPropositionScreen)
+                        Task {
+                            var user = bigModel.currentUser
+                            user?.proposedMeals = []
+                            user?.favoriteMeals = []
+                            if bigModel.currentUser != nil {
+                                bigModel.updateCurrentUserInfoInDB(user: user ?? BigModel.User(firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, proposedMeals: [], favoriteMeals: []))
+                            }
+                            await bigModel.createMeals()
+                        }
                     }
             }
             
         }.edgesIgnoringSafeArea(.bottom)
         .onAppear {
-            tags = bigModel.generateTags()
+            bigModel.currentUserTags = bigModel.generateTags()
         }
     }
     
@@ -108,7 +114,7 @@ struct MealsViewModel: View {
                 .foregroundStyle(Color.navyBlue)
                 .onTapGesture {
                     bigModel.currentView = .RecipeScreen
-                    bigModel.currentView.append(.mealsPropositionScreen)
+                    bigModel.$currentView.append(.mealsPropositionScreen)
                     bigModel.selectedMeal = item
                 }
             Spacer()

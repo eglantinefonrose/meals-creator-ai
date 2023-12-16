@@ -11,6 +11,7 @@ struct RecipeScreen: View {
     
     @EnvironmentObject var bigModel: BigModel
     let columns = [GridItem(.adaptive(minimum: 150))]
+    @State var selected = false
     
     var body: some View {
         
@@ -22,9 +23,26 @@ struct RecipeScreen: View {
                   
                   BackModel(color: Color.navyBlue, view: .mealsPropositionScreen)
                   
-                  Text(bigModel.selectedMeal.name.uppercased())
-                      .foregroundStyle(Color.navyBlue)
-                      .font(.system(size: 70))
+                     HStack {
+                         Text(bigModel.selectedMeal.name.uppercased())
+                          .foregroundStyle(Color.navyBlue)
+                          .font(.system(size: 70))
+                         Spacer()
+                         Image(systemName: selected ? "heart.fill" : "heart")
+                             .foregroundColor(.navyBlue)
+                             .onTapGesture {
+                                 selected.toggle()
+                                 if isMealInList(meal: bigModel.selectedMeal) && selected {
+                                     addToFavourite(item: bigModel.selectedMeal)
+                                 }
+                                 if !selected {
+                                     var user = bigModel.currentUser
+                                     let mealsList = user?.favoriteMeals ?? []
+                                     user?.favoriteMeals = bigModel.removeMealFromFavouriteMeals(meal: bigModel.selectedMeal, mealsList: mealsList)
+                                     bigModel.updateCurrentUserInfoInDB(user: user ?? BigModel.User(firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, proposedMeals: [], favoriteMeals: []))
+                                 }
+                             }
+                     }
                      
                      ScrollView {
                          
@@ -106,7 +124,23 @@ struct RecipeScreen: View {
              }
              
          }.edgesIgnoringSafeArea(.bottom)
+        .onAppear {
+            if isMealInList(meal: bigModel.selectedMeal) {
+                selected = true
+            }
+        }
      }
+    
+    private func addToFavourite(item: BigModel.Meal) {
+        var user = bigModel.currentUser
+        user?.favoriteMeals.append(item)
+        bigModel.updateCurrentUserInfoInDB(user: user ?? BigModel.User(firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, proposedMeals: [], favoriteMeals: []))
+    }
+    
+    private func isMealInList(meal: BigModel.Meal) -> Bool {
+        return ((bigModel.currentUser?.favoriteMeals.contains { $0.id == meal.id }) != nil)
+    }
+    
 }
 
 struct RecipeScreen_Previews: PreviewProvider {
