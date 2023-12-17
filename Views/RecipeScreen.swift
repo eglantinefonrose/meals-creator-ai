@@ -138,7 +138,7 @@ struct RecipeScreen: View {
     }
     
     private func isMealInList(meal: BigModel.Meal) -> Bool {
-        return ((bigModel.currentUser?.favoriteMeals.contains { $0.id == meal.id }) != nil)
+        return bigModel.currentUser!.favoriteMeals.contains { $0.name == meal.name }
     }
     
 }

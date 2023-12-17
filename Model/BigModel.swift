@@ -662,6 +662,7 @@ class BigModel: ObservableObject {
     
     
     @Published var currentUserTags: [Meal: Bool] = [:]
+    @Published var didPreferencesChanged = false
     
     func createMeals() async {
         
@@ -672,12 +673,12 @@ class BigModel: ObservableObject {
             let mealsNameList: [String] = createMealsNameList()
             currentUserTags = [:]
             
-            var user = currentUser
+            /*var user = currentUser
             user?.proposedMeals = []
             user?.favoriteMeals = []
             if self.currentUser != nil {
                 self.updateCurrentUserInfoInDB(user: user ?? User(firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, proposedMeals: [], favoriteMeals: []))
-            }
+            }*/
         
         for i in 0..<mealsNameList.count {
             let response = processPrompt(prompt: "\(prompt1) \(mealsNameList[i]) en utilisant le modèle de menus que je t'ai donné et en renvoyant une réponse au format JSON et en donnant des id unique et distincts constitués de minimum 20 caractères et contenant au moins une majuscule, un chiffre et un caractère spécial à chaque menus crées ?")

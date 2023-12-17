@@ -90,12 +90,24 @@ struct MealsPropostion: View {
         .onAppear {
             bigModel.currentUserTags = bigModel.generateTags()
         }
+        .alert(isPresented: $bigModel.didPreferencesChanged) {
+            Alert(
+                title: Text("You changed your tastes, do you want to regenerate meals ?"),
+                primaryButton: .destructive(Text("Yes")) {
+                    bigModel.didPreferencesChanged = false
+                    Task {
+                        await bigModel.createMeals()
+                    }
+                },
+                secondaryButton: .destructive(Text("No"))
+            )
+        }
     }
     
     private func binding(for key: BigModel.Meal) -> Binding<Bool> {
         return .init(
-            get: { self.tags[key, default: false] },
-            set: { self.tags[key] = $0 })
+            get: { bigModel.currentUserTags[key, default: false] },
+            set: { bigModel.currentUserTags[key] = $0 })
     }
 
 }
@@ -114,7 +126,7 @@ struct MealsViewModel: View {
                 .foregroundStyle(Color.navyBlue)
                 .onTapGesture {
                     bigModel.currentView = .RecipeScreen
-                    bigModel.$currentView.append(.mealsPropositionScreen)
+                    bigModel.screenHistory.append(.mealsPropositionScreen)
                     bigModel.selectedMeal = item
                 }
             Spacer()

@@ -53,7 +53,7 @@ struct PreferenceView: View {
                             var user = bigModel.currentUser
                             
                             if bigModel.screenHistory.last == .TastesView {
-                                bigModel.currentView = .TastesView
+                                bigModel.currentView = .UserView
                                 bigModel.screenHistory.append(bigModel.categoryToScreenName(categorie: categorie))
                             } else {
                                 bigModel.currentView = nextScreenName
@@ -84,6 +84,7 @@ struct PreferenceView: View {
 
 struct TagButton: View {
     
+    @EnvironmentObject var bigModel: BigModel
     @Binding var selected: Bool
     var txt: String
     
@@ -97,6 +98,7 @@ struct TagButton: View {
                 .foregroundColor(.white)
         }.onTapGesture {
             self.selected.toggle()
+            bigModel.didPreferencesChanged = true
         }
     }
 
