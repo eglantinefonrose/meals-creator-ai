@@ -55,7 +55,7 @@ class BigModel: ObservableObject {
         var id: String
         var name: String
         var itemsAndQ: [ItemAndQtty]
-        var price: Int
+        var price: Float
         var spendedTime: Int
         var recipe: String
         
@@ -308,7 +308,7 @@ class BigModel: ObservableObject {
                         self.currentUser = try document.data(as: User.self)
                         self.currentView = .UserView
                         self.screenHistory.append(.signInView)
-                        print("Document data: \(String(describing: document.data()))")
+                        //print("Document data: \(String(describing: document.data()))")
                     }
                     catch {
                       print(error)
@@ -681,7 +681,7 @@ class BigModel: ObservableObject {
             }*/
         
         for i in 0..<mealsNameList.count {
-            let response = processPrompt(prompt: "\(prompt1) \(mealsNameList[i]) en utilisant le modèle de menus que je t'ai donné et en renvoyant une réponse au format JSON et en donnant des id unique et distincts constitués de minimum 20 caractères et contenant au moins une majuscule, un chiffre et un caractère spécial à chaque menus crées ?")
+            let response = processPrompt(prompt: "\(prompt1) \(mealsNameList[i]) en utilisant le modèle de menus que je t'ai donné et en renvoyant une réponse au format JSON et en écrivant les recipes sans mettre de retour à la ligne et donnant des id unique et distincts constitués de minimum 20 caractères et contenant au moins une majuscule en utilisant uniquement des caractères utf8, un chiffre et un caractère spécial à chaque menus crées ?")
                 
             let meal = self.jsonTest(jsonString: response) ?? Meal(id: "dd", name: "gagag", itemsAndQ: [ItemAndQtty(id: "e", item: Item(id: 88, category: "", name: "Carottes"), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 5, category: "", name: "Carottes"), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 0, category: "", name: "Carottes"), quantity: 200)], price: 0, spendedTime: 0, recipe: "")
             if meal.id != "dd" {
@@ -690,7 +690,7 @@ class BigModel: ObservableObject {
                 if currentUser != nil {
                     self.updateCurrentUserInfoInDB(user: currentUser ?? User(firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, proposedMeals: [], favoriteMeals: []))
                 }
-                print("append")
+                //print("append")
             }
             print(meal.name)
             
@@ -726,14 +726,16 @@ class BigModel: ObservableObject {
     func jsonTest(jsonString: String) -> Meal? {
         if let jsonData = jsonString.data(using: .utf8) {
             do {
-                //print(jsonString)
+                print(jsonString)
                 let meal = try JSONDecoder().decode(Meal.self, from: jsonData)
                 return meal
             } catch {
+                print(jsonString)
                 print("Erreur lors de la désérialisation JSON :", error)
                 return nil
             }
         } else {
+            print(jsonString)
             print("Erreur lors de la conversion de la chaîne en données JSON")
             return nil
         }
