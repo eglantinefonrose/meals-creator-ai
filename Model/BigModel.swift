@@ -24,7 +24,7 @@ class BigModel: ObservableObject {
     @Published var screenHistory: [ViewEnum] = []
     
     struct User: Identifiable, Codable {
-        @DocumentID var id: String?
+        var id: String
         var firstName: String
         var lastName: String
         var items: [Item]
@@ -291,7 +291,7 @@ class BigModel: ObservableObject {
             guard let id = self.auth.currentUser?.uid else { return }
             self.currentUser = User(firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, proposedMeals: [], favoriteMeals: [])
             
-            let newUser = User(firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, proposedMeals: [], favoriteMeals: [])
+            let newUser = User(id: id, firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, proposedMeals: [], favoriteMeals: [])
             
             let docRef = self.db.collection("Users").document(id)
 
@@ -301,8 +301,7 @@ class BigModel: ObservableObject {
                     print("Error getting document: \(error.localizedDescription)")
                 }
                 else {
-                    if let document = document
-                    , document.exists
+                    if let document = document, document.exists
                     {
                     do {
                         self.currentUser = try document.data(as: User.self)
@@ -314,12 +313,30 @@ class BigModel: ObservableObject {
                       print(error)
                     }
                   } else {
-                      do {
-                          let _ = try self.db.collection("Users").addDocument(from: newUser)
+                      /*do {
+                          let newDocRef : DocumentReference = try self.db.collection("Users").addDocument(from: newUser)
+                          newDocRef.getDocument { (document, error) in
+                              if let error = error as NSError? {
+                                  print("Error getting document: \(error.localizedDescription)")
+                              }
+                              else {
+                                  if let document = document {
+                                      do {
+                                          self.currentUser = try document.data(as: User.self)
+                                          self.currentView = .UserView
+                                          self.screenHistory.append(.signInView)
+                                          //print("Document data: \(String(describing: document.data()))")
+                                      }
+                                      catch {
+                                        print(error)
+                                      }
+                                  }
+                              }
+                          }
                       }
                       catch {
                           print(error)
-                      }
+                      }*/
                   }
                 }
             }
@@ -327,7 +344,7 @@ class BigModel: ObservableObject {
         }
     }
     
-    func updateUserInfo() {
+    func fetchUserInfoFromDB() {
         
         guard let id = self.auth.currentUser?.uid else { return }
         let docRef = self.db.collection("Users").document(id)
@@ -389,19 +406,21 @@ class BigModel: ObservableObject {
         }
     }
     
-    func updateCurrentUserInfoInDB(user: User) {
-        
-        guard let id = self.auth.currentUser?.uid else { return }
-        
+    func storeCurrentUserInfoIntoDB(user: User) {
+                
         if currentUser != nil {
             do {
-                let _ = try self.db.collection("Users").document(id).setData(from: user)
-                updateUserInfo()
+                // Update the UserInfo inside the Firebase DB
+                let _currentUser: User = currentUser!
+                let currentUserId: String = _currentUser.id
+                let _ = try self.db.collection("Users").document(currentUserId).setData(from: user)
+                // Refresh the BigModel from the DB
+                fetchUserInfoFromDB()
             } catch {
-                
+                print("ERR001[updateCurrentUserInfoInDB]=\(error)")
             }
         } else {
-            
+            print("ERR002[updateCurrentUserInfoInDB]=No currentUser")
         }
         
     }

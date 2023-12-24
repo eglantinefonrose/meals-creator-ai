@@ -90,7 +90,7 @@ struct TimeScreen: View {
                             .onTapGesture {
                                 var user = bigModel.currentUser
                                 user?.spendedTime = time
-                                bigModel.updateCurrentUserInfoInDB(user: user!)
+                                bigModel.storeCurrentUserInfoIntoDB(user: user!)
                                 Task {
                                     await bigModel.createMeals()
                                 }

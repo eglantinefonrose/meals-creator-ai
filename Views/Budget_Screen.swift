@@ -142,7 +142,7 @@ struct Budget_Screen: View {
                             .onTapGesture {
                                 var user = bigModel.currentUser
                                 user?.budget = budget
-                                bigModel.updateCurrentUserInfoInDB(user: user!)
+                                bigModel.storeCurrentUserInfoIntoDB(user: user!)
                                 
                                 if bigModel.screenHistory.last == .TastesView {
                                     bigModel.currentView = .TastesView

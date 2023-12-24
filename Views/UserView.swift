@@ -69,8 +69,10 @@ struct UserView: View {
                                 
                                 if isEditModeOn {
                                     //bigModel.updateUserNames(firstName: newFirstName, lastName: newLastName)
-                                    let user = BigModel.User(firstName: newFirstName, lastName: newLastName, items: bigModel.currentUser?.items ?? [], tools: [], budget: bigModel.currentUser?.budget ?? 0, spendedTime: bigModel.currentUser?.spendedTime ?? 0, proposedMeals: bigModel.currentUser?.proposedMeals ?? [], favoriteMeals: bigModel.currentUser?.favoriteMeals ?? [])
-                                    bigModel.updateCurrentUserInfoInDB(user: user)
+                                    var user = bigModel.currentUser
+                                    user?.firstName = newFirstName
+                                    user?.lastName = newLastName
+                                    bigModel.storeCurrentUserInfoIntoDB(user: user ?? BigModel.User(id: "", firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, proposedMeals: [], favoriteMeals: []))
                                     firstName = newFirstName
                                     lastName = newLastName
                                     isEditModeOn.toggle()

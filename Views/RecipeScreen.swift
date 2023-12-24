@@ -39,7 +39,7 @@ struct RecipeScreen: View {
                                      var user = bigModel.currentUser
                                      let mealsList = user?.favoriteMeals ?? []
                                      user?.favoriteMeals = bigModel.removeMealFromFavouriteMeals(meal: bigModel.selectedMeal, mealsList: mealsList)
-                                     bigModel.updateCurrentUserInfoInDB(user: user ?? BigModel.User(firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, proposedMeals: [], favoriteMeals: []))
+                                     bigModel.storeCurrentUserInfoInDB(user: user ?? BigModel.User(firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, proposedMeals: [], favoriteMeals: []))
                                  }
                              }
                      }
@@ -134,7 +134,7 @@ struct RecipeScreen: View {
     private func addToFavourite(item: BigModel.Meal) {
         var user = bigModel.currentUser
         user?.favoriteMeals.append(item)
-        bigModel.updateCurrentUserInfoInDB(user: user ?? BigModel.User(firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, proposedMeals: [], favoriteMeals: []))
+        bigModel.storeCurrentUserInfoInDB(user: user ?? BigModel.User(firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, proposedMeals: [], favoriteMeals: []))
     }
     
     private func isMealInList(meal: BigModel.Meal) -> Bool {
