@@ -18,21 +18,23 @@ import KeychainAccess
 
 class BigModel: ObservableObject {
     
-    public static var shared = BigModel(shouldInjectMockedData: true)
+    public static var shared = BigModel()
     
     @Published var currentView: ViewEnum = .signInView
     @Published var screenHistory: [ViewEnum] = []
     
     struct User: Identifiable, Codable {
-        var id: String
+        @DocumentID var id: String?
         var firstName: String
         var lastName: String
         var items: [Item]
         var tools: [Item]
         var budget: Int
         var spendedTime: Int
+        var numberOfPerson: Int
         var proposedMeals: [Meal]
         var favoriteMeals: [Meal]
+        var dislikedMeals: [Meal]
     }
     
     struct Item: Identifiable, Comparable, Hashable, Codable {
@@ -68,7 +70,7 @@ class BigModel: ObservableObject {
     }
             
     
-    @Published var currentUser: User?
+    @Published var currentUser: User = User(firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, numberOfPerson: 0, proposedMeals: [], favoriteMeals: [], dislikedMeals: [])
     
     let items = [Item(id: 0, category: "legumes", name: "Carotte"), Item(id: 1, category: "legumes", name: "Poireaux"),Item(id: 2, category: "legumes", name: "Courgette"),Item(id: 3, category: "legumes", name: "Aubergine"),Item(id: 4, category: "legumes", name: "Brocolli"),
                  Item(id: 5, category: "fruits", name: "Pomme"), Item(id: 6, category: "fruits", name: "Poire"),
@@ -81,9 +83,9 @@ class BigModel: ObservableObject {
     
     func isInTheList(item: Item) -> Bool {
         
-        if (self.currentUser?.items.count) != 0 {
-            for i in (0...(self.currentUser?.items.count ?? 0)-1) {
-                if currentUser?.items[i].id == item.id {
+        if (self.currentUser.items.count) != 0 {
+            for i in (0...(self.currentUser.items.count)-1) {
+                if currentUser.items[i].id == item.id {
                     return true
                 } else {
                     
@@ -105,7 +107,7 @@ class BigModel: ObservableObject {
     
     func compareLists() -> [Item: Bool] {
         var resultDictionary = [Item: Bool]()
-        let list1 = currentUser?.items ?? []
+        let list1 = currentUser.items
         
         // Crée un ensemble des noms d'items dans la liste1 pour une recherche plus efficace
         let setList1 = Set(list1.map { $0 })
@@ -133,10 +135,10 @@ class BigModel: ObservableObject {
     func extractItemsPerCategorie(categorie: String) -> [Item] {
         var itemList: [Item] = []
         
-        for i in (0...(self.currentUser?.items.count ?? 0)-1) {
-            if (self.currentUser?.items.count ?? 0) > 1 {
-                if self.currentUser?.items[i].category == categorie {
-                    itemList.append(self.currentUser?.items[i] ?? Item(id: 0, category: "legumes", name: ""))
+        for i in (0...(self.currentUser.items.count)-1) {
+            if (self.currentUser.items.count) > 1 {
+                if self.currentUser.items[i].category == categorie {
+                    itemList.append(self.currentUser.items[i])
                 } else {
                     
                 }
@@ -157,9 +159,9 @@ class BigModel: ObservableObject {
         }
         
         if categorie == "tools" {
-            array = array + (currentUser?.tools ?? [])
+            array = array + (currentUser.tools)
         } else {
-            array = array + (currentUser?.items ?? [])
+            array = array + (currentUser.items)
         }
         
         return Array(Set(array))
@@ -167,8 +169,8 @@ class BigModel: ObservableObject {
     
     func generateTags() -> [Meal: Bool] {
         var tagsDictionary = [Meal: Bool]()
-        let meals = self.currentUser?.proposedMeals ?? []
-        let favoriteMeals = self.currentUser?.favoriteMeals ?? []
+        let meals = self.currentUser.proposedMeals
+        let favoriteMeals = self.currentUser.favoriteMeals
 
         for meal in meals {
             tagsDictionary[meal] = favoriteMeals.contains { $0.id == meal.id }
@@ -289,9 +291,9 @@ class BigModel: ObservableObject {
             print("Logged In Success")
             
             guard let id = self.auth.currentUser?.uid else { return }
-            self.currentUser = User(firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, proposedMeals: [], favoriteMeals: [])
+            self.currentUser = User(firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, numberOfPerson: 0, proposedMeals: [], favoriteMeals: [], dislikedMeals: [])
             
-            let newUser = User(id: id, firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, proposedMeals: [], favoriteMeals: [])
+            let newUser = User(id: id, firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, numberOfPerson: 0, proposedMeals: [], favoriteMeals: [], dislikedMeals: [])
             
             let docRef = self.db.collection("Users").document(id)
 
@@ -313,6 +315,9 @@ class BigModel: ObservableObject {
                       print(error)
                     }
                   } else {
+                      //self.currentUser = try document.data(as: User.self)
+                      self.currentView = .UserView
+                      self.screenHistory.append(.signInView)
                       /*do {
                           let newDocRef : DocumentReference = try self.db.collection("Users").addDocument(from: newUser)
                           newDocRef.getDocument { (document, error) in
@@ -348,7 +353,7 @@ class BigModel: ObservableObject {
         
         guard let id = self.auth.currentUser?.uid else { return }
         let docRef = self.db.collection("Users").document(id)
-        let newUser = User(id: id, firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, proposedMeals: [], favoriteMeals: [])
+        let newUser = User(id: id, firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, numberOfPerson: 0, proposedMeals: [], favoriteMeals: [], dislikedMeals: [])
         
         docRef.getDocument { (document, error) in
             
@@ -379,7 +384,7 @@ class BigModel: ObservableObject {
         
         guard let id = self.auth.currentUser?.uid else { return }
         let docRef = self.db.collection("Users").document(id)
-        let newUser = User(id: id, firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, proposedMeals: [], favoriteMeals: [])
+        let newUser = User(id: id, firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, numberOfPerson: 0, proposedMeals: [], favoriteMeals: [], dislikedMeals: [])
         
         docRef.getDocument { (document, error) in
             
@@ -408,31 +413,28 @@ class BigModel: ObservableObject {
     
     func storeCurrentUserInfoIntoDB(user: User) {
                 
-        if currentUser != nil {
-            do {
-                // Update the UserInfo inside the Firebase DB
-                let _currentUser: User = currentUser!
-                let currentUserId: String = _currentUser.id
-                let _ = try self.db.collection("Users").document(currentUserId).setData(from: user)
-                // Refresh the BigModel from the DB
-                fetchUserInfoFromDB()
-            } catch {
-                print("ERR001[updateCurrentUserInfoInDB]=\(error)")
-            }
-        } else {
-            print("ERR002[updateCurrentUserInfoInDB]=No currentUser")
+        do {
+            // Update the UserInfo inside the Firebase DB
+            guard let id = self.auth.currentUser?.uid else { return }
+            let _ = try self.db.collection("Users").document(id).setData(from: user)
+            // Refresh the BigModel from the DB
+            fetchUserInfoFromDB()
+        } catch {
+            print("ERR001[updateCurrentUserInfoInDB]=\(error)")
         }
         
     }
     
-    func removeMealFromFavouriteMeals(meal: Meal, mealsList: [Meal]) -> [Meal] {
+    @Published var dislikedMeal: Meal = Meal(id: "", name: "", itemsAndQ: [], price: 0, spendedTime: 0, recipe: "")
+    
+    func removeMealFromList(meal: Meal, mealsList: [Meal]) -> [Meal] {
         
         var newMealsList = mealsList
         
         if let index = mealsList.firstIndex(where: { $0.id == meal.id }) {
             newMealsList.remove(at: index)
-            return newMealsList
             print("Element retiré avec succès")
+            return newMealsList
         } else {
             print("Element non trouvé dans la liste")
             return newMealsList
@@ -441,9 +443,9 @@ class BigModel: ObservableObject {
     
     func updateUserNames(firstName: String, lastName: String) {
         
-        guard let id = self.currentUser?.id else { return }
+        guard let id = self.auth.currentUser?.uid else { return }
         let docRef = self.db.collection("Users").document(id)
-        let user = User(id: id, firstName: firstName, lastName: lastName, items: self.currentUser?.items ?? [], tools: [], budget: self.currentUser?.budget ?? 0, spendedTime: self.currentUser?.spendedTime ?? 0, proposedMeals: self.currentUser?.proposedMeals ?? [], favoriteMeals: self.currentUser?.favoriteMeals ?? [])
+        let user = User(id: id, firstName: firstName, lastName: lastName, items: self.currentUser.items, tools: [], budget: self.currentUser.budget, spendedTime: self.currentUser.spendedTime, numberOfPerson: 0, proposedMeals: self.currentUser.proposedMeals, favoriteMeals: self.currentUser.favoriteMeals, dislikedMeals: self.currentUser.dislikedMeals)
         
         docRef.getDocument { (document, error) in
             do {
@@ -584,7 +586,7 @@ class BigModel: ObservableObject {
     
     let openAIURL = URL(string: "https://api.openai.com/v1/engines/text-davinci-003/completions")
     var openAIKey: String {
-        return getSecretKey() ?? "nil"
+        return getSecretKey() ?? "GrosMinetnil"
     }
     
     private func executeRequest(request: URLRequest, withSessionConfig sessionConfig: URLSessionConfiguration?) -> Data? {
@@ -646,7 +648,10 @@ class BigModel: ObservableObject {
                     //MARK: I know there's an error below, but we'll fix it later on in the article, so make sure not to change anything
                     ///
                     let responseHandler = OpenAIResponseHandler()
-                    let jsonString = (responseHandler.decodeJson(jsonString: jsonStr)?.choices[0].text)!
+                    
+                    print("jsonStr : [\(jsonStr)]")
+                    let jsonString = (responseHandler.decodeJson(jsonString: jsonStr)!.choices[0].text)
+                    
                     return (jsonString)
                     
                 }
@@ -661,10 +666,10 @@ class BigModel: ObservableObject {
     func createMealsNameList() -> [String] {
         
         let prompt1 = "Voici mon modèle d'ingredients en swift : struct Item: Identifiable, Comparable, Hashable, Codable { var id: Int var category: Categories var name: String }. Voici mon modèle d'ItemAndQtty en swift : struct ItemAndQtty: Codable, Identifiable { var id: String var item: Item var quantity: Int } Le type Categories est une enum : enum Categories: CaseIterable, Codable { case legumes, fruits, strachyFoods, proteins, seasonning, allergies, cookingTools }. La variable 'category' doit être écrit de la forme .nomdelacategorie. Voici mon modèle de menu en swift : struct Meal: Codable, Identifiable { var id: String var name: String var itemsAndQ: [ItemAndQtty] var price: Int var spendedTime: Int var recipe: String }. Peux tu me donner la recette de "
-        var meals: [Meal] = []
+        //var meals: [Meal] = []
         var mealsNameList: [String] = []
         
-        let response = processPrompt(prompt: "Peux tu me proposer une liste de 5 plats pour une personne qui aime \(listToString(list: self.currentUser?.items ?? [])) et qui a \(listToString(list: self.currentUser?.tools ?? [])). Donne moi des meals avec des ID distincts et différents entre eux pour chaque meals. Donne moi une réponse sans retour à la ligne, en séparant uniquement les différents plats par des tirest (ex: repas1 - repas2 - repas3 etc...).")
+        let response = processPrompt(prompt: "Peux tu me proposer une liste de 5 plats pour une personne qui aime \(listToString(list: self.currentUser.items)) et qui a \(listToString(list: self.currentUser.tools)). Cette personne a un budget de \(currentUser.budget), veut y consacrer maximum \(currentUser.spendedTime) et pour \(currentUser.numberOfPerson). Donne moi des meals avec des ID distincts et différents entre eux pour chaque meals. Donne moi une réponse sans retour à la ligne, en séparant uniquement les différents plats par des tirest (ex: repas1 - repas2 - repas3 etc...).")
         mealsNameList = splitStringWithDash(inputString: response)
         
         //let response2 = processPrompt(prompt: "\(prompt1) \(mealsNameList[0])")
@@ -681,23 +686,23 @@ class BigModel: ObservableObject {
     
     
     @Published var currentUserTags: [Meal: Bool] = [:]
-    @Published var didPreferencesChanged = false
+    @Published var didPreferencesChanged: Bool = false
     
     func createMeals() async {
         
         DispatchQueue.main.async {
             self.isLoading = true
         }
-            let prompt1 = "Voici mon modèle d'ingredients en swift : struct Item: Identifiable, Comparable, Hashable, Codable { var id: Int var category: Categories var name: String }. Voici mon modèle d'ItemAndQtty en swift : struct ItemAndQtty: Codable, Identifiable { var id: String var item: Item var quantity: Int } Le type Categories est une enum : enum Categories: CaseIterable, Codable { case legumes, fruits, strachyFoods, proteins, seasonning, allergies, cookingTools }. La variable 'category' doit être écrit de la forme .nomdelacategorie. Voici mon modèle de menu en swift : struct Meal: Codable, Identifiable { var id: String var name: String var itemsAndQ: [ItemAndQtty] var price: Int var spendedTime: Int var recipe: String }. Peux tu me donner la recette de "
-            let mealsNameList: [String] = createMealsNameList()
-            currentUserTags = [:]
-            
-            /*var user = currentUser
-            user?.proposedMeals = []
-            user?.favoriteMeals = []
-            if self.currentUser != nil {
-                self.updateCurrentUserInfoInDB(user: user ?? User(firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, proposedMeals: [], favoriteMeals: []))
-            }*/
+        let prompt1 = "Voici mon modèle d'ingredients en swift : struct Item: Identifiable, Comparable, Hashable, Codable { var id: Int var category: Categories var name: String }. Voici mon modèle d'ItemAndQtty en swift : struct ItemAndQtty: Codable, Identifiable { var id: String var item: Item var quantity: Int } Le type Categories est une enum : enum Categories: CaseIterable, Codable { case legumes, fruits, strachyFoods, proteins, seasonning, allergies, cookingTools }. La variable 'category' doit être écrit de la forme .nomdelacategorie. Voici mon modèle de menu en swift : struct Meal: Codable, Identifiable { var id: String var name: String var itemsAndQ: [ItemAndQtty] var price: Int var spendedTime: Int var recipe: String }. Peux tu me donner la recette de "
+        let mealsNameList: [String] = createMealsNameList()
+        currentUserTags = [:]
+        
+        /*var user = currentUser
+        user?.proposedMeals = []
+        user?.favoriteMeals = []
+        if self.currentUser != nil {
+            self.updateCurrentUserInfoInDB(user: user ?? User(firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, proposedMeals: [], favoriteMeals: []))
+        }*/
         
         for i in 0..<mealsNameList.count {
             let response = processPrompt(prompt: "\(prompt1) \(mealsNameList[i]) en utilisant le modèle de menus que je t'ai donné et en renvoyant une réponse au format JSON et en écrivant les recipes sans mettre de retour à la ligne et donnant des id unique et distincts constitués de minimum 20 caractères et contenant au moins une majuscule en utilisant uniquement des caractères utf8, un chiffre et un caractère spécial à chaque menus crées ?")
@@ -705,10 +710,9 @@ class BigModel: ObservableObject {
             let meal = self.jsonTest(jsonString: response) ?? Meal(id: "dd", name: "gagag", itemsAndQ: [ItemAndQtty(id: "e", item: Item(id: 88, category: "", name: "Carottes"), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 5, category: "", name: "Carottes"), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 0, category: "", name: "Carottes"), quantity: 200)], price: 0, spendedTime: 0, recipe: "")
             if meal.id != "dd" {
                 self.currentUserTags[meal] = false
-                self.currentUser?.proposedMeals.append(meal)
-                if currentUser != nil {
-                    self.updateCurrentUserInfoInDB(user: currentUser ?? User(firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, proposedMeals: [], favoriteMeals: []))
-                }
+                self.currentUser.proposedMeals.append(meal)
+                self.storeCurrentUserInfoIntoDB(user: currentUser)
+                
                 //print("append")
             }
             print(meal.name)
@@ -775,8 +779,8 @@ class BigModel: ObservableObject {
     
     func toolsStringList() -> String {
         var itemsString: String = ""
-        for i in 0...(currentUser?.tools.count ?? 0) {
-            itemsString += "\(String(describing: currentUser?.tools[i].name)), "
+        for i in 0...(currentUser.tools.count) {
+            itemsString += "\(String(describing: currentUser.tools[i].name)), "
         }
         return itemsString
     }
@@ -788,12 +792,21 @@ class BigModel: ObservableObject {
     //
     
     init() {
-        print("Constructor BigModel - default")
+        
     }
     
     init(shouldInjectMockedData: Bool) {
-        self.currentUser = User(firstName: "Malo", lastName: "Fonrose", items: [], tools: [], budget: 0, spendedTime: 0, proposedMeals: [BigModel.Meal(id: "ktuyffg", name: "Brandade", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""), BigModel.Meal(id: "yjfgj", name: "Brandade", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""), BigModel.Meal(id: "sdfgjvjkuhu", name: "Brandade", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""), BigModel.Meal(id: "lyughompij", name: "Brandade", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""), BigModel.Meal(id: "ttttt", name: "Brandade", itemsAndQ: [], price: 0, spendedTime: 0, recipe: "")], favoriteMeals: [])
-        self.currentView = .signInView
+        self.currentUser = User(firstName: "Malo", lastName: "Fonrose",
+                                items: [/*Item(id: 0, category: "Legumes", name: "Poireaux")*/],
+                                tools: [/*Item(id: 0, category: "Tools", name: "Casserolle")*/],
+                                budget: 90, spendedTime: 9, numberOfPerson: 4,
+                                proposedMeals: [/*BigModel.Meal(id: "ktuyffg", name: "Andouillette", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),
+                                                BigModel.Meal(id: "yjfgj", name: "Brandade", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),
+                                                BigModel.Meal(id: "sdfgjvjkuhu", name: "Cassoulet", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),
+                                                BigModel.Meal(id: "lyughompij", name: "Couscous", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),
+                                                BigModel.Meal(id: "ttttt", name: "Tarte à la pomme", itemsAndQ: [], price: 0, spendedTime: 0, recipe: "")*/],
+                                favoriteMeals: [], dislikedMeals: [])
+        self.currentView = .UserView
     }
     
 }
@@ -805,7 +818,7 @@ extension View {
             return .init()
         }
         guard let root = screen.windows.first?.rootViewController else {
-            return.init()
+            return .init()
         }
         return root
     }

@@ -33,13 +33,17 @@ struct RecipeScreen: View {
                              .onTapGesture {
                                  selected.toggle()
                                  if isMealInList(meal: bigModel.selectedMeal) && selected {
-                                     addToFavourite(item: bigModel.selectedMeal)
+                                     Task {
+                                         await addToFavourite(item: bigModel.selectedMeal)
+                                     }
                                  }
                                  if !selected {
-                                     var user = bigModel.currentUser
-                                     let mealsList = user?.favoriteMeals ?? []
-                                     user?.favoriteMeals = bigModel.removeMealFromFavouriteMeals(meal: bigModel.selectedMeal, mealsList: mealsList)
-                                     bigModel.storeCurrentUserInfoInDB(user: user ?? BigModel.User(firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, proposedMeals: [], favoriteMeals: []))
+                                     Task {
+                                         var user = bigModel.currentUser
+                                         let mealsList = user.favoriteMeals
+                                         user.favoriteMeals = bigModel.removeMealFromList(meal: bigModel.selectedMeal, mealsList: mealsList)
+                                         await bigModel.storeCurrentUserInfoIntoDB(user: user)
+                                     }
                                  }
                              }
                      }
@@ -91,7 +95,7 @@ struct RecipeScreen: View {
                                  .font(.largeTitle)
                                  .foregroundStyle(Color.navyBlue)
                              Spacer()
-                             Text("\(bigModel.selectedMeal.price)")
+                             Text(String(format: "%.1f", bigModel.selectedMeal.price))
                                  .foregroundStyle(Color.navyBlue)
                          }
                          Rectangle().fill(Color.navyBlue).frame(height: 1)
@@ -117,7 +121,7 @@ struct RecipeScreen: View {
                      Text("Add to favourite")
                          .foregroundStyle(Color.white)
                          .onTapGesture {
-                             bigModel.currentUser?.favoriteMeals.append(bigModel.selectedMeal)
+                             bigModel.currentUser.favoriteMeals.append(bigModel.selectedMeal)
                          }
                  }
                  
@@ -131,14 +135,14 @@ struct RecipeScreen: View {
         }
      }
     
-    private func addToFavourite(item: BigModel.Meal) {
+    private func addToFavourite(item: BigModel.Meal) async {
         var user = bigModel.currentUser
-        user?.favoriteMeals.append(item)
-        bigModel.storeCurrentUserInfoInDB(user: user ?? BigModel.User(firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, proposedMeals: [], favoriteMeals: []))
+        user.favoriteMeals.append(item)
+        await bigModel.storeCurrentUserInfoIntoDB(user: user)
     }
     
     private func isMealInList(meal: BigModel.Meal) -> Bool {
-        return bigModel.currentUser!.favoriteMeals.contains { $0.name == meal.name }
+        return bigModel.currentUser.favoriteMeals.contains { $0.name == meal.name }
     }
     
 }

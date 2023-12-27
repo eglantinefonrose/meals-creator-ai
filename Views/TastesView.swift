@@ -61,7 +61,7 @@ struct TastesView: View {
                         bigModel.currentView = .UserView
                         bigModel.screenHistory.append(.TastesView)
                         
-                        print(bigModel.currentUser?.items ?? 0)
+                        print(bigModel.currentUser.items)
                     }
             }
             

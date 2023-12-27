@@ -140,27 +140,29 @@ struct Budget_Screen: View {
                         Text("Validate")
                             .foregroundStyle(Color.navyBlue)
                             .onTapGesture {
-                                var user = bigModel.currentUser
-                                user?.budget = budget
-                                bigModel.storeCurrentUserInfoIntoDB(user: user!)
-                                
-                                if bigModel.screenHistory.last == .TastesView {
-                                    bigModel.currentView = .TastesView
-                                    bigModel.screenHistory.append(.budgetScreen)
-                                } else {
-                                    bigModel.currentView = .timeScreen
+                                Task {
+                                    var user = bigModel.currentUser
+                                    user.budget = budget
+                                    bigModel.storeCurrentUserInfoIntoDB(user: user)
+                                    
+                                    if bigModel.screenHistory.last == .TastesView {
+                                        bigModel.currentView = .TastesView
+                                        bigModel.screenHistory.append(.budgetScreen)
+                                    } else {
+                                        bigModel.currentView = .NumberOfPersonScreen
+                                        bigModel.screenHistory.append(.budgetScreen)
+                                    }
+                                    
+                                    bigModel.currentView = .NumberOfPersonScreen
                                     bigModel.screenHistory.append(.budgetScreen)
                                 }
-                                
-                                bigModel.currentView = .timeScreen
-                                bigModel.screenHistory.append(.budgetScreen)
                             }
                     }
                 }.edgesIgnoringSafeArea(.all)
                 
             }.edgesIgnoringSafeArea(.bottom)
         }.onAppear {
-            budget = bigModel.currentUser?.budget ?? 0
+            budget = bigModel.currentUser.budget
         }
     }
 }

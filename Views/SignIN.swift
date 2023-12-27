@@ -12,6 +12,7 @@ import FirebaseAuth
 import AuthenticationServices
 import GoogleSignIn
 import GoogleSignInSwift
+import KeychainAccess
 
 struct SignIN: View {
     
@@ -44,6 +45,10 @@ struct SignIN: View {
                 
                 Circle()
                     .foregroundStyle(Color.navyBlue)
+                    .onTapGesture {
+                        let keychain = Keychain(service: "net.proutechos.openai")
+                        keychain["key.teevity.dev001"] = "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"
+                    }
                 
                 Spacer()
                 

@@ -66,6 +66,12 @@ struct BigRootView: View {
         if bigModel.currentView == .FavoriteMealsScreen {
             FavoriteMealsScreen()
         }
+        if bigModel.currentView == .BlankFile {
+            BlankFile()
+        }
+        if bigModel.currentView == .NumberOfPersonScreen {
+            NumberOfPersonScreen()
+        }
         
     }
 }
@@ -88,4 +94,6 @@ enum ViewEnum: String {
     case UserView
     case RecipeScreen
     case FavoriteMealsScreen
+    case BlankFile
+    case NumberOfPersonScreen
 }

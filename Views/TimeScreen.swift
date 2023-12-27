@@ -27,7 +27,7 @@ struct TimeScreen: View {
                     VStack(spacing: 75) {
                         
                         VStack(alignment: .leading) {
-                            Text("SPENDED")
+                            Text("SPENT")
                                 .foregroundStyle(Color.white)
                                 .font(.largeTitle)
                             Text("time per meal")
@@ -88,18 +88,21 @@ struct TimeScreen: View {
                         Text("Validate")
                             .foregroundStyle(Color.navyBlue)
                             .onTapGesture {
-                                var user = bigModel.currentUser
-                                user?.spendedTime = time
-                                bigModel.storeCurrentUserInfoIntoDB(user: user!)
+                               
                                 Task {
-                                    await bigModel.createMeals()
-                                }
-                                if bigModel.screenHistory.last == .TastesView {
-                                    bigModel.currentView = .TastesView
-                                    bigModel.screenHistory.append(.timeScreen)
-                                } else {
-                                    bigModel.currentView = .mealsPropositionScreen
-                                    bigModel.screenHistory.append(.timeScreen)
+                                    var user = bigModel.currentUser
+                                    user.spendedTime = time
+                                    await bigModel.storeCurrentUserInfoIntoDB(user: user)
+                                    if bigModel.screenHistory.last == .UserView {
+                                        bigModel.currentView = .UserView
+                                        bigModel.screenHistory.append(.timeScreen)
+                                    } else {
+                                        Task {
+                                            await bigModel.createMeals()
+                                        }
+                                        bigModel.currentView = .mealsPropositionScreen
+                                        bigModel.screenHistory.append(.timeScreen)
+                                    }
                                 }
                                 
                             }
@@ -107,6 +110,8 @@ struct TimeScreen: View {
                 }.edgesIgnoringSafeArea(.all)
                 
             }.edgesIgnoringSafeArea(.bottom)
+        }.onAppear {
+            time = bigModel.currentUser.spendedTime
         }
     }
 }

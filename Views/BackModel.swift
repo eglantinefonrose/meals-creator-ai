@@ -26,7 +26,7 @@ struct BackModel: View {
             Image(systemName: "person.circle")
                 .foregroundStyle(color)
                 .onTapGesture {
-                    bigModel.currentView = bigModel.currentUser == nil ? .signInView : .UserView
+                    bigModel.currentView = .UserView
                     bigModel.screenHistory.append(view)
                 }
         }

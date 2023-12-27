@@ -50,19 +50,22 @@ struct PreferenceView: View {
                         .foregroundColor(.white)
                         .onTapGesture {
                             
-                            var user = bigModel.currentUser
-                            
-                            if bigModel.screenHistory.last == .TastesView {
-                                bigModel.currentView = .UserView
-                                bigModel.screenHistory.append(bigModel.categoryToScreenName(categorie: categorie))
-                            } else {
-                                bigModel.currentView = nextScreenName
+                            Task {
+                                var user = bigModel.currentUser
+                                
+                                if bigModel.screenHistory.last == .TastesView {
+                                    bigModel.currentView = .UserView
+                                    bigModel.screenHistory.append(bigModel.categoryToScreenName(categorie: categorie))
+                                } else {
+                                    bigModel.currentView = nextScreenName
+                                }
+                                
+                                user.items = bigModel.updatedSelectedItemsList(dict: tags, categorie: categorie)
+                                await bigModel.storeCurrentUserInfoIntoDB(user: user)
+                                
+                                print(bigModel.currentUser.items)
                             }
                             
-                            user?.items = bigModel.updatedSelectedItemsList(dict: tags, categorie: categorie)
-                            bigModel.storeCurrentUserInfoIntoDB(user: user!)
-                            
-                            print(bigModel.currentUser?.items ?? 0)
                         }
                 }
             }.edgesIgnoringSafeArea(.all)
@@ -98,7 +101,9 @@ struct TagButton: View {
                 .foregroundColor(.white)
         }.onTapGesture {
             self.selected.toggle()
-            bigModel.didPreferencesChanged = true
+            if bigModel.currentUser.proposedMeals != [] {
+                bigModel.didPreferencesChanged = true
+            }
         }
     }
 

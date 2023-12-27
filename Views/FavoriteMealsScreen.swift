@@ -45,7 +45,7 @@ struct FavoriteMealsScreen: View {
                     
                     ScrollView {
                         VStack(alignment: .leading, spacing: 10) {
-                            ForEach(bigModel.currentUser?.favoriteMeals ?? []) { item in
+                            ForEach(bigModel.currentUser.favoriteMeals) { item in
                                 Text(item.name)
                                     .font(.largeTitle)
                                     .foregroundStyle(Color.navyBlue)
