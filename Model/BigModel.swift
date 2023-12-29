@@ -19,6 +19,7 @@ import KeychainAccess
 class BigModel: ObservableObject {
     
     public static var shared = BigModel()
+    public static var mocked: BigModel = BigModel(shouldInjectMockedData: true)
     
     @Published var currentView: ViewEnum = .signInView
     @Published var screenHistory: [ViewEnum] = []
@@ -360,6 +361,7 @@ class BigModel: ObservableObject {
             if let document = document {
                 if document.exists {
                     do {
+                        self.currentUser.firstName = ""
                         let user = try document.data(as: User.self)
                         self.currentUser = user
                         
@@ -411,7 +413,7 @@ class BigModel: ObservableObject {
         }
     }
     
-    func storeCurrentUserInfoIntoDB(user: User) {
+    func storeCurrentUserInfoIntoDB(user: User, completion: @escaping () -> Void) {
                 
         do {
             // Update the UserInfo inside the Firebase DB
@@ -419,6 +421,54 @@ class BigModel: ObservableObject {
             let _ = try self.db.collection("Users").document(id).setData(from: user)
             // Refresh the BigModel from the DB
             fetchUserInfoFromDB()
+            print("done")
+        } catch {
+            print("ERR001[updateCurrentUserInfoInDB]=\(error)")
+        }
+        
+    }
+    
+    func storeCurrentUserInfoIntoDB2(user: User) {
+                
+        do {
+            // Update the UserInfo inside the Firebase DB
+            guard let id = self.auth.currentUser?.uid else { return }
+            let _ = try self.db.collection("Users").document(id).setData(from: user) { _ in
+                
+                let docRef = self.db.collection("Users").document(id)
+                let newUser = User(id: id, firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, numberOfPerson: 0, proposedMeals: [], favoriteMeals: [], dislikedMeals: [])
+                
+                docRef.getDocument { (document, error) in
+                    
+                    if let document = document {
+                        if document.exists {
+                            do {
+                                self.currentUser.firstName = ""
+                                let user = try document.data(as: User.self)
+                                self.currentUser = user
+                                
+                                print("Document data: \(String(describing: document.data()))")
+                                if self.currentUser.firstName != "" {
+                                    self.currentView = .mealsPropositionScreen
+                                }
+                            }
+                            catch {
+                                print(error.localizedDescription)
+                            }
+                        } else {
+                            do {
+                                let _ = try self.db.collection("Users").document(id).setData(from: newUser)
+                            } catch {
+                                
+                            }
+                        }
+                    }
+                }
+                
+            }
+            // Refresh the BigModel from the DB
+            
+            print("done")
         } catch {
             print("ERR001[updateCurrentUserInfoInDB]=\(error)")
         }
@@ -440,6 +490,26 @@ class BigModel: ObservableObject {
             return newMealsList
         }
     }
+    
+    func removeMealFromLikedMeals() {
+        
+        //var newMealsList = mealsList
+        var user = currentUser
+        var mealsList = self.currentUser.proposedMeals
+        let meal = self.dislikedMeal
+        
+        if let index = mealsList.firstIndex(where: { $0.id == meal.id }) {
+            mealsList.remove(at: index)
+            print("Element retiré avec succès")
+        } else {
+            print("Element non trouvé dans la liste")
+        }
+        
+        user.proposedMeals = mealsList
+        storeCurrentUserInfoIntoDB2(user: user)
+        
+    }
+    
     
     func updateUserNames(firstName: String, lastName: String) {
         
@@ -711,7 +781,7 @@ class BigModel: ObservableObject {
             if meal.id != "dd" {
                 self.currentUserTags[meal] = false
                 self.currentUser.proposedMeals.append(meal)
-                self.storeCurrentUserInfoIntoDB(user: currentUser)
+                self.storeCurrentUserInfoIntoDB(user: currentUser) {}
                 
                 //print("append")
             }
@@ -749,7 +819,7 @@ class BigModel: ObservableObject {
     func jsonTest(jsonString: String) -> Meal? {
         if let jsonData = jsonString.data(using: .utf8) {
             do {
-                print(jsonString)
+                print("jsonString \(jsonString)")
                 let meal = try JSONDecoder().decode(Meal.self, from: jsonData)
                 return meal
             } catch {
@@ -797,14 +867,14 @@ class BigModel: ObservableObject {
     
     init(shouldInjectMockedData: Bool) {
         self.currentUser = User(firstName: "Malo", lastName: "Fonrose",
-                                items: [/*Item(id: 0, category: "Legumes", name: "Poireaux")*/],
+                                items: [Item(id: 0, category: "Legumes", name: "Poireaux")],
                                 tools: [/*Item(id: 0, category: "Tools", name: "Casserolle")*/],
                                 budget: 90, spendedTime: 9, numberOfPerson: 4,
-                                proposedMeals: [/*BigModel.Meal(id: "ktuyffg", name: "Andouillette", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),
+                                proposedMeals: [BigModel.Meal(id: "ktuyffg", name: "Andouillette", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),
                                                 BigModel.Meal(id: "yjfgj", name: "Brandade", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),
                                                 BigModel.Meal(id: "sdfgjvjkuhu", name: "Cassoulet", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),
                                                 BigModel.Meal(id: "lyughompij", name: "Couscous", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),
-                                                BigModel.Meal(id: "ttttt", name: "Tarte à la pomme", itemsAndQ: [], price: 0, spendedTime: 0, recipe: "")*/],
+                                                BigModel.Meal(id: "ttttt", name: "Tarte à la pomme", itemsAndQ: [], price: 0, spendedTime: 0, recipe: "")],
                                 favoriteMeals: [], dislikedMeals: [])
         self.currentView = .UserView
     }

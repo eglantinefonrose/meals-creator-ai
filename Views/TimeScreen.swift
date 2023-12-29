@@ -92,7 +92,7 @@ struct TimeScreen: View {
                                 Task {
                                     var user = bigModel.currentUser
                                     user.spendedTime = time
-                                    await bigModel.storeCurrentUserInfoIntoDB(user: user)
+                                    bigModel.storeCurrentUserInfoIntoDB(user: user) {}
                                     if bigModel.screenHistory.last == .UserView {
                                         bigModel.currentView = .UserView
                                         bigModel.screenHistory.append(.timeScreen)

@@ -19,30 +19,41 @@ struct BlankFile: View {
             }
             .alert(isPresented: $show) {
                 
+                /*Alert(title: Text("Are you sure you want to dislike this meal ?"),
+                      message: Text("It will be deleted from your proposed meals list."),
+                      primaryButton: .destructive(Text("No")) {
+                        
+                        }
+                }, secondaryButton: .destructive(Text("Yes")) {
+                    bigModel.didPreferencesChanged = false
+                    Task {
+                        var user = bigModel.currentUser
+                        let mealsList = user.proposedMeals
+                        user.proposedMeals = bigModel.removeMealFromList(meal: bigModel.dislikedMeal, mealsList: mealsList)
+                        bigModel.storeCurrentUserInfoIntoDB(user: user)
+                        addToDisliked(item: bigModel.dislikedMeal)
+                        bigModel.currentView = .mealsPropositionScreen
+                })*/
+                
                 Alert(title: Text("Are you sure you want to dislike this meal ?"),
                       message: Text("It will be deleted from your proposed meals list."),
-                      primaryButton: .destructive(Text("Yes")) {
-                        bigModel.didPreferencesChanged = false
-                        Task {
-                            var user = bigModel.currentUser
-                            let mealsList = user.proposedMeals
-                            user.proposedMeals = bigModel.removeMealFromList(meal: bigModel.dislikedMeal, mealsList: mealsList)
-                            bigModel.storeCurrentUserInfoIntoDB(user: user)
-                            addToDisliked(item: bigModel.dislikedMeal)
-                            bigModel.currentView = .mealsPropositionScreen
-                        }
-                }, secondaryButton: .destructive(Text("No")) {
-                    
+                      primaryButton: .destructive(Text("No")) {},
+                      secondaryButton: .destructive(Text("Yes")) {
+                        var user = bigModel.currentUser
+                        let mealsList = user.proposedMeals
+                        bigModel.removeMealFromLikedMeals()
+                                        
                 })
+                
             }
     }
     
     private func addToDisliked(item: BigModel.Meal) {
         var user = bigModel.currentUser
         user.proposedMeals = bigModel.removeMealFromList(meal: item, mealsList: bigModel.currentUser.proposedMeals)
-        bigModel.storeCurrentUserInfoIntoDB(user: user)
+        bigModel.storeCurrentUserInfoIntoDB(user: user) {}
         user.dislikedMeals.append(item)
-        bigModel.storeCurrentUserInfoIntoDB(user: user)
+        bigModel.storeCurrentUserInfoIntoDB(user: user) {}
     }
     
 }

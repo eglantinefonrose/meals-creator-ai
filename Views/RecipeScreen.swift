@@ -42,7 +42,7 @@ struct RecipeScreen: View {
                                          var user = bigModel.currentUser
                                          let mealsList = user.favoriteMeals
                                          user.favoriteMeals = bigModel.removeMealFromList(meal: bigModel.selectedMeal, mealsList: mealsList)
-                                         await bigModel.storeCurrentUserInfoIntoDB(user: user)
+                                         await bigModel.storeCurrentUserInfoIntoDB(user: user) {}
                                      }
                                  }
                              }
@@ -138,7 +138,7 @@ struct RecipeScreen: View {
     private func addToFavourite(item: BigModel.Meal) async {
         var user = bigModel.currentUser
         user.favoriteMeals.append(item)
-        await bigModel.storeCurrentUserInfoIntoDB(user: user)
+        bigModel.storeCurrentUserInfoIntoDB(user: user) {}
     }
     
     private func isMealInList(meal: BigModel.Meal) -> Bool {

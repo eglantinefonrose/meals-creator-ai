@@ -61,7 +61,7 @@ struct PreferenceView: View {
                                 }
                                 
                                 user.items = bigModel.updatedSelectedItemsList(dict: tags, categorie: categorie)
-                                await bigModel.storeCurrentUserInfoIntoDB(user: user)
+                                await bigModel.storeCurrentUserInfoIntoDB(user: user) {}
                                 
                                 print(bigModel.currentUser.items)
                             }

@@ -46,7 +46,7 @@ struct MealsPropostion: View {
                         VStack(alignment: .leading, spacing: 10) {
                             ForEach(bigModel.currentUserTags.keys.sorted(), id: \.self) { item in
                                 
-                                MealsViewModel(bigModel: BigModel.shared, item: item, liked: self.binding(for: item), disliked: self.binding(for: item))
+                                MealsViewModel(bigModel: BigModel.mocked, item: item, liked: self.binding(for: item), disliked: self.binding(for: item))
                                 Rectangle().fill(Color.navyBlue).frame(height: 1)
                                 
                             }
@@ -76,13 +76,16 @@ struct MealsPropostion: View {
                     .foregroundStyle(Color.white)
                     .onTapGesture {
                         
-                        Task {
                             var user: BigModel.User = bigModel.currentUser
                             user.proposedMeals = []
                             user.favoriteMeals = []
-                            bigModel.storeCurrentUserInfoIntoDB(user: user)
-                            await bigModel.createMeals()
-                        }
+                            bigModel.storeCurrentUserInfoIntoDB(user: user) {
+                                Task {
+                                    await bigModel.createMeals()
+                                }
+                            }
+                            
+                        
                         
                     }
             }
@@ -135,8 +138,8 @@ struct MealsViewModel: View {
             Image(systemName: liked ? "heart.fill" : "heart")
                 .foregroundColor(.navyBlue)
                 .onTapGesture {
-                    
-                    Task {
+                    bigModel.currentView = .BlankFile
+                    /*Task {
                         liked.toggle()
                         if isMealInList(meal: item) && liked {
                             await addToFavourite(item: item)
@@ -147,7 +150,7 @@ struct MealsViewModel: View {
                             user.favoriteMeals = bigModel.removeMealFromList(meal: item, mealsList: mealsList)
                             bigModel.storeCurrentUserInfoIntoDB(user: user)
                         }
-                    }
+                    }*/
                     
                 }
             Image(systemName: "hand.thumbsdown")
@@ -155,7 +158,7 @@ struct MealsViewModel: View {
                 .onTapGesture {
                     //disliked.toggle()
                     //if isMealInList(meal: item) && disliked {
-                    bigModel.currentView = .preferencesSummary
+                    bigModel.currentView = .BlankFile
                     bigModel.dislikedMeal = item
                     //}
                     /*if !disliked {
@@ -171,7 +174,7 @@ struct MealsViewModel: View {
     private func addToFavourite(item: BigModel.Meal) async {
         var user = bigModel.currentUser
         user.favoriteMeals.append(item)
-        await bigModel.storeCurrentUserInfoIntoDB(user: user)
+        await bigModel.storeCurrentUserInfoIntoDB(user: user) {}
     }
     
     private func isMealInList(meal: BigModel.Meal) -> Bool {
