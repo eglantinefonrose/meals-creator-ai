@@ -120,9 +120,8 @@ struct RecipeScreen: View {
                          .foregroundStyle(Color.navyBlue)
                      Text("Add to favourite")
                          .foregroundStyle(Color.white)
-                         .onTapGesture {
-                             bigModel.currentUser.favoriteMeals.append(bigModel.selectedMeal)
-                         }
+                 }.onTapGesture {
+                     bigModel.currentUser.favoriteMeals.append(bigModel.selectedMeal)
                  }
                  
              }

@@ -98,7 +98,9 @@ struct Budget_Screen: View {
                                 Text("-")
                                     .foregroundStyle(Color.navyBlue)
                                     .onTapGesture {
-                                        self.budget -= 10
+                                        if self.budget-10>0 {
+                                            self.budget -= 10
+                                        }
                                     }
                                     .onChange(of: budget) { newValue in
                                         budgetString = String(budget)
@@ -112,7 +114,11 @@ struct Budget_Screen: View {
                                     .font(.title)
                                     .keyboardType(.decimalPad)
                                     .onChange(of: budgetString) { newValue in
-                                        budget = Int(budgetString) ?? 0
+                                        if Int(budgetString) ?? 0 > 0 {
+                                            budget = Int(budgetString) ?? 0
+                                        } else {
+                                            budget = 0
+                                        }
                                     }
                                 
                                 Spacer()
@@ -139,24 +145,23 @@ struct Budget_Screen: View {
                             .foregroundStyle(Color.white)
                         Text("Validate")
                             .foregroundStyle(Color.navyBlue)
-                            .onTapGesture {
-                                Task {
-                                    var user = bigModel.currentUser
-                                    user.budget = budget
-                                    bigModel.storeCurrentUserInfoIntoDB(user: user) {}
-                                    
-                                    if bigModel.screenHistory.last == .TastesView {
-                                        bigModel.currentView = .TastesView
-                                        bigModel.screenHistory.append(.budgetScreen)
-                                    } else {
-                                        bigModel.currentView = .NumberOfPersonScreen
-                                        bigModel.screenHistory.append(.budgetScreen)
-                                    }
-                                    
-                                    bigModel.currentView = .NumberOfPersonScreen
-                                    bigModel.screenHistory.append(.budgetScreen)
-                                }
+                    }.onTapGesture {
+                        Task {
+                            var user = bigModel.currentUser
+                            user.budget = budget
+                            bigModel.storeCurrentUserInfoIntoDB(user: user) {}
+                            
+                            if bigModel.screenHistory.last == .TastesView {
+                                bigModel.currentView = .TastesView
+                                bigModel.screenHistory.append(.budgetScreen)
+                            } else {
+                                bigModel.currentView = .NumberOfPersonScreen
+                                bigModel.screenHistory.append(.budgetScreen)
                             }
+                            
+                            bigModel.currentView = .NumberOfPersonScreen
+                            bigModel.screenHistory.append(.budgetScreen)
+                        }
                     }
                 }.edgesIgnoringSafeArea(.all)
                 

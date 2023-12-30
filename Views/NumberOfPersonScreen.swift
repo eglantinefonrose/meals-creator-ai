@@ -126,7 +126,9 @@ struct NumberOfPersonScreen: View {
                                 Text("-")
                                     .foregroundStyle(Color.navyBlue)
                                     .onTapGesture {
-                                        self.numberOfPerson -= 10
+                                        if self.numberOfPerson - 10 > 0 {
+                                            self.numberOfPerson -= 10
+                                        }
                                     }
                                     .onChange(of: numberOfPerson) { newValue in
                                         numberOfPersonString = String(numberOfPerson)
@@ -167,23 +169,22 @@ struct NumberOfPersonScreen: View {
                             .foregroundStyle(Color.white)
                         Text("Validate")
                             .foregroundStyle(Color.navyBlue)
-                            .onTapGesture {
-                                Task {
-                                    var user = bigModel.currentUser
-                                    user.numberOfPerson = numberOfPerson
-                                    
-                                    bigModel.storeCurrentUserInfoIntoDB(user: user) {}
-                                    
-                                    if bigModel.screenHistory.last == .UserView {
-                                        bigModel.currentView = .UserView
-                                        bigModel.screenHistory.append(.NumberOfPersonScreen)
-                                    } else {
-                                        bigModel.currentView = .timeScreen
-                                        bigModel.screenHistory.append(.NumberOfPersonScreen)
-                                    }
-                                    
-                                }
+                    }.onTapGesture {
+                        Task {
+                            var user = bigModel.currentUser
+                            user.numberOfPerson = numberOfPerson
+                            
+                            bigModel.storeCurrentUserInfoIntoDB(user: user) {}
+                            
+                            if bigModel.screenHistory.last == .UserView {
+                                bigModel.currentView = .UserView
+                                bigModel.screenHistory.append(.NumberOfPersonScreen)
+                            } else {
+                                bigModel.currentView = .timeScreen
+                                bigModel.screenHistory.append(.NumberOfPersonScreen)
                             }
+                            
+                        }
                     }
                 }.edgesIgnoringSafeArea(.all)
                 

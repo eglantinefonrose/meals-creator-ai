@@ -48,25 +48,24 @@ struct PreferenceView: View {
                         .foregroundStyle(Color.navyBlue)
                     Text("Validate")
                         .foregroundColor(.white)
-                        .onTapGesture {
-                            
-                            Task {
-                                var user = bigModel.currentUser
-                                
-                                if bigModel.screenHistory.last == .TastesView {
-                                    bigModel.currentView = .UserView
-                                    bigModel.screenHistory.append(bigModel.categoryToScreenName(categorie: categorie))
-                                } else {
-                                    bigModel.currentView = nextScreenName
-                                }
-                                
-                                user.items = bigModel.updatedSelectedItemsList(dict: tags, categorie: categorie)
-                                await bigModel.storeCurrentUserInfoIntoDB(user: user) {}
-                                
-                                print(bigModel.currentUser.items)
-                            }
-                            
+                }.onTapGesture {
+                    
+                    Task {
+                        var user = bigModel.currentUser
+                        
+                        if bigModel.screenHistory.last == .TastesView {
+                            bigModel.currentView = .UserView
+                            bigModel.screenHistory.append(bigModel.categoryToScreenName(categorie: categorie))
+                        } else {
+                            bigModel.currentView = nextScreenName
                         }
+                        
+                        user.items = bigModel.updatedSelectedItemsList(dict: tags, categorie: categorie)
+                        bigModel.storeCurrentUserInfoIntoDB(user: user) {}
+                        
+                        print(bigModel.currentUser.items)
+                    }
+                    
                 }
             }.edgesIgnoringSafeArea(.all)
         }.onAppear {

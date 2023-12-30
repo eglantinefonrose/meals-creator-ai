@@ -137,7 +137,7 @@ class BigModel: ObservableObject {
         var itemList: [Item] = []
         
         for i in (0...(self.currentUser.items.count)-1) {
-            if (self.currentUser.items.count) > 1 {
+            if (self.currentUser.items.count) >= 1 {
                 if self.currentUser.items[i].category == categorie {
                     itemList.append(self.currentUser.items[i])
                 } else {
@@ -225,6 +225,34 @@ class BigModel: ObservableObject {
         }
     }
     
+    func categoryToName(categorie: String) -> String {
+        switch categorie {
+            case "legumes":
+                return "Legumes"
+            case "fruits":
+                return "Fruits"
+            case "strachyFoods":
+                return "Strachy foods"
+            case "proteins":
+                return "Proteins"
+            case "seasonning":
+                return "Seasonning"
+            case "allergies":
+                return "Allergies"
+            case "cookingTools":
+                return "Cooking tools"
+        default:
+            return ""
+        }
+    }
+    
+    struct CategoryName: Identifiable {
+        var id: Int
+        var name: String
+    }
+    
+    let categoriesNameList: [CategoryName] = [CategoryName(id: 0, name: "legumes"), CategoryName(id: 1, name: "fruits"), CategoryName(id: 2, name: "strachyFoods"), CategoryName(id: 3, name: "proteins"), CategoryName(id: 4, name: "seasonning"), CategoryName(id: 5, name: "allergies"), CategoryName(id: 6, name: "cookingTools")]
+    
     //
     //
     //
@@ -293,9 +321,7 @@ class BigModel: ObservableObject {
             
             guard let id = self.auth.currentUser?.uid else { return }
             self.currentUser = User(firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, numberOfPerson: 0, proposedMeals: [], favoriteMeals: [], dislikedMeals: [])
-            
-            let newUser = User(id: id, firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, numberOfPerson: 0, proposedMeals: [], favoriteMeals: [], dislikedMeals: [])
-            
+                        
             let docRef = self.db.collection("Users").document(id)
 
             docRef.getDocument { (document, error) in
@@ -881,10 +907,16 @@ class BigModel: ObservableObject {
     }
     
     init(shouldInjectMockedData: Bool) {
-        self.currentUser = User(firstName: "Malo", lastName: "Fonrose",
-                                items: [Item(id: 0, category: "Legumes", name: "Poireaux")],
+        self.currentUser = User(firstName: "", lastName: "",
+                                items: [Item(id: 0, category: "legumes", name: "Poireaux"),
+                                        Item(id: 0, category: "fruits", name: "Poireaux"),
+                                        Item(id: 0, category: "strachyFoods", name: "Poireaux"),
+                                        Item(id: 0, category: "proteins", name: "Poireaux"),
+                                        Item(id: 0, category: "seasonning", name: "Poireaux"),
+                                        Item(id: 0, category: "allergies", name: "Poireaux"),
+                                        Item(id: 0, category: "cookingTools", name: "Poireaux")],
                                 tools: [/*Item(id: 0, category: "Tools", name: "Casserolle")*/],
-                                budget: 90, spendedTime: 9, numberOfPerson: 4,
+                                budget: 0, spendedTime: 0, numberOfPerson: 0,
                                 proposedMeals: [BigModel.Meal(id: "ktuyffg", name: "Andouillette", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),
                                                 BigModel.Meal(id: "yjfgj", name: "Brandade", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),
                                                 BigModel.Meal(id: "sdfgjvjkuhu", name: "Cassoulet", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),

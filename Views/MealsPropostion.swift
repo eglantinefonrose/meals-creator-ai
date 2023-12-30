@@ -74,22 +74,16 @@ struct MealsPropostion: View {
                     .foregroundStyle(Color.navyBlue)
                 Text("Generate new meals")
                     .foregroundStyle(Color.white)
-                    .onTapGesture {
-                        
-                            var user: BigModel.User = bigModel.currentUser
-                            user.proposedMeals = []
-                            user.favoriteMeals = []
-                            bigModel.storeCurrentUserInfoIntoDB(user: user) {
-                                Task {
-                                    await bigModel.createMeals()
-                                }
-                            }
-                            
-                        
-                        
+            }.onTapGesture {
+                var user: BigModel.User = bigModel.currentUser
+                user.proposedMeals = []
+                user.favoriteMeals = []
+                bigModel.storeCurrentUserInfoIntoDB(user: user) {
+                    Task {
+                        await bigModel.createMeals()
                     }
+                }
             }
-            
         }.edgesIgnoringSafeArea(.bottom)
         .onAppear {
             bigModel.currentUserTags = bigModel.generateTags()

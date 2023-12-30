@@ -46,7 +46,9 @@ struct TimeScreen: View {
                                 Text("-")
                                     .foregroundStyle(Color.navyBlue)
                                     .onTapGesture {
-                                        self.time -= 10
+                                        if self.time - 10 > 0 {
+                                            self.time -= 10
+                                        }
                                     }
                                     .onChange(of: time) { newValue in
                                         timeString = String(time)
@@ -87,25 +89,24 @@ struct TimeScreen: View {
                             .foregroundStyle(Color.white)
                         Text("Validate")
                             .foregroundStyle(Color.navyBlue)
-                            .onTapGesture {
-                               
+                    }.onTapGesture {
+                        
+                        Task {
+                            var user = bigModel.currentUser
+                            user.spendedTime = time
+                            bigModel.storeCurrentUserInfoIntoDB(user: user) {}
+                            if bigModel.screenHistory.last == .UserView {
+                                bigModel.currentView = .UserView
+                                bigModel.screenHistory.append(.timeScreen)
+                            } else {
                                 Task {
-                                    var user = bigModel.currentUser
-                                    user.spendedTime = time
-                                    bigModel.storeCurrentUserInfoIntoDB(user: user) {}
-                                    if bigModel.screenHistory.last == .UserView {
-                                        bigModel.currentView = .UserView
-                                        bigModel.screenHistory.append(.timeScreen)
-                                    } else {
-                                        Task {
-                                            await bigModel.createMeals()
-                                        }
-                                        bigModel.currentView = .mealsPropositionScreen
-                                        bigModel.screenHistory.append(.timeScreen)
-                                    }
+                                    await bigModel.createMeals()
                                 }
-                                
+                                bigModel.currentView = .mealsPropositionScreen
+                                bigModel.screenHistory.append(.timeScreen)
                             }
+                        }
+                        
                     }
                 }.edgesIgnoringSafeArea(.all)
                 

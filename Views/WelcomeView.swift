@@ -20,7 +20,7 @@ struct WelcomeView: View {
                 BackModel(color: Color.navyBlue, view: .welcomeView)
                     .padding(20)
                 
-                HStack {
+                /*HStack {
                     VStack(alignment: .leading) {
                         Text("Broccoli")
                             .foregroundStyle(Color.navyBlue)
@@ -39,7 +39,7 @@ struct WelcomeView: View {
                             .font(.title)
                     }
                     Spacer()
-                }.padding(.horizontal, 20)
+                }.padding(.horizontal, 20)*/
                 
                 Spacer()
                 
@@ -57,10 +57,9 @@ struct WelcomeView: View {
                         .foregroundStyle(Color.gray)
                     Text("Start selecting")
                         .foregroundStyle(Color.white)
-                        .onTapGesture {
-                            bigModel.currentView = .LegumeScreen
-                            bigModel.screenHistory.append(.welcomeView)
-                        }
+                }.onTapGesture {
+                    bigModel.currentView = .LegumeScreen
+                    bigModel.screenHistory.append(.welcomeView)
                 }
             }
             

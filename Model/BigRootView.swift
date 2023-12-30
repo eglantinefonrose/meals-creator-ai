@@ -45,35 +45,40 @@ struct BigRootView: View {
                 Budget_Screen()
             }
         }
-        if bigModel.currentView == .welcomeView {
-            WelcomeView()
-        }
-        if bigModel.currentView == .signInView {
-            SignIN()
-        }
-        if bigModel.currentView == .UserView {
-            UserView()
-        }
-        if bigModel.currentView == .timeScreen {
-            TimeScreen()
-        }
-        if bigModel.currentView == .mealsPropositionScreen {
-            MealsPropostion()
-        }
-        if bigModel.currentView == .RecipeScreen {
-            RecipeScreen()
-        }
-        if bigModel.currentView == .FavoriteMealsScreen {
-            FavoriteMealsScreen()
-        }
-        if bigModel.currentView == .BlankFile {
-            BlankFile()
-        }
-        if bigModel.currentView == .NumberOfPersonScreen {
-            NumberOfPersonScreen()
-        }
-        if bigModel.currentView == .DailyCalendar {
-            DailyCalendar()
+        
+        VStack {
+            
+            if bigModel.currentView == .welcomeView {
+                WelcomeView()
+            }
+            if bigModel.currentView == .signInView {
+                SignIN()
+            }
+            if bigModel.currentView == .UserView {
+                UserView()
+            }
+            if bigModel.currentView == .timeScreen {
+                TimeScreen()
+            }
+            if bigModel.currentView == .mealsPropositionScreen {
+                MealsPropostion()
+            }
+            if bigModel.currentView == .RecipeScreen {
+                RecipeScreen()
+            }
+            if bigModel.currentView == .FavoriteMealsScreen {
+                FavoriteMealsScreen()
+            }
+            if bigModel.currentView == .BlankFile {
+                BlankFile()
+            }
+            if bigModel.currentView == .NumberOfPersonScreen {
+                NumberOfPersonScreen()
+            }
+            if bigModel.currentView == .DailyCalendar {
+                DailyCalendar()
+            }
+            
         }
         
     }

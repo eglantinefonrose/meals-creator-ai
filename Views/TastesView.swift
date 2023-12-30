@@ -56,13 +56,11 @@ struct TastesView: View {
                     .foregroundStyle(Color.navyBlue)
                 Text("Validate")
                     .foregroundColor(.white)
-                    .onTapGesture {
-                        var user = bigModel.currentUser
-                        bigModel.currentView = .UserView
-                        bigModel.screenHistory.append(.TastesView)
-                        
-                        print(bigModel.currentUser.items)
-                    }
+            }.onTapGesture {
+                var user = bigModel.currentUser
+                bigModel.currentView = .UserView
+                bigModel.screenHistory.append(.TastesView)
+                print(bigModel.currentUser.items)
             }
             
         }.edgesIgnoringSafeArea(.bottom)

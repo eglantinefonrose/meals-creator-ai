@@ -20,7 +20,9 @@ struct BackModel: View {
                 .bold()
                 .onTapGesture {
                     bigModel.currentView = bigModel.screenHistory.last ?? .FruitsScreen
-                    self.bigModel.screenHistory.removeLast()
+                    if bigModel.screenHistory.count > 0 {
+                        self.bigModel.screenHistory.removeLast()
+                    }
                 }
             Spacer()
             Image(systemName: "person.circle")
