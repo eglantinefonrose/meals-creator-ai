@@ -428,11 +428,14 @@ class BigModel: ObservableObject {
         
     }
     
-    func storeCurrentUserInfoIntoDB2(user: User) {
+    func storeInDBAndFetchNewProposedMealsList() {
                 
         do {
             // Update the UserInfo inside the Firebase DB
+            var user = currentUser
             guard let id = self.auth.currentUser?.uid else { return }
+            let mealsList = removeMealFromLikedMeals()
+            user.proposedMeals = mealsList
             let _ = try self.db.collection("Users").document(id).setData(from: user) { _ in
                 
                 let docRef = self.db.collection("Users").document(id)
@@ -446,11 +449,12 @@ class BigModel: ObservableObject {
                                 self.currentUser.firstName = ""
                                 let user = try document.data(as: User.self)
                                 self.currentUser = user
-                                
-                                print("Document data: \(String(describing: document.data()))")
-                                if self.currentUser.firstName != "" {
+                                if self.currentUser.proposedMeals == mealsList {
                                     self.currentView = .mealsPropositionScreen
                                 }
+                                
+                                print("Document data: \(String(describing: document.data()))")
+                                
                             }
                             catch {
                                 print(error.localizedDescription)
@@ -475,6 +479,23 @@ class BigModel: ObservableObject {
         
     }
     
+    private func removeMealFromLikedMeals() -> [BigModel.Meal] {
+        
+        //var newMealsList = mealsList
+        var mealsList = currentUser.proposedMeals
+        let meal = dislikedMeal
+        
+        if let index = mealsList.firstIndex(where: { $0.id == meal.id }) {
+            mealsList.remove(at: index)
+            print("Element retiré avec succès")
+            return mealsList
+        } else {
+            print("Element non trouvé dans la liste")
+            return mealsList
+        }
+        
+    }
+    
     @Published var dislikedMeal: Meal = Meal(id: "", name: "", itemsAndQ: [], price: 0, spendedTime: 0, recipe: "")
     
     func removeMealFromList(meal: Meal, mealsList: [Meal]) -> [Meal] {
@@ -491,24 +512,7 @@ class BigModel: ObservableObject {
         }
     }
     
-    func removeMealFromLikedMeals() {
-        
-        //var newMealsList = mealsList
-        var user = currentUser
-        var mealsList = self.currentUser.proposedMeals
-        let meal = self.dislikedMeal
-        
-        if let index = mealsList.firstIndex(where: { $0.id == meal.id }) {
-            mealsList.remove(at: index)
-            print("Element retiré avec succès")
-        } else {
-            print("Element non trouvé dans la liste")
-        }
-        
-        user.proposedMeals = mealsList
-        storeCurrentUserInfoIntoDB2(user: user)
-        
-    }
+    
     
     
     func updateUserNames(firstName: String, lastName: String) {
@@ -778,7 +782,7 @@ class BigModel: ObservableObject {
             let response = processPrompt(prompt: "\(prompt1) \(mealsNameList[i]) en utilisant le modèle de menus que je t'ai donné et en renvoyant une réponse au format JSON et en écrivant les recipes sans mettre de retour à la ligne et donnant des id unique et distincts constitués de minimum 20 caractères et contenant au moins une majuscule en utilisant uniquement des caractères utf8, un chiffre et un caractère spécial à chaque menus crées ?")
                 
             let meal = self.jsonTest(jsonString: response) ?? Meal(id: "dd", name: "gagag", itemsAndQ: [ItemAndQtty(id: "e", item: Item(id: 88, category: "", name: "Carottes"), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 5, category: "", name: "Carottes"), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 0, category: "", name: "Carottes"), quantity: 200)], price: 0, spendedTime: 0, recipe: "")
-            if meal.id != "dd" {
+            if meal.id != "dd" && !isDisliked(mealName: meal.name) {
                 self.currentUserTags[meal] = false
                 self.currentUser.proposedMeals.append(meal)
                 self.storeCurrentUserInfoIntoDB(user: currentUser) {}
@@ -797,6 +801,17 @@ class BigModel: ObservableObject {
         
     }
     
+    func isDisliked(mealName: String) -> Bool {
+        // Parcourt la liste des repas
+        for repasCourant in currentUser.dislikedMeals {
+            // Vérifie si le nomRecherche correspond à l'attribut "nom" de l'objet Repas
+            if repasCourant.name == mealName {
+                return true
+            }
+        }
+        // Aucune correspondance trouvée
+        return false
+    }
     
     func updateList() async {
         // Modifiez votre liste ici comme vous le souhaitez

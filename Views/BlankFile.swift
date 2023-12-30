@@ -35,18 +35,19 @@ struct BlankFile: View {
                         bigModel.currentView = .mealsPropositionScreen
                 })*/
                 
-                Alert(title: Text("Are you sure you want to dislike this meal ?"),
-                      message: Text("It will be deleted from your proposed meals list."),
-                      primaryButton: .destructive(Text("No")) {},
-                      secondaryButton: .destructive(Text("Yes")) {
-                        var user = bigModel.currentUser
-                        let mealsList = user.proposedMeals
-                        bigModel.removeMealFromLikedMeals()
-                                        
+                    Alert(title: Text("Are you sure you want to dislike this meal ?"),
+                          message: Text("It will be deleted from your proposed meals list."),
+                          primaryButton: .destructive(Text("No")) {},
+                          secondaryButton: .destructive(Text("Yes")) {
+                            
+                            bigModel.storeInDBAndFetchNewProposedMealsList()
+                            
                 })
                 
             }
     }
+    
+    
     
     private func addToDisliked(item: BigModel.Meal) {
         var user = bigModel.currentUser
