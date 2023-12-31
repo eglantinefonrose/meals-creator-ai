@@ -908,20 +908,20 @@ class BigModel: ObservableObject {
     
     init(shouldInjectMockedData: Bool) {
         self.currentUser = User(firstName: "", lastName: "",
-                                items: [Item(id: 0, category: "legumes", name: "Poireaux"),
+                                items: [/*Item(id: 0, category: "legumes", name: "Poireaux"),
                                         Item(id: 0, category: "fruits", name: "Poireaux"),
                                         Item(id: 0, category: "strachyFoods", name: "Poireaux"),
                                         Item(id: 0, category: "proteins", name: "Poireaux"),
                                         Item(id: 0, category: "seasonning", name: "Poireaux"),
                                         Item(id: 0, category: "allergies", name: "Poireaux"),
-                                        Item(id: 0, category: "cookingTools", name: "Poireaux")],
+                                        Item(id: 0, category: "cookingTools", name: "Poireaux")*/],
                                 tools: [/*Item(id: 0, category: "Tools", name: "Casserolle")*/],
                                 budget: 0, spendedTime: 0, numberOfPerson: 0,
-                                proposedMeals: [BigModel.Meal(id: "ktuyffg", name: "Andouillette", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),
+                                proposedMeals: [/*BigModel.Meal(id: "ktuyffg", name: "Andouillette", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),
                                                 BigModel.Meal(id: "yjfgj", name: "Brandade", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),
                                                 BigModel.Meal(id: "sdfgjvjkuhu", name: "Cassoulet", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),
                                                 BigModel.Meal(id: "lyughompij", name: "Couscous", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),
-                                                BigModel.Meal(id: "ttttt", name: "Tarte à la pomme", itemsAndQ: [], price: 0, spendedTime: 0, recipe: "")],
+                                                BigModel.Meal(id: "ttttt", name: "Tarte à la pomme", itemsAndQ: [], price: 0, spendedTime: 0, recipe: "")*/],
                                 favoriteMeals: [], dislikedMeals: [])
         self.currentView = .UserView
     }

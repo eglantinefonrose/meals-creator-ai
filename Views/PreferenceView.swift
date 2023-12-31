@@ -54,9 +54,10 @@ struct PreferenceView: View {
                         var user = bigModel.currentUser
                         
                         if bigModel.screenHistory.last == .TastesView {
-                            bigModel.currentView = .UserView
+                            bigModel.currentView = .TastesView
                             bigModel.screenHistory.append(bigModel.categoryToScreenName(categorie: categorie))
-                        } else {
+                        }
+                        else {
                             bigModel.currentView = nextScreenName
                         }
                         

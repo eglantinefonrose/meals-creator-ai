@@ -58,7 +58,7 @@ struct TastesView: View {
                     .foregroundColor(.white)
             }.onTapGesture {
                 var user = bigModel.currentUser
-                bigModel.currentView = .UserView
+                bigModel.currentView = .preferencesSummary
                 bigModel.screenHistory.append(.TastesView)
                 print(bigModel.currentUser.items)
             }

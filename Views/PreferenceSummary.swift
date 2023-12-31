@@ -70,7 +70,19 @@ struct PreferenceSummary: View {
                     
                 }.padding(20)
                 
-                VStack {
+                VStack(spacing: 0) {
+                    
+                    ZStack {
+                        Rectangle()
+                            .frame(height: 60)
+                            .foregroundStyle(Color.gray)
+                        Text("Edit")
+                            .foregroundStyle(Color.white)
+                    }.onTapGesture {
+                        bigModel.screenHistory.append(.preferencesSummary)
+                        bigModel.currentView = .TastesView
+                    }
+                    
                     ZStack {
                         Rectangle()
                             .frame(height: 60)
