@@ -39,7 +39,6 @@ struct MealType: View {
                             Task {
                                 bigModel.currentView = .mealsPropositionScreen
                                 await bigModel.createMeals(mealType: "petit déjeuner")
-                                
                             }
                         }
                         
