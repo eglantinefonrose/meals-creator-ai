@@ -279,9 +279,7 @@ struct UserView: View {
                                                      bigModel.currentView = .mealsPropositionScreen
                                                      bigModel.screenHistory.append(.UserView)
                                                      if bigModel.currentUser.proposedMeals.count == 0 {
-                                                         Task {
-                                                             await bigModel.createMeals()
-                                                         }
+                                                         bigModel.currentView = .MealTypeView
                                                      }
                                                  }
                                          }
@@ -311,8 +309,9 @@ struct UserView: View {
                                              Image(systemName: "arrow.right.circle")
                                                  .foregroundColor(Color.navyBlue)
                                                  .onTapGesture {
-                                                     bigModel.currentView = .mealsPropositionScreen
-                                                     bigModel.screenHistory.append(.UserView)
+                                                     if bigModel.currentUser.items.count != 0 && bigModel.currentUser.budget != 0 && bigModel.currentUser.numberOfPerson != 0 && bigModel.currentUser.spendedTime != 0 {
+                                                         bigModel.currentView = .mealsPropositionScreen
+                                                     }
                                                  }
                                          }
                                          

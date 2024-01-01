@@ -81,6 +81,10 @@ struct BigRootView: View {
             
         }
         
+        if bigModel.currentView == .MealTypeView {
+            MealType()
+        }
+        
     }
 }
 //case legumes, fruits, strachyFoods, proteins, seasonning, allergies, cookingTools
@@ -105,4 +109,5 @@ enum ViewEnum: String {
     case BlankFile
     case NumberOfPersonScreen
     case DailyCalendar
+    case MealTypeView
 }

@@ -99,10 +99,7 @@ struct TimeScreen: View {
                                 bigModel.currentView = .UserView
                                 bigModel.screenHistory.append(.timeScreen)
                             } else {
-                                Task {
-                                    await bigModel.createMeals()
-                                }
-                                bigModel.currentView = .mealsPropositionScreen
+                                bigModel.currentView = .MealTypeView
                                 bigModel.screenHistory.append(.timeScreen)
                             }
                         }

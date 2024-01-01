@@ -763,13 +763,13 @@ class BigModel: ObservableObject {
             
         }
     
-    func createMealsNameList() -> [String] {
+    func createMealsNameList(mealType: String) -> [String] {
         
         let prompt1 = "Voici mon modèle d'ingredients en swift : struct Item: Identifiable, Comparable, Hashable, Codable { var id: Int var category: Categories var name: String }. Voici mon modèle d'ItemAndQtty en swift : struct ItemAndQtty: Codable, Identifiable { var id: String var item: Item var quantity: Int } Le type Categories est une enum : enum Categories: CaseIterable, Codable { case legumes, fruits, strachyFoods, proteins, seasonning, allergies, cookingTools }. La variable 'category' doit être écrit de la forme .nomdelacategorie. Voici mon modèle de menu en swift : struct Meal: Codable, Identifiable { var id: String var name: String var itemsAndQ: [ItemAndQtty] var price: Int var spendedTime: Int var recipe: String }. Peux tu me donner la recette de "
         //var meals: [Meal] = []
         var mealsNameList: [String] = []
         
-        let response = processPrompt(prompt: "Peux tu me proposer une liste de 5 plats pour une personne qui aime \(listToString(list: self.currentUser.items)) et qui a \(listToString(list: self.currentUser.tools)). Cette personne a un budget de \(currentUser.budget), veut y consacrer maximum \(currentUser.spendedTime) et pour \(currentUser.numberOfPerson). Donne moi des meals avec des ID distincts et différents entre eux pour chaque meals. Donne moi une réponse sans retour à la ligne, en séparant uniquement les différents plats par des tirest (ex: repas1 - repas2 - repas3 etc...).")
+        let response = processPrompt(prompt: "Peux tu me proposer une liste de 5 plats de type \(mealType) pour une personne qui aime \(listToString(list: self.currentUser.items)) et qui a \(listToString(list: self.currentUser.tools)). Cette personne a un budget de \(currentUser.budget), veut y consacrer maximum \(currentUser.spendedTime) et pour \(currentUser.numberOfPerson). Donne moi des meals avec des ID distincts et différents entre eux pour chaque meals. Donne moi une réponse sans retour à la ligne, en séparant uniquement les différents plats par des tirest (ex: repas1 - repas2 - repas3 etc...).")
         mealsNameList = splitStringWithDash(inputString: response)
         
         //let response2 = processPrompt(prompt: "\(prompt1) \(mealsNameList[0])")
@@ -788,13 +788,13 @@ class BigModel: ObservableObject {
     @Published var currentUserTags: [Meal: Bool] = [:]
     @Published var didPreferencesChanged: Bool = false
     
-    func createMeals() async {
+    func createMeals(mealType: String) async {
         
         DispatchQueue.main.async {
             self.isLoading = true
         }
         let prompt1 = "Voici mon modèle d'ingredients en swift : struct Item: Identifiable, Comparable, Hashable, Codable { var id: Int var category: Categories var name: String }. Voici mon modèle d'ItemAndQtty en swift : struct ItemAndQtty: Codable, Identifiable { var id: String var item: Item var quantity: Int } Le type Categories est une enum : enum Categories: CaseIterable, Codable { case legumes, fruits, strachyFoods, proteins, seasonning, allergies, cookingTools }. La variable 'category' doit être écrit de la forme .nomdelacategorie. Voici mon modèle de menu en swift : struct Meal: Codable, Identifiable { var id: String var name: String var itemsAndQ: [ItemAndQtty] var price: Int var spendedTime: Int var recipe: String }. Peux tu me donner la recette de "
-        let mealsNameList: [String] = createMealsNameList()
+        let mealsNameList: [String] = createMealsNameList(mealType: mealType)
         currentUserTags = [:]
         
         /*var user = currentUser

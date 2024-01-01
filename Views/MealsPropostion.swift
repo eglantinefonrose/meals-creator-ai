@@ -75,14 +75,7 @@ struct MealsPropostion: View {
                 Text("Generate new meals")
                     .foregroundStyle(Color.white)
             }.onTapGesture {
-                var user: BigModel.User = bigModel.currentUser
-                user.proposedMeals = []
-                user.favoriteMeals = []
-                bigModel.storeCurrentUserInfoIntoDB(user: user) {
-                    Task {
-                        await bigModel.createMeals()
-                    }
-                }
+                
             }
         }.edgesIgnoringSafeArea(.bottom)
         .onAppear {
@@ -93,9 +86,8 @@ struct MealsPropostion: View {
                 title: Text("You changed your tastes, do you want to regenerate meals ?"),
                 primaryButton: .destructive(Text("Yes")) {
                     bigModel.didPreferencesChanged = false
-                    Task {
-                        await bigModel.createMeals()
-                    }
+                    bigModel.currentView = .MealTypeView
+                    bigModel.screenHistory.append(.MealTypeView)
                 },
                 secondaryButton: .destructive(Text("No"))
             )
