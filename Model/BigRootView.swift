@@ -61,7 +61,11 @@ struct BigRootView: View {
                 TimeScreen()
             }
             if bigModel.currentView == .mealsPropositionScreen {
-                MealsPropostion()
+                if #available(iOS 17.0, *) {
+                    MealsPropostion()
+                } else {
+                    // Fallback on earlier versions
+                }
             }
             if bigModel.currentView == .RecipeScreen {
                 RecipeScreen()

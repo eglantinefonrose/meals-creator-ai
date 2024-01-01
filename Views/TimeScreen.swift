@@ -95,12 +95,18 @@ struct TimeScreen: View {
                             var user = bigModel.currentUser
                             user.spendedTime = time
                             bigModel.storeCurrentUserInfoIntoDB(user: user) {}
+                            
                             if bigModel.screenHistory.last == .UserView {
                                 bigModel.currentView = .UserView
                                 bigModel.screenHistory.append(.timeScreen)
                             } else {
-                                bigModel.currentView = .MealTypeView
-                                bigModel.screenHistory.append(.timeScreen)
+                                if bigModel.currentUser.proposedMeals.count == 0 {
+                                    bigModel.currentView = .MealTypeView
+                                    bigModel.screenHistory.append(.timeScreen)
+                                } else {
+                                    bigModel.currentView = .mealsPropositionScreen
+                                    bigModel.screenHistory.append(.timeScreen)
+                                }
                             }
                         }
                         
