@@ -74,7 +74,7 @@ class BigModel: ObservableObject {
     
     @Published var currentUser: User = User(firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, numberOfPerson: 0, proposedMeals: [], favoriteMeals: [], dislikedMeals: [])
     
-    let items = [Item(id: 0, category: "legumes", name: "Carotte"), Item(id: 1, category: "legumes", name: "Poireaux"),Item(id: 2, category: "legumes", name: "Courgette"),Item(id: 3, category: "legumes", name: "Aubergine"),Item(id: 4, category: "legumes", name: "Brocolli"),
+    let items = [Item(id: 0, category: "legumes", name: "Carotte"), Item(id: 1, category: "legumes", name: "Poireaux"),Item(id: 2, category: "legumes", name: "Courgette"),Item(id: 3, category: "legumes", name: "Aubergine"),Item(id: 4, category: "legumes", name: "Brocolli"),Item(id: 5, category: "legumes", name: "Aubergine"),Item(id: 6, category: "legumes", name: "Brocolli"),Item(id: 7, category: "legumes", name: "Aubergine"),Item(id: 8, category: "legumes", name: "Brocolli"),Item(id: 9, category: "legumes", name: "Aubergine"),Item(id: 10, category: "legumes", name: "Brocolli"),
                  Item(id: 5, category: "fruits", name: "Pomme"), Item(id: 6, category: "fruits", name: "Poire"),
                  Item(id: 7, category: "strachyFoods", name: "Riz"), Item(id: 8, category: "strachyFoods", name: "Pates"),
                  Item(id: 9, category: "allergies", name: "Carbohydrate"), Item(id: 10, category: "allergies", name: "Lactose"),

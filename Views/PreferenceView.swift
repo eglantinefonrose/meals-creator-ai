@@ -16,6 +16,7 @@ struct PreferenceView: View {
     @State var tags: [BigModel.Item: Bool] = [:]
     let categorie: String
     var nextScreenName: ViewEnum
+    @State private var searchText = ""
     
     var body: some View {
         
@@ -30,9 +31,17 @@ struct PreferenceView: View {
                     .textCase(.uppercase)
                     .font(.system(size: 78))
                 
-                LazyVGrid(columns: columns, spacing: 5) {
-                    ForEach(tags.keys.sorted(), id: \.self) { k in
-                        TagButton(selected: self.binding(for: k), txt: k.name)
+                TextField("Search", text: $searchText)
+                    .disableAutocorrection(true)
+                    .autocapitalization(.none)
+                    .textFieldStyle(.roundedBorder)
+                
+                
+                ScrollView {
+                    LazyVGrid(columns: columns, spacing: 5) {
+                        ForEach(searchResults, id: \.self) { k in
+                            TagButton(selected: self.binding(for: k), txt: k.name)
+                        }
                     }
                 }
                 
@@ -81,6 +90,14 @@ struct PreferenceView: View {
         return .init(
             get: { self.tags[key, default: false] },
             set: { self.tags[key] = $0 })
+    }
+    
+    var searchResults: [BigModel.Item] {
+        if searchText.isEmpty {
+            return tags.keys.sorted()
+        } else {
+            return tags.keys.sorted().filter { $0.name.contains(searchText) }
+        }
     }
     
 }
