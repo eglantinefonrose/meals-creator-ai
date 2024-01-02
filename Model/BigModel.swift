@@ -59,6 +59,7 @@ class BigModel: ObservableObject {
         var id: String
         var name: String
         var type: String
+        var season: String
         var itemsAndQ: [ItemAndQtty]
         var price: Float
         var spendedTime: Int
@@ -551,7 +552,7 @@ class BigModel: ObservableObject {
         
     }
     
-    @Published var dislikedMeal: Meal = Meal(id: "", name: "", type: "", itemsAndQ: [], price: 0, spendedTime: 0, recipe: "")
+    @Published var dislikedMeal: Meal = Meal(id: "", name: "", type: "", season: "", itemsAndQ: [], price: 0, spendedTime: 0, recipe: "")
     
     func removeMealFromList(meal: Meal, mealsList: [Meal]) -> [Meal] {
         
@@ -810,9 +811,9 @@ class BigModel: ObservableObject {
     }
     
     @Published var isLoading = false
-    @Published var testMealList: [Meal] = [Meal(id: "", name: "Brand", type: "", itemsAndQ: [], price: 0, spendedTime: 0, recipe: "0")]
-    @Published var selectedMeal: Meal = Meal(id: "dd", name: "gagag", type: "", itemsAndQ: [ItemAndQtty(id: "e", item: Item(id: 88, category: "", name: "Carottes", seasons: ["été"]), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 5, category: "", name: "Carottes", seasons: ["été"]), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 0, category: "", name: "Carottes", seasons: ["été"]), quantity: 200)], price: 0, spendedTime: 0, recipe: "")
-    
+    @Published var testMealList: [Meal] = [Meal(id: "", name: "Brand", type: "", season: "", itemsAndQ: [], price: 0, spendedTime: 0, recipe: "0")]
+    @Published var selectedMeal: Meal = Meal(id: "dd", name: "gagag", type: "", season: "", itemsAndQ: [ItemAndQtty(id: "e", item: Item(id: 88, category: "", name: "Carottes", seasons: ["été"]), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 5, category: "", name: "Carottes", seasons: ["été"]), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 0, category: "", name: "Carottes", seasons: ["été"]), quantity: 200)], price: 0, spendedTime: 0, recipe: "")
+    @Published var selectedSeason: String = ""
     
     @Published var currentUserTags: [Meal: Bool] = [:]
     @Published var didPreferencesChanged: Bool = false
@@ -836,7 +837,7 @@ class BigModel: ObservableObject {
         for i in 0..<mealsNameList.count {
             let response = processPrompt(prompt: "\(prompt1) \(mealsNameList[i]) en utilisant le modèle de menus que je t'ai donné et en renvoyant une réponse au format JSON et en écrivant les recipes sans mettre de retour à la ligne et donnant des id unique et distincts constitués de minimum 20 caractères et contenant au moins une majuscule en utilisant uniquement des caractères utf8, un chiffre et un caractère spécial à chaque menus crées ?")
                 
-            let meal = self.jsonTest(jsonString: response) ?? Meal(id: "dd", name: "gagag", type: "", itemsAndQ: [ItemAndQtty(id: "e", item: Item(id: 88, category: "", name: "Carottes", seasons: ["été"]), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 5, category: "", name: "Carottes", seasons: ["été"]), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 0, category: "", name: "Carottes", seasons: ["été"]), quantity: 200)], price: 0, spendedTime: 0, recipe: "")
+            let meal = self.jsonTest(jsonString: response) ?? Meal(id: "dd", name: "gagag", type: "", season: "", itemsAndQ: [ItemAndQtty(id: "e", item: Item(id: 88, category: "", name: "Carottes", seasons: ["été"]), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 5, category: "", name: "Carottes", seasons: ["été"]), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 0, category: "", name: "Carottes", seasons: ["été"]), quantity: 200)], price: 0, spendedTime: 0, recipe: "")
             if meal.id != "dd" && !isDisliked(mealName: meal.name) {
                 self.currentUserTags[meal] = false
                 self.currentUser.proposedMeals.append(meal)
@@ -872,7 +873,7 @@ class BigModel: ObservableObject {
         // Modifiez votre liste ici comme vous le souhaitez
         print("à")
         //for i in 0...10 {
-        let meal = Meal(id: "dd", name: "Brandade", type: "", itemsAndQ: [], price: 0, spendedTime: 0, recipe: "")
+        let meal = Meal(id: "dd", name: "Brandade", type: "", season: "", itemsAndQ: [], price: 0, spendedTime: 0, recipe: "")
             if meal.id != "" {
                 do {
                     try await Task.sleep(nanoseconds: 1000000000)
@@ -946,14 +947,14 @@ class BigModel: ObservableObject {
                                         Item(id: 0, category: "cookingTools", name: "Poireaux", seasons: ["été"])],
                                 tools: [Item(id: 0, category: "Tools", name: "Casserolle", seasons: ["été"])],
                                 budget: 0, spendedTime: 0, numberOfPerson: 0,
-                                proposedMeals: [BigModel.Meal(id: "ktuyffg", name: "Andouillette", type: "Petit-déjeuner", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),
-                                                BigModel.Meal(id: "yjfgj", name: "Brandade", type: "Déjeuner", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),
-                                                BigModel.Meal(id: "sdfgjvjkuhu", name: "Cassoulet", type: "Goûter", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),
-                                                BigModel.Meal(id: "lyughompij", name: "Couscous", type: "Diner", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),
-                                                BigModel.Meal(id: "ttttt", name: "Tarte à la pomme", type: "Goûter", itemsAndQ: [], price: 0, spendedTime: 0, recipe: "")],
-                                favoriteMeals: [BigModel.Meal(id: "ktuyffg", name: "Andouillette", type: "Petit-déjeuner", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),
-                                                BigModel.Meal(id: "yjfgj", name: "Brandade", type: "Déjeuner", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),
-                                                BigModel.Meal(id: "sdfgjvjkuhu", name: "Cassoulet", type: "Goûter", itemsAndQ: [], price: 0, spendedTime: 0, recipe: "")], dislikedMeals: [])
+                                proposedMeals: [BigModel.Meal(id: "ktuyffg", name: "Andouillette", type: "Petit-déjeuner", season: "", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),
+                                                BigModel.Meal(id: "yjfgj", name: "Brandade", type: "Déjeuner", season: "", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),
+                                                BigModel.Meal(id: "sdfgjvjkuhu", name: "Cassoulet", type: "Goûter", season: "", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),
+                                                BigModel.Meal(id: "lyughompij", name: "Couscous", type: "Diner", season: "", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),
+                                                BigModel.Meal(id: "ttttt", name: "Tarte à la pomme", type: "Goûter", season: "", itemsAndQ: [], price: 0, spendedTime: 0, recipe: "")],
+                                favoriteMeals: [BigModel.Meal(id: "ktuyffg", name: "Andouillette", type: "Petit-déjeuner", season: "", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),
+                                                BigModel.Meal(id: "yjfgj", name: "Brandade", type: "Déjeuner", season: "", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),
+                                                BigModel.Meal(id: "sdfgjvjkuhu", name: "Cassoulet", type: "Goûter", season: "", itemsAndQ: [], price: 0, spendedTime: 0, recipe: "")], dislikedMeals: [])
         self.currentView = .UserView
     }
     

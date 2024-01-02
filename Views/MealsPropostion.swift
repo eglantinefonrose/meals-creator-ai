@@ -13,7 +13,7 @@ struct MealsPropostion: View {
     
     @EnvironmentObject var bigModel: BigModel
     let meals = ["Nouilles sautées", "Omelette", "Rillettes de thon"]
-    @State var tags: [BigModel.Meal: Bool] = [BigModel.Meal(id: "0", name: "E", type: "", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""):false, BigModel.Meal(id: "1", name: "E", type: "", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""):false]
+    @State var tags: [BigModel.Meal: Bool] = [BigModel.Meal(id: "0", name: "E", type: "", season: "", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""):false, BigModel.Meal(id: "1", name: "E", type: "", season: "", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""):false]
     @State var type: String = "All"
 
     var body: some View {
@@ -127,7 +127,7 @@ struct MealsPropostion: View {
                 Text("Generate new meals")
                     .foregroundStyle(Color.white)
             }.onTapGesture {
-                
+                bigModel.currentView = .SeasonSelectionView
             }
         }.edgesIgnoringSafeArea(.bottom)
         .onAppear {
@@ -231,7 +231,7 @@ struct MealsViewModel : View {
     private func addToFavourite(item: BigModel.Meal) async {
         var user = bigModel.currentUser
         user.favoriteMeals.append(item)
-        await bigModel.storeCurrentUserInfoIntoDB(user: user) {}
+        bigModel.storeCurrentUserInfoIntoDB(user: user) {}
     }
     
     private func isMealInList(meal: BigModel.Meal) -> Bool {
