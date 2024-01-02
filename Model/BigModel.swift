@@ -47,6 +47,7 @@ class BigModel: ObservableObject {
         var id: Int
         var category: String
         var name: String
+        var seasons: [String]
     }
     
     struct Meal: Codable, Identifiable, Hashable, Comparable {
@@ -74,13 +75,13 @@ class BigModel: ObservableObject {
     
     @Published var currentUser: User = User(firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, numberOfPerson: 0, proposedMeals: [], favoriteMeals: [], dislikedMeals: [])
     
-    let items = [Item(id: 0, category: "legumes", name: "Carotte"), Item(id: 1, category: "legumes", name: "Poireaux"),Item(id: 2, category: "legumes", name: "Courgette"),Item(id: 3, category: "legumes", name: "Aubergine"),Item(id: 4, category: "legumes", name: "Brocolli"),Item(id: 5, category: "legumes", name: "Aubergine"),Item(id: 6, category: "legumes", name: "Brocolli"),Item(id: 7, category: "legumes", name: "Aubergine"),Item(id: 8, category: "legumes", name: "Brocolli"),Item(id: 9, category: "legumes", name: "Aubergine"),Item(id: 10, category: "legumes", name: "Brocolli"),
-                 Item(id: 5, category: "fruits", name: "Pomme"), Item(id: 6, category: "fruits", name: "Poire"),
-                 Item(id: 7, category: "strachyFoods", name: "Riz"), Item(id: 8, category: "strachyFoods", name: "Pates"),
-                 Item(id: 9, category: "allergies", name: "Carbohydrate"), Item(id: 10, category: "allergies", name: "Lactose"),
-                 Item(id: 11, category: "proteins", name: "Boeuf"), Item(id: 12, category: "proteins", name: "Poisson"),
-                 Item(id: 13, category: "seasonning", name: "curry"), Item(id: 14, category: "seasonning", name: "curcuma"),
-                 Item(id: 15, category: "cookingTools", name: "Stove"), Item(id: 16, category: "cookingTools", name: "pan"), Item(id: 17, category: "cookingTools", name: "oven")
+    let items = [Item(id: 0, category: "legumes", name: "Carotte", seasons: ["été"]), Item(id: 1, category: "legumes", name: "Poireaux", seasons: ["automne", "été"]),Item(id: 2, category: "legumes", name: "Courgette", seasons: ["automne", "hiver"]),Item(id: 3, category: "legumes", name: "Aubergine", seasons: ["hiver"]),Item(id: 4, category: "legumes", name: "Brocolli", seasons: ["printemps"]),/*,Item(id: 5, category: "legumes", name: "Aubergine", seasons: ["été"]),Item(id: 6, category: "legumes", name: "Brocolli"),Item(id: 7, category: "legumes", name: "Aubergine"),Item(id: 8, category: "legumes", name: "Brocolli", seasons: []),Item(id: 9, category: "legumes", name: "Aubergine"),Item(id: 10, category: "legumes", name: "Brocolli"),*/
+                 Item(id: 5, category: "fruits", name: "Pomme", seasons: ["printemps"]), Item(id: 6, category: "fruits", name: "Poire", seasons: ["automne"]),
+                 Item(id: 7, category: "strachyFoods", name: "Riz", seasons: ["été", "automne", "hiver", "printemps"]), Item(id: 8, category: "strachyFoods", name: "Pates", seasons: ["été", "automne", "hiver", "printemps"]),
+                 Item(id: 9, category: "allergies", name: "Carbohydrate", seasons: ["été","automne","hiver","printemps"]), Item(id: 10, category: "allergies", name: "Lactose", seasons: ["été","automne","hiver","printemps"]),
+                 Item(id: 11, category: "proteins", name: "Boeuf", seasons: ["été","automne","hiver","printemps"]), Item(id: 12, category: "proteins", name: "Poisson", seasons: ["été","automne","hiver","printemps"]),
+                 Item(id: 13, category: "seasonning", name: "curry", seasons: ["été","automne","hiver","printemps"]), Item(id: 14, category: "seasonning", name: "curcuma", seasons: ["été","automne","hiver","printemps"]),
+                 Item(id: 15, category: "cookingTools", name: "Stove", seasons: ["été","automne","hiver","printemps"]), Item(id: 16, category: "cookingTools", name: "pan", seasons: ["été","automne","hiver","printemps"]), Item(id: 17, category: "cookingTools", name: "oven", seasons: ["été","automne","hiver","printemps"])
     ]
     
     func isInTheList(item: Item) -> Bool {
@@ -129,6 +130,23 @@ class BigModel: ObservableObject {
         for (key, value) in tagList {
             if key.category == categorie {
                 tags[key] = value
+            }
+        }
+        return tags
+    }
+    
+    func extractTagsPerCategorieAndSeason(categorie: String, season: String) -> [Item:Bool] {
+        var tags: [Item:Bool] = [:]
+        let tagList = compareLists()
+        
+        for (key, value) in tagList {
+            if key.category == categorie {
+                if key.seasons.contains(season) {
+                    tags[key] = value
+                }
+                if season == "All" {
+                    tags[key] = value
+                }
             }
         }
         return tags
@@ -793,7 +811,7 @@ class BigModel: ObservableObject {
     
     @Published var isLoading = false
     @Published var testMealList: [Meal] = [Meal(id: "", name: "Brand", type: "", itemsAndQ: [], price: 0, spendedTime: 0, recipe: "0")]
-    @Published var selectedMeal: Meal = Meal(id: "dd", name: "gagag", type: "", itemsAndQ: [ItemAndQtty(id: "e", item: Item(id: 88, category: "", name: "Carottes"), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 5, category: "", name: "Carottes"), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 0, category: "", name: "Carottes"), quantity: 200)], price: 0, spendedTime: 0, recipe: "")
+    @Published var selectedMeal: Meal = Meal(id: "dd", name: "gagag", type: "", itemsAndQ: [ItemAndQtty(id: "e", item: Item(id: 88, category: "", name: "Carottes", seasons: ["été"]), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 5, category: "", name: "Carottes", seasons: ["été"]), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 0, category: "", name: "Carottes", seasons: ["été"]), quantity: 200)], price: 0, spendedTime: 0, recipe: "")
     
     
     @Published var currentUserTags: [Meal: Bool] = [:]
@@ -818,7 +836,7 @@ class BigModel: ObservableObject {
         for i in 0..<mealsNameList.count {
             let response = processPrompt(prompt: "\(prompt1) \(mealsNameList[i]) en utilisant le modèle de menus que je t'ai donné et en renvoyant une réponse au format JSON et en écrivant les recipes sans mettre de retour à la ligne et donnant des id unique et distincts constitués de minimum 20 caractères et contenant au moins une majuscule en utilisant uniquement des caractères utf8, un chiffre et un caractère spécial à chaque menus crées ?")
                 
-            let meal = self.jsonTest(jsonString: response) ?? Meal(id: "dd", name: "gagag", type: "", itemsAndQ: [ItemAndQtty(id: "e", item: Item(id: 88, category: "", name: "Carottes"), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 5, category: "", name: "Carottes"), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 0, category: "", name: "Carottes"), quantity: 200)], price: 0, spendedTime: 0, recipe: "")
+            let meal = self.jsonTest(jsonString: response) ?? Meal(id: "dd", name: "gagag", type: "", itemsAndQ: [ItemAndQtty(id: "e", item: Item(id: 88, category: "", name: "Carottes", seasons: ["été"]), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 5, category: "", name: "Carottes", seasons: ["été"]), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 0, category: "", name: "Carottes", seasons: ["été"]), quantity: 200)], price: 0, spendedTime: 0, recipe: "")
             if meal.id != "dd" && !isDisliked(mealName: meal.name) {
                 self.currentUserTags[meal] = false
                 self.currentUser.proposedMeals.append(meal)
@@ -919,14 +937,14 @@ class BigModel: ObservableObject {
     
     init(shouldInjectMockedData: Bool) {
         self.currentUser = User(firstName: "", lastName: "",
-                                items: [Item(id: 0, category: "legumes", name: "Poireaux"),
-                                        Item(id: 0, category: "fruits", name: "Poireaux"),
-                                        Item(id: 0, category: "strachyFoods", name: "Poireaux"),
-                                        Item(id: 0, category: "proteins", name: "Poireaux"),
-                                        Item(id: 0, category: "seasonning", name: "Poireaux"),
-                                        Item(id: 0, category: "allergies", name: "Poireaux"),
-                                        Item(id: 0, category: "cookingTools", name: "Poireaux")],
-                                tools: [Item(id: 0, category: "Tools", name: "Casserolle")],
+                                items: [Item(id: 0, category: "legumes", name: "Poireaux", seasons: ["été"]),
+                                        Item(id: 0, category: "fruits", name: "Poireaux", seasons: ["été"]),
+                                        Item(id: 0, category: "strachyFoods", name: "Poireaux", seasons: ["été"]),
+                                        Item(id: 0, category: "proteins", name: "Poireaux", seasons: ["été"]),
+                                        Item(id: 0, category: "seasonning", name: "Poireaux", seasons: ["été"]),
+                                        Item(id: 0, category: "allergies", name: "Poireaux", seasons: ["été"]),
+                                        Item(id: 0, category: "cookingTools", name: "Poireaux", seasons: ["été"])],
+                                tools: [Item(id: 0, category: "Tools", name: "Casserolle", seasons: ["été"])],
                                 budget: 0, spendedTime: 0, numberOfPerson: 0,
                                 proposedMeals: [BigModel.Meal(id: "ktuyffg", name: "Andouillette", type: "Petit-déjeuner", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),
                                                 BigModel.Meal(id: "yjfgj", name: "Brandade", type: "Déjeuner", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),

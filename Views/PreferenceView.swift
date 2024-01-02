@@ -17,6 +17,7 @@ struct PreferenceView: View {
     let categorie: String
     var nextScreenName: ViewEnum
     @State private var searchText = ""
+    @State var season: String = "All"
     
     var body: some View {
         
@@ -35,6 +36,70 @@ struct PreferenceView: View {
                     .disableAutocorrection(true)
                     .autocapitalization(.none)
                     .textFieldStyle(.roundedBorder)
+                
+                HStack {
+                    
+                    ZStack {
+                        Rectangle()
+                            .cornerRadius(10)
+                            .foregroundColor(season == "All" ? Color.navyBlue : Color.gray)
+                            .frame(height: 50)
+                        Text("All")
+                            .foregroundColor(season == "All" ? Color.white : Color.black)
+                    }.onTapGesture {
+                        season = "All"
+                        tags = bigModel.extractTagsPerCategorieAndSeason(categorie: categorie, season: "All")
+                    }
+                    
+                    ZStack {
+                        Rectangle()
+                            .cornerRadius(10)
+                            .foregroundColor(season == "Hiver" ? Color.navyBlue : Color.gray)
+                            .frame(height: 50)
+                        Text("Hiver")
+                            .foregroundColor(season == "Hiver" ? Color.white : Color.black)
+                    }.onTapGesture {
+                        season = "Hiver"
+                        tags = bigModel.extractTagsPerCategorieAndSeason(categorie: categorie, season: "hiver")
+                    }
+                    
+                    ZStack {
+                        Rectangle()
+                            .cornerRadius(10)
+                            .foregroundColor(season == "Printemps" ? Color.navyBlue : Color.gray)
+                            .frame(height: 50)
+                        Text("Printemps")
+                            .foregroundColor(season == "Printemps" ? Color.white : Color.black)
+                    }.onTapGesture {
+                        season = "Printemps"
+                        tags = bigModel.extractTagsPerCategorieAndSeason(categorie: categorie, season: "printemps")
+                    }
+                    
+                    ZStack {
+                        Rectangle()
+                            .cornerRadius(10)
+                            .foregroundColor(season == "Été" ? Color.navyBlue : Color.gray)
+                            .frame(height: 50)
+                        Text("Été")
+                            .foregroundColor(season == "Été" ? Color.white : Color.black)
+                    }.onTapGesture {
+                        season = "Été"
+                        tags = bigModel.extractTagsPerCategorieAndSeason(categorie: categorie, season: "été")
+                    }
+                    
+                    ZStack {
+                        Rectangle()
+                            .cornerRadius(10)
+                            .foregroundColor(season == "Automne" ? Color.navyBlue : Color.gray)
+                            .frame(height: 50)
+                        Text("Automne")
+                            .foregroundColor(season == "Automne" ? Color.white : Color.black)
+                    }.onTapGesture {
+                        season = "Automne"
+                        tags = bigModel.extractTagsPerCategorieAndSeason(categorie: categorie, season: "automne")
+                    }
+                    
+                }
                 
                 
                 ScrollView {
@@ -79,7 +144,7 @@ struct PreferenceView: View {
                 }
             }.edgesIgnoringSafeArea(.all)
         }.onAppear {
-            tags = bigModel.extractTagsPerCategorie(categorie: categorie)
+            tags = bigModel.extractTagsPerCategorieAndSeason(categorie: categorie, season: "All")
             print("tags")
             print(tags)
         }
