@@ -43,7 +43,7 @@ struct PreferenceView: View {
                             TagButton(selected: self.binding(for: k), txt: k.name)
                         }
                     }
-                }
+                }.padding(.vertical, 10)
                 
                 Spacer()
                 
@@ -96,7 +96,7 @@ struct PreferenceView: View {
         if searchText.isEmpty {
             return tags.keys.sorted()
         } else {
-            return tags.keys.sorted().filter { $0.name.contains(searchText) }
+            return tags.keys.sorted().filter { $0.name.capitalized.contains(searchText.capitalized) }
         }
     }
     
