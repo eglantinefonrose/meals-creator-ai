@@ -15,6 +15,10 @@ struct MealsPropostion: View {
     let meals = ["Nouilles sautées", "Omelette", "Rillettes de thon"]
     @State var tags: [BigModel.Meal: Bool] = [BigModel.Meal(id: "0", name: "E", type: "", season: "", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""):false, BigModel.Meal(id: "1", name: "E", type: "", season: "", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""):false]
     @State var type: String = "All"
+    @State var season: String = "All"
+    let types: [Type] = [Type(id: 0, typeName: "All", type: "All"), Type(id: 1, typeName: "Petit-déjeuner", type: "Petit-déjeuner"), Type(id: 2, typeName: "Déjeuner", type: "Déjeuner"), Type(id: 3, typeName: "Goûter", type: "Goûter"), Type(id: 4, typeName: "Diner", type: "Diner")]
+    let seasons: [Season] = [Season(id: 0, seasonName: "All", season: "All"), Season(id: 1, seasonName: "Winter", season: "Winter"), Season(id: 2, seasonName: "Spring", season: "Spring"), Season(id: 3, seasonName: "Summer", season: "Summer"), Season(id: 4, seasonName: "Autumn", season: "Autumn")]
+    //let typeNames: [String] = ["All", "Petit-déjeuner", "Déjeuner", "Goûter", "Diner"]
 
     var body: some View {
         
@@ -27,6 +31,7 @@ struct MealsPropostion: View {
                 Text("MEALS")
                     .foregroundStyle(Color.navyBlue)
                     .font(.system(size: 100))
+                
                 Circle()
                     .foregroundStyle(Color.navyBlue)
                 
@@ -35,63 +40,44 @@ struct MealsPropostion: View {
                     Text("Select a meal to see the recipe")
                         .foregroundStyle(Color.navyBlue)
                     
-                    HStack {
-                        
-                        ZStack {
-                            Rectangle()
-                                .cornerRadius(10)
-                                .foregroundColor(type == "All" ? Color.navyBlue : Color.gray)
-                                .frame(height: 50)
-                            Text("All")
-                                .foregroundColor(type == "All" ? Color.white : Color.black)
-                        }.onTapGesture {
-                            type = "All"
+                    ScrollView(.horizontal) {
+                        HStack {
+                            
+                            ForEach(seasons) { seasonValue in
+                                ZStack {
+                                    Rectangle()
+                                        .cornerRadius(10)
+                                        .foregroundColor(season == seasonValue.season ? Color.navyBlue : Color.gray)
+                                        .frame(height: 50)
+                                    Text(seasonValue.seasonName)
+                                        .foregroundColor(season == seasonValue.season ? Color.white : Color.black)
+                                        .padding()
+                                }.onTapGesture {
+                                    season = seasonValue.season
+                            }
+                            }
+                            
                         }
-                        
-                        ZStack {
-                            Rectangle()
-                                .cornerRadius(10)
-                                .foregroundColor(type == "Petit-déjeuner" ? Color.navyBlue : Color.gray)
-                                .frame(height: 50)
-                            Text("Petit-déjeuner")
-                                .foregroundColor(type == "Petit-déjeuner" ? Color.white : Color.black)
-                        }.onTapGesture {
-                            type = "Petit-déjeuner"
+                    }
+                    
+                    ScrollView(.horizontal) {
+                        HStack {
+                            
+                            ForEach(types) { typeValue in
+                                ZStack {
+                                    Rectangle()
+                                        .cornerRadius(10)
+                                        .foregroundColor(type == typeValue.type ? Color.navyBlue : Color.gray)
+                                        .frame(height: 50)
+                                    Text(typeValue.typeName)
+                                        .foregroundColor(type == typeValue.type ? Color.white : Color.black)
+                                        .padding()
+                                }.onTapGesture {
+                                    type = typeValue.type
+                            }
+                            }
+                            
                         }
-                        
-                        ZStack {
-                            Rectangle()
-                                .cornerRadius(10)
-                                .foregroundColor(type == "Déjeuner" ? Color.navyBlue : Color.gray)
-                                .frame(height: 50)
-                            Text("Déjeuner")
-                                .foregroundColor(type == "Déjeuner" ? Color.white : Color.black)
-                        }.onTapGesture {
-                            type = "Déjeuner"
-                        }
-                        
-                        ZStack {
-                            Rectangle()
-                                .cornerRadius(10)
-                                .foregroundColor(type == "Goûter" ? Color.navyBlue : Color.gray)
-                                .frame(height: 50)
-                            Text("Goûter")
-                                .foregroundColor(type == "Goûter" ? Color.white : Color.black)
-                        }.onTapGesture {
-                            type = "Goûter"
-                        }
-                        
-                        ZStack {
-                            Rectangle()
-                                .cornerRadius(10)
-                                .foregroundColor(type == "Diner" ? Color.navyBlue : Color.gray)
-                                .frame(height: 50)
-                            Text("Diner")
-                                .foregroundColor(type == "Diner" ? Color.white : Color.black)
-                        }.onTapGesture {
-                            type = "Diner"
-                        }
-                        
                     }
                     
                     ScrollView {
@@ -131,10 +117,13 @@ struct MealsPropostion: View {
             }
         }.edgesIgnoringSafeArea(.bottom)
         .onAppear {
-            bigModel.currentUserTags = bigModel.generateTags(type: type)
+            bigModel.currentUserTags = bigModel.generateTags(type: type, season: season)
         }
         .onChange(of: type, {
-            bigModel.currentUserTags = bigModel.generateTags(type: type)
+            bigModel.currentUserTags = bigModel.generateTags(type: type, season: season)
+        })
+        .onChange(of: season, {
+            bigModel.currentUserTags = bigModel.generateTags(type: type, season: season)
         })
         .alert(isPresented: $bigModel.didPreferencesChanged) {
             Alert(
@@ -155,6 +144,18 @@ struct MealsPropostion: View {
             set: { bigModel.currentUserTags[key] = $0 })
     }
 
+}
+
+struct Type: Identifiable {
+    var id: Int
+    var typeName: String
+    var type: String
+}
+
+struct Season: Identifiable {
+    var id: Int
+    var seasonName: String
+    var season: String
 }
 
 

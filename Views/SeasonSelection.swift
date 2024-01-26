@@ -97,6 +97,8 @@ struct SeasonSelection: View {
                     .foregroundStyle(Color.navyBlue)
                 Text("Validate")
                     .foregroundStyle(Color.white)
+            }.onTapGesture {
+                bigModel.currentView = .MealTypeView
             }
             
         }
