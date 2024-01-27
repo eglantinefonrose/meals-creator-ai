@@ -253,7 +253,7 @@ struct UserView: View {
                                                  ScrollView(.horizontal) {
                                                      HStack {
                                                          ForEach(bigModel.currentUser.proposedMeals) { meal in
-                                                             Text(meal.name)
+                                                             Text(meal.recipe.recipeName)
                                                          }
                                                      }
                                                  }
@@ -295,7 +295,7 @@ struct UserView: View {
                                                  ScrollView(.horizontal) {
                                                      HStack {
                                                          ForEach(bigModel.currentUser.favoriteMeals) { meal in
-                                                             Text(meal.name)
+                                                             Text(meal.recipe.recipeName)
                                                          }
                                                      }
                                                  }

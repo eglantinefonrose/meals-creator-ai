@@ -24,7 +24,7 @@ struct RecipeScreen: View {
                   BackModel(color: Color.navyBlue, view: .mealsPropositionScreen)
                   
                      HStack {
-                         Text(bigModel.selectedMeal.name.uppercased())
+                         Text(bigModel.selectedMeal.recipe.recipeName.uppercased())
                           .foregroundStyle(Color.navyBlue)
                           .font(.system(size: 70))
                          Spacer()
@@ -61,7 +61,7 @@ struct RecipeScreen: View {
                          }
                          
                          LazyVGrid(columns: columns, spacing: 5) {
-                             ForEach(bigModel.selectedMeal.itemsAndQ , id: \.self) { k in
+                             ForEach(bigModel.selectedMeal.recipe.ingredients , id: \.self) { k in
                                  ZStack {
                                      Rectangle()
                                          .frame(minWidth: 150, minHeight: 150)
@@ -69,9 +69,9 @@ struct RecipeScreen: View {
                                      HStack {
                                          VStack(alignment: .leading) {
                                              Spacer()
-                                             Text(k.item.name)
+                                             Text(k.name)
                                                  .foregroundColor(.white)
-                                             Text("\(k.quantity)")
+                                             Text("\(k.quantityWithUnit)")
                                                  .foregroundStyle(Color.navyBlue)
                                          }
                                          Spacer()
@@ -85,7 +85,7 @@ struct RecipeScreen: View {
                                  .font(.largeTitle)
                                  .foregroundStyle(Color.navyBlue)
                              Spacer()
-                             Text("\(bigModel.selectedMeal.spendedTime)")
+                             Text("\(bigModel.selectedMeal.recipe.totalDuration)")
                                  .foregroundStyle(Color.navyBlue)
                          }
                          Rectangle().fill(Color.navyBlue).frame(height: 1)
@@ -95,7 +95,7 @@ struct RecipeScreen: View {
                                  .font(.largeTitle)
                                  .foregroundStyle(Color.navyBlue)
                              Spacer()
-                             Text(String(format: "%.1f", bigModel.selectedMeal.price))
+                             Text(String(format: "%.1f", bigModel.selectedMeal.recipe.price))
                                  .foregroundStyle(Color.navyBlue)
                          }
                          Rectangle().fill(Color.navyBlue).frame(height: 1)
@@ -107,7 +107,11 @@ struct RecipeScreen: View {
                              Spacer()
                          }
                          //Rectangle().fill(Color.navyBlue).frame(height: 1)
-                         Text(bigModel.selectedMeal.recipe)
+                         
+                         List(bigModel.selectedMeal.recipe.recipeDescription.steps, id: \.self) { string in
+                            Text(string)
+                        }
+                         
                      }
                        
                 }.padding(20)
@@ -141,7 +145,7 @@ struct RecipeScreen: View {
     }
     
     private func isMealInList(meal: BigModel.Meal) -> Bool {
-        return bigModel.currentUser.favoriteMeals.contains { $0.name == meal.name }
+        return bigModel.currentUser.favoriteMeals.contains { $0.recipe.recipeName == meal.recipe.recipeName }
     }
     
 }

@@ -13,7 +13,7 @@ struct MealsPropostion: View {
     
     @EnvironmentObject var bigModel: BigModel
     let meals = ["Nouilles sautées", "Omelette", "Rillettes de thon"]
-    @State var tags: [BigModel.Meal: Bool] = [BigModel.Meal(id: "0", name: "E", type: "", seasons: [], itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""):false, BigModel.Meal(id: "1", name: "E", type: "", seasons: [], itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""):false]
+    @State var tags: [BigModel.Meal: Bool] = [BigModel.Meal(id: "0", recipe: BigModel.Recipe(id: "efioejfifj", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: BigModel.RecipeDescription(introduction: "", steps: []))):false, BigModel.Meal(id: "0", recipe: BigModel.Recipe(id: "efioejfifj", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: BigModel.RecipeDescription(introduction: "", steps: []))):false ]
     @State var type: String = "All"
     @State var season: String = "All"
     let types: [Type] = [Type(id: 0, typeName: "All", type: "All"), Type(id: 1, typeName: "Petit-déjeuner", type: "Petit-déjeuner"), Type(id: 2, typeName: "Déjeuner", type: "Déjeuner"), Type(id: 3, typeName: "Goûter", type: "Goûter"), Type(id: 4, typeName: "Diner", type: "Diner")]
@@ -170,9 +170,9 @@ struct MealsViewModel : View {
     var body: some View {
         HStack {
             
-            if item.type == type {
+            if item.recipe.mealType == type {
                 
-                Text(item.name)
+                Text(item.recipe.recipeName)
                     .font(.largeTitle)
                     .foregroundStyle(Color.navyBlue)
                     .onTapGesture {
@@ -200,7 +200,7 @@ struct MealsViewModel : View {
             
             if type == "All" {
                 
-                Text(item.name)
+                Text(item.recipe.recipeName)
                     .font(.largeTitle)
                     .foregroundStyle(Color.navyBlue)
                     .onTapGesture {

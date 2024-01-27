@@ -38,8 +38,54 @@ class BigModel: ObservableObject {
         var dislikedMeals: [Meal]
     }
     
-    struct Item: Identifiable, Comparable, Hashable, Codable {
+    struct Recipe: Codable, Identifiable, Hashable, Comparable {
         
+        static func < (lhs: BigModel.Recipe, rhs: BigModel.Recipe) -> Bool {
+            lhs.recipeName < rhs.recipeName
+        }
+        
+        static func == (lhs: BigModel.Recipe, rhs: BigModel.Recipe) -> Bool {
+            lhs.recipeName < rhs.recipeName
+        }
+        
+        var id: String
+        var recipeName: String
+        var numberOfPersons: Int
+        var mealType: String
+        var seasons: [String]
+        var ingredients: [Ingredient]
+        var price: Int
+        var prepDuration: Int
+        var totalDuration: Int
+        var recipeDescription: RecipeDescription
+        
+        // Hashable conformance
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(id)
+            hasher.combine(recipeName)
+            hasher.combine(numberOfPersons)
+            hasher.combine(mealType)
+            hasher.combine(seasons)
+            hasher.combine(ingredients)
+            hasher.combine(price)
+            hasher.combine(prepDuration)
+            hasher.combine(totalDuration)
+            hasher.combine(recipeDescription)
+        }
+        
+    }
+    
+    struct Ingredient: Codable, Hashable {
+        let name: String
+        let quantityWithUnit: String
+    }
+
+    struct RecipeDescription: Codable, Hashable {
+        let introduction: String
+        let steps: [String]
+    }
+    
+    struct Item: Identifiable, Comparable, Hashable, Codable {
         static func < (lhs: Item, rhs: Item) -> Bool {
             lhs.name < rhs.name
         }
@@ -52,18 +98,16 @@ class BigModel: ObservableObject {
     
     struct Meal: Codable, Identifiable, Hashable, Comparable {
         
-        static func < (lhs: Meal, rhs: Meal) -> Bool {
-            lhs.name < rhs.name
+        static func < (lhs: BigModel.Meal, rhs: BigModel.Meal) -> Bool {
+            lhs.recipe.recipeName < rhs.recipe.recipeName
+        }
+        
+        static func == (lhs: BigModel.Meal, rhs: BigModel.Meal) -> Bool {
+            lhs.recipe.recipeName < rhs.recipe.recipeName
         }
         
         var id: String
-        var name: String
-        var type: String
-        var seasons: [String]
-        var itemsAndQ: [ItemAndQtty]
-        var price: Float
-        var spendedTime: Int
-        var recipe: String
+        var recipe: Recipe
         
     }
     
@@ -72,7 +116,6 @@ class BigModel: ObservableObject {
         var item: Item
         var quantity: Int
     }
-            
     
     @Published var currentUser: User = User(firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, numberOfPerson: 0, proposedMeals: [], favoriteMeals: [], dislikedMeals: [])
     
@@ -193,24 +236,25 @@ class BigModel: ObservableObject {
         var meals: [Meal] = []
         let favoriteMeals = self.currentUser.favoriteMeals
         
-        /*if type != "All" {
+        if type != "All" {
             for meal in currentUser.proposedMeals {
-                if meal.type == type {
+                if meal.recipe.mealType == type {
                     meals.append(meal)
                 } else {}
             }
         } else {
             meals = currentUser.proposedMeals
-        }*/
+        }
         
-        /*if season != "All" {
+        if season != "All" {
             for meal in currentUser.proposedMeals {
-                if meal.season == season {
+                
+                if meal.recipe.seasons.contains(season) {
                     
-                    if meal.type == "All" {
+                    if meal.recipe.mealType == "All" {
                         meals.append(meal)
                     }
-                    if meal.type == type {
+                    if meal.recipe.mealType == type {
                         meals.append(meal)
                     } else {}
                     
@@ -218,7 +262,7 @@ class BigModel: ObservableObject {
             }
         } else {
             meals = currentUser.proposedMeals
-        }*/
+        }
 
         for meal in meals {
             tagsDictionary[meal] = favoriteMeals.contains { $0.id == meal.id }
@@ -569,7 +613,7 @@ class BigModel: ObservableObject {
         
     }
     
-    @Published var dislikedMeal: Meal = Meal(id: "", name: "", type: "", seasons: [], itemsAndQ: [], price: 0, spendedTime: 0, recipe: "")
+    @Published var dislikedMeal: Meal = Meal(id: "", recipe: Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: [])))
     
     func removeMealFromList(meal: Meal, mealsList: [Meal]) -> [Meal] {
         
@@ -828,8 +872,8 @@ class BigModel: ObservableObject {
     }
     
     @Published var isLoading = false
-    @Published var testMealList: [Meal] = [Meal(id: "", name: "Brand", type: "", seasons: [], itemsAndQ: [], price: 0, spendedTime: 0, recipe: "0")]
-    @Published var selectedMeal: Meal = Meal(id: "dd", name: "gagag", type: "", seasons: [], itemsAndQ: [ItemAndQtty(id: "e", item: Item(id: 88, category: "", name: "Carottes", seasons: ["été"]), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 5, category: "", name: "Carottes", seasons: ["été"]), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 0, category: "", name: "Carottes", seasons: ["été"]), quantity: 200)], price: 0, spendedTime: 0, recipe: "")
+    @Published var testMealList: [Meal] = [Meal(id: "", recipe: Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: [])))]
+    @Published var selectedMeal: Meal = Meal(id: "", recipe: Recipe(id: "", recipeName: "gaga", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: [])))
     @Published var selectedSeason: String = ""
     
     @Published var currentUserTags: [Meal: Bool] = [:]
@@ -860,15 +904,16 @@ class BigModel: ObservableObject {
         print(mealsNameList)
         
         for i in 0..<mealsNameList.count {
-         let response = processPrompt(prompt: "\(prompt1) \(mealsNameList[i]) en utilisant le modèle de menus que je t'ai donné et en renvoyant une réponse au format JSON et en écrivant les recipes sans mettre de retour à la ligne et donnant des id unique et distincts constitués de minimum 20 caractères et contenant au moins une majuscule en utilisant uniquement des caractères utf8, un chiffre et un caractère spécial à chaque menus crées ? La valeur de season de l'objet de type Meal sera 'été'. Donne moi UNIQUEMENT la réponse au format JSON, sans texte autour.")
-             
-         let meal = self.jsonTest(jsonString: response) ?? Meal(id: "dd", name: "gagag", type: "", seasons: [], itemsAndQ: [ItemAndQtty(id: "e", item: Item(id: 88, category: "", name: "Carottes", seasons: ["été"]), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 5, category: "", name: "Carottes", seasons: ["été"]), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 0, category: "", name: "Carottes", seasons: ["été"]), quantity: 200)], price: 0, spendedTime: 0, recipe: "")
-         if meal.id != "dd" && !isDisliked(mealName: meal.name) {
+         let response = processPrompt(prompt: "\(prompt1) \(mealsNameList[i]) en utilisant le modèle de menus que je t'ai donné et en renvoyant une réponse au format JSON et en écrivant les recipes sans mettre de retour à la ligne et donnant des id unique et distincts constitués de minimum 20 caractères et contenant au moins une majuscule en utilisant uniquement des caractères utf8, un chiffre et un caractère spécial à chaque menus crées ? La valeur de season de l'objet de type Meal sera 'été'. Donne moi UNIQUEMENT la réponse au format JSON, sans texte autour. Pour les ID des items, il faut qu'ils soient constitués de chiffres et de lettres mais jamais uniquement de + de 10 chiffres")
+            let formattedResponse: String = "{ \(response) }"
+        print("formattedResponse : [\(extractTextBetweenBraces(input: formattedResponse))]")
+        let meal = self.jsonTest(jsonString: formattedResponse) ?? Meal(id: "", recipe: Recipe(id: "", recipeName: "gaga", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: [])))
+            if meal.id != "dd" && !isDisliked(mealName: meal.recipe.recipeName) {
              self.currentUserTags[meal] = false
              self.currentUser.proposedMeals.append(meal)
              self.storeCurrentUserInfoIntoDB(user: currentUser) {}
          }
-         print(meal.name)
+         print(meal.recipe.recipeName)
             
         }
              
@@ -879,11 +924,65 @@ class BigModel: ObservableObject {
         
     }
     
+    func createCatObject(name: String, colour: String, age: Int) {
+        let parameters: [String: Any] = [
+            "model": "gpt-3.5-turbo-0613",
+            "messages": [
+                [
+                    "role": "user",
+                    "content": "Create a new Meal object for the meal 'Brandade de morue'."
+                ]
+            ],
+            "functions": [
+                [
+                    "name": "createCatObject",
+                    "parameters": [
+                        "type": "object",
+                        "properties": [
+                            "id": ["type": "string"],
+                            "name": ["type": "string"],
+                            "type": ["type": "string"],
+                            "seasosn": ["type": "[string]"],
+                            "itemsAndQ": ["type": "  "],
+                            "name": ["type": "string"],
+                            "name": ["type": "string"],
+                        ],
+                        "required": ["name", "colour", "age"]
+                    ]
+                ]
+            ],
+            "function_call": ["name": "createCatObject"]
+        ]
+        
+        AF.request("https://api.openai.com/v1/engines/davinci/completions", method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: ["Authorization": "Bearer YOUR_API_KEY"])
+            .validate()
+            .responseDecodable(of: Meal.self) { response in
+                guard let cat = response.value else {
+                    print("Error: \(String(describing: response.error))")
+                    return
+                }
+                print("Created Cat object: \(cat)")
+            }
+    }
+    
+    func extractTextBetweenBraces(input: String) -> String {
+        guard let firstOpenBraceRange = input.range(of: "{"),
+              let lastCloseBraceRange = input.range(of: "}", options: .backwards),
+              firstOpenBraceRange.upperBound < lastCloseBraceRange.lowerBound else {
+            return ""
+        }
+        
+        let startIndex = input.index(after: firstOpenBraceRange.lowerBound)
+        let endIndex = input.index(before: lastCloseBraceRange.upperBound)
+        
+        return String(input[startIndex..<endIndex])
+    }
+    
     func isDisliked(mealName: String) -> Bool {
         // Parcourt la liste des repas
         for repasCourant in currentUser.dislikedMeals {
             // Vérifie si le nomRecherche correspond à l'attribut "nom" de l'objet Repas
-            if repasCourant.name == mealName {
+            if repasCourant.recipe.recipeName == mealName {
                 return true
             }
         }
@@ -895,7 +994,7 @@ class BigModel: ObservableObject {
         // Modifiez votre liste ici comme vous le souhaitez
         print("à")
         //for i in 0...10 {
-        let meal = Meal(id: "dd", name: "Brandade", type: "", seasons: [], itemsAndQ: [], price: 0, spendedTime: 0, recipe: "")
+        let meal = Meal(id: "", recipe: Recipe(id: "", recipeName: "Brandade", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: [])))
             if meal.id != "" {
                 do {
                     try await Task.sleep(nanoseconds: 1000000000)
@@ -912,7 +1011,7 @@ class BigModel: ObservableObject {
     func jsonTest(jsonString: String) -> Meal? {
         if let jsonData = jsonString.data(using: .utf8) {
             do {
-                print("jsonString \(jsonString)")
+                print("jsonString [\(jsonString)]")
                 let meal = try JSONDecoder().decode(Meal.self, from: jsonData)
                 return meal
             } catch {
@@ -973,14 +1072,18 @@ class BigModel: ObservableObject {
                                         Item(id: 0, category: "cookingTools", name: "Poireaux", seasons: ["été"])],
                                 tools: [Item(id: 0, category: "Tools", name: "Casserolle", seasons: ["été"])],
                                 budget: 0, spendedTime: 0, numberOfPerson: 0,
-                                proposedMeals: [BigModel.Meal(id: "ktuyffg", name: "Andouillette", type: "Petit-déjeuner", seasons: ["Spring"], itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),
-                                                BigModel.Meal(id: "yjfgj", name: "Brandade", type: "Déjeuner", seasons: ["Winter"], itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),
-                                                BigModel.Meal(id: "sdfgjvjkuhu", name: "Cassoulet", type: "Goûter", seasons: ["Summer"], itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),
-                                                BigModel.Meal(id: "lyughompij", name: "Couscous", type: "Diner", seasons: ["Autumn"], itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),
-                                                BigModel.Meal(id: "ttttt", name: "Tarte à la pomme", type: "Goûter", seasons: ["Autumn"], itemsAndQ: [], price: 0, spendedTime: 0, recipe: "")],
-                                favoriteMeals: [BigModel.Meal(id: "ktuyffg", name: "Andouillette", type: "Petit-déjeuner", seasons: ["Summer"], itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),
-                                                BigModel.Meal(id: "yjfgj", name: "Brandade", type: "Déjeuner", seasons: ["Winter"], itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),
-                                                BigModel.Meal(id: "sdfgjvjkuhu", name: "Cassoulet", type: "Goûter", seasons: ["Spring"], itemsAndQ: [], price: 0, spendedTime: 0, recipe: "")], dislikedMeals: [])
+                                proposedMeals: [BigModel.Meal(id: "dfkljfrjf", recipe: Recipe(id: "dfkljfrjf", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))),
+                                                BigModel.Meal(id: "002222", recipe: Recipe(id: "002222", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))),
+                                                BigModel.Meal(id: "05394939459", recipe: Recipe(id: "05394939459", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))),
+                                                BigModel.Meal(id: "59T845958", recipe: Recipe(id: "59T845958", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))),
+                                                BigModel.Meal(id: "DFORUER9UE", recipe: Recipe(id: "DFORUER9UE", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))),
+                                                BigModel.Meal(id: "IEFJEPFIO", recipe: Recipe(id: "IEFJEPFIO", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: [])))] ,
+                                
+                                favoriteMeals: [BigModel.Meal(id: "dfkljfrjf", recipe: Recipe(id: "efioejfifj", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))),
+                                                BigModel.Meal(id: "dfkljfrjf", recipe: Recipe(id: "efioejfifj", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))),
+                                                BigModel.Meal(id: "dfkljfrjf", recipe: Recipe(id: "efioejfifj", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))) ],
+                                
+                                dislikedMeals: [])
         self.currentView = .UserView
     }
     

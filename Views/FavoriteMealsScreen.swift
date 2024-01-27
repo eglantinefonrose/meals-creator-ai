@@ -46,7 +46,7 @@ struct FavoriteMealsScreen: View {
                     ScrollView {
                         VStack(alignment: .leading, spacing: 10) {
                             ForEach(bigModel.currentUser.favoriteMeals) { item in
-                                Text(item.name)
+                                Text(item.recipe.recipeName)
                                     .font(.largeTitle)
                                     .foregroundStyle(Color.navyBlue)
                                     .onTapGesture {
