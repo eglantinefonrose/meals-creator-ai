@@ -13,7 +13,7 @@ struct MealsPropostion: View {
     
     @EnvironmentObject var bigModel: BigModel
     let meals = ["Nouilles sautées", "Omelette", "Rillettes de thon"]
-    @State var tags: [BigModel.Meal: Bool] = [BigModel.Meal(id: "0", name: "E", type: "", season: "", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""):false, BigModel.Meal(id: "1", name: "E", type: "", season: "", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""):false]
+    @State var tags: [BigModel.Meal: Bool] = [BigModel.Meal(id: "0", name: "E", type: "", seasons: [], itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""):false, BigModel.Meal(id: "1", name: "E", type: "", seasons: [], itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""):false]
     @State var type: String = "All"
     @State var season: String = "All"
     let types: [Type] = [Type(id: 0, typeName: "All", type: "All"), Type(id: 1, typeName: "Petit-déjeuner", type: "Petit-déjeuner"), Type(id: 2, typeName: "Déjeuner", type: "Déjeuner"), Type(id: 3, typeName: "Goûter", type: "Goûter"), Type(id: 4, typeName: "Diner", type: "Diner")]

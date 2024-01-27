@@ -59,7 +59,7 @@ class BigModel: ObservableObject {
         var id: String
         var name: String
         var type: String
-        var season: String
+        var seasons: [String]
         var itemsAndQ: [ItemAndQtty]
         var price: Float
         var spendedTime: Int
@@ -203,7 +203,7 @@ class BigModel: ObservableObject {
             meals = currentUser.proposedMeals
         }*/
         
-        if season != "All" {
+        /*if season != "All" {
             for meal in currentUser.proposedMeals {
                 if meal.season == season {
                     
@@ -218,7 +218,7 @@ class BigModel: ObservableObject {
             }
         } else {
             meals = currentUser.proposedMeals
-        }
+        }*/
 
         for meal in meals {
             tagsDictionary[meal] = favoriteMeals.contains { $0.id == meal.id }
@@ -569,7 +569,7 @@ class BigModel: ObservableObject {
         
     }
     
-    @Published var dislikedMeal: Meal = Meal(id: "", name: "", type: "", season: "", itemsAndQ: [], price: 0, spendedTime: 0, recipe: "")
+    @Published var dislikedMeal: Meal = Meal(id: "", name: "", type: "", seasons: [], itemsAndQ: [], price: 0, spendedTime: 0, recipe: "")
     
     func removeMealFromList(meal: Meal, mealsList: [Meal]) -> [Meal] {
         
@@ -775,7 +775,6 @@ class BigModel: ObservableObject {
             let httpBody: [String: Any] = [
                 "prompt" : prompt,
                 "max_tokens" : 2000
-         //       "temperature": String(temperature)
             ]
             
             var httpBodyJson: Data
@@ -812,11 +811,12 @@ class BigModel: ObservableObject {
     
     func createMealsNameList(mealType: String) -> [String] {
         
-        let prompt1 = "Voici mon modèle d'ingredients en swift : struct Item: Identifiable, Comparable, Hashable, Codable { var id: Int var category: Categories var name: String }. Voici mon modèle d'ItemAndQtty en swift : struct ItemAndQtty: Codable, Identifiable { var id: String var item: Item var quantity: Int } Le type Categories est une enum : enum Categories: CaseIterable, Codable { case legumes, fruits, strachyFoods, proteins, seasonning, allergies, cookingTools }. La variable 'category' doit être écrit de la forme .nomdelacategorie. Voici mon modèle de menu en swift : struct Meal: Codable, Identifiable { var id: String var name: String var type: String = \(mealType) var season: String = \(selectedSeason) var itemsAndQ: [ItemAndQtty] var price: Int var spendedTime: Int var recipe: String }. Peux tu me donner la recette de "
+        //let prompt1 = "Voici mon modèle d'ingredients en swift : struct Item: Identifiable, Comparable, Hashable, Codable { var id: Int var category: String var name: String var seasons: [String] }. Voici mon modèle d'ItemAndQtty en swift : struct ItemAndQtty: Codable, Identifiable { var id: String var item: Item var quantity: Int } Le type Categories est une enum : enum Categories: CaseIterable, Codable { case legumes, fruits, strachyFoods, proteins, seasonning, allergies, cookingTools }. La variable 'category' doit être écrit de la forme .nomdelacategorie. Voici mon modèle de menu en swift : struct Meal: Codable, Identifiable { var id: String var name: String var type: String = \(mealType) var season: String = \(selectedSeason) var itemsAndQ: [ItemAndQtty] var price: Int var spendedTime: Int var recipe: String }. Peux tu me donner la recette de "
         //var meals: [Meal] = []
         var mealsNameList: [String] = []
         
-        let response = processPrompt(prompt: "Peux tu me proposer une liste de 5 plats de type \(mealType) d'\(selectedSeason) pour une personne qui aime \(listToString(list: self.currentUser.items)) et qui a \(listToString(list: self.currentUser.tools)). Cette personne a un budget de \(currentUser.budget), veut y consacrer maximum \(currentUser.spendedTime) et pour \(currentUser.numberOfPerson). Donne moi des meals avec des ID distincts et différents entre eux pour chaque meals. Donne moi une réponse sans retour à la ligne, en séparant uniquement les différents plats par des tirest (ex: repas1 - repas2 - repas3 etc...).")
+        let response = processPrompt(prompt: "Peux tu me proposer une liste de 5 plats de type \(mealType) d'\(selectedSeason) pour une personne qui aime \(listToString(list: self.currentUser.items)) et qui a \(listToString(list: self.currentUser.tools)). Cette personne a un budget de \(currentUser.budget), veut y consacrer maximum \(currentUser.spendedTime) et pour \(currentUser.numberOfPerson). Donne moi une réponse sans retour à la ligne, en séparant uniquement les différents plats par des tirest (par exemple : \"Rillettes de thon - Brandade de morue - Spaghettis à la carbonnara\").")
+        //Donne moi des meals avec des ID distincts et différents entre eux pour chaque meals.
         mealsNameList = splitStringWithDash(inputString: response)
         
         //let response2 = processPrompt(prompt: "\(prompt1) \(mealsNameList[0])")
@@ -828,8 +828,8 @@ class BigModel: ObservableObject {
     }
     
     @Published var isLoading = false
-    @Published var testMealList: [Meal] = [Meal(id: "", name: "Brand", type: "", season: "", itemsAndQ: [], price: 0, spendedTime: 0, recipe: "0")]
-    @Published var selectedMeal: Meal = Meal(id: "dd", name: "gagag", type: "", season: "", itemsAndQ: [ItemAndQtty(id: "e", item: Item(id: 88, category: "", name: "Carottes", seasons: ["été"]), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 5, category: "", name: "Carottes", seasons: ["été"]), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 0, category: "", name: "Carottes", seasons: ["été"]), quantity: 200)], price: 0, spendedTime: 0, recipe: "")
+    @Published var testMealList: [Meal] = [Meal(id: "", name: "Brand", type: "", seasons: [], itemsAndQ: [], price: 0, spendedTime: 0, recipe: "0")]
+    @Published var selectedMeal: Meal = Meal(id: "dd", name: "gagag", type: "", seasons: [], itemsAndQ: [ItemAndQtty(id: "e", item: Item(id: 88, category: "", name: "Carottes", seasons: ["été"]), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 5, category: "", name: "Carottes", seasons: ["été"]), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 0, category: "", name: "Carottes", seasons: ["été"]), quantity: 200)], price: 0, spendedTime: 0, recipe: "")
     @Published var selectedSeason: String = ""
     
     @Published var currentUserTags: [Meal: Bool] = [:]
@@ -837,10 +837,15 @@ class BigModel: ObservableObject {
     
     func createMeals(mealType: String) async {
         
+        /*var id: Int
+         var category: String
+         var name: String
+         var seasons: [String]*/
+        
         DispatchQueue.main.async {
             self.isLoading = true
         }
-        let prompt1 = "Voici mon modèle d'ingredients en swift : struct Item: Identifiable, Comparable, Hashable, Codable { var id: Int var category: Categories var name: String }. Voici mon modèle d'ItemAndQtty en swift : struct ItemAndQtty: Codable, Identifiable { var id: String var item: Item var quantity: Int } Le type Categories est une enum : enum Categories: CaseIterable, Codable { case legumes, fruits, strachyFoods, proteins, seasonning, allergies, cookingTools }. La variable 'category' doit être écrit de la forme .nomdelacategorie. Voici mon modèle de menu en swift : struct Meal: Codable, Identifiable { var id: String var name: String var type: String = \(mealType) var itemsAndQ: [ItemAndQtty] var price: Int var spendedTime: Int var recipe: String }. Peux tu me donner la recette de "
+        let prompt1 = "Voici mon modèle d'ingredients en swift : struct Item: Identifiable, Comparable, Hashable, Codable { var id: Int var category: Categories var name: String var seasons: [String] }. La variable seasons peut prendre uniquement les 4 valeurs suivantes : 'Été', 'Automne', 'Hiver', 'Printemps'. Voici mon modèle d'ItemAndQtty en swift : struct ItemAndQtty: Codable, Identifiable { var id: String var item: Item var quantity: Int } La variable categorie peut prendre seulement ces valeurs : 'legumes', 'fruits', 'strachyFoods', 'proteins', 'seasonning', 'allergies', 'cookingTools' }. Voici mon modèle de menu en swift : struct Meal: Codable, Identifiable { var id: String var name: String var type: String = \(mealType) var seasons = ['été'] var itemsAndQ: [ItemAndQtty] var price: Int var spendedTime: Int var recipe: String }. Peux tu me donner l'objet de type Meal correspondant à "
         let mealsNameList: [String] = createMealsNameList(mealType: mealType)
         currentUserTags = [:]
         
@@ -854,26 +859,28 @@ class BigModel: ObservableObject {
         print("mealsNameList.count \(mealsNameList.count)")
         print(mealsNameList)
         
-        for i in 0..<mealsNameList.count {
-            let response = processPrompt(prompt: "\(prompt1) \(mealsNameList[i]) en utilisant le modèle de menus que je t'ai donné et en renvoyant une réponse au format JSON et en écrivant les recipes sans mettre de retour à la ligne et donnant des id unique et distincts constitués de minimum 20 caractères et contenant au moins une majuscule en utilisant uniquement des caractères utf8, un chiffre et un caractère spécial à chaque menus crées ?")
-                
-            let meal = self.jsonTest(jsonString: response) ?? Meal(id: "dd", name: "gagag", type: "", season: "", itemsAndQ: [ItemAndQtty(id: "e", item: Item(id: 88, category: "", name: "Carottes", seasons: ["été"]), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 5, category: "", name: "Carottes", seasons: ["été"]), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 0, category: "", name: "Carottes", seasons: ["été"]), quantity: 200)], price: 0, spendedTime: 0, recipe: "")
-            if meal.id != "dd" && !isDisliked(mealName: meal.name) {
-                self.currentUserTags[meal] = false
-                self.currentUser.proposedMeals.append(meal)
-                self.storeCurrentUserInfoIntoDB(user: currentUser) {}
-                
-                //print("append")
-            }
-            print(meal.name)
+        
+        let response = processPrompt(prompt: "\(prompt1) la brandade de morue en utilisant le modèle de menus que je t'ai donné et en renvoyant une réponse au format JSON et en écrivant les recipes sans mettre de retour à la ligne et donnant des id unique et distincts constitués de minimum 20 caractères et contenant au moins une majuscule en utilisant uniquement des caractères utf8, un chiffre et un caractère spécial à chaque menus crées ? La valeur de season de l'objet de type Meal sera 'été'. Donne moi UNIQUEMENT la réponse au format JSON, sans texte autour.")
             
+        let meal = self.jsonTest(jsonString: response) ?? Meal(id: "dd", name: "gagag", type: "", seasons: [], itemsAndQ: [ItemAndQtty(id: "e", item: Item(id: 88, category: "", name: "Carottes", seasons: ["été"]), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 5, category: "", name: "Carottes", seasons: ["été"]), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 0, category: "", name: "Carottes", seasons: ["été"]), quantity: 200)], price: 0, spendedTime: 0, recipe: "")
+        if meal.id != "dd" && !isDisliked(mealName: meal.name) {
+            self.currentUserTags[meal] = false
+            self.currentUser.proposedMeals.append(meal)
+            self.storeCurrentUserInfoIntoDB(user: currentUser) {}
+            
+            //print("append")
         }
+        print(meal.name)
+        
+        /*for i in 0..<mealsNameList.count {
+            
+            
+        }*/
              
         DispatchQueue.main.async {
             self.isLoading = false
         }
         print("done")
-        
         
     }
     
@@ -893,7 +900,7 @@ class BigModel: ObservableObject {
         // Modifiez votre liste ici comme vous le souhaitez
         print("à")
         //for i in 0...10 {
-        let meal = Meal(id: "dd", name: "Brandade", type: "", season: "", itemsAndQ: [], price: 0, spendedTime: 0, recipe: "")
+        let meal = Meal(id: "dd", name: "Brandade", type: "", seasons: [], itemsAndQ: [], price: 0, spendedTime: 0, recipe: "")
             if meal.id != "" {
                 do {
                     try await Task.sleep(nanoseconds: 1000000000)
@@ -971,14 +978,14 @@ class BigModel: ObservableObject {
                                         Item(id: 0, category: "cookingTools", name: "Poireaux", seasons: ["été"])],
                                 tools: [Item(id: 0, category: "Tools", name: "Casserolle", seasons: ["été"])],
                                 budget: 0, spendedTime: 0, numberOfPerson: 0,
-                                proposedMeals: [BigModel.Meal(id: "ktuyffg", name: "Andouillette", type: "Petit-déjeuner", season: "Spring", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),
-                                                BigModel.Meal(id: "yjfgj", name: "Brandade", type: "Déjeuner", season: "Winter", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),
-                                                BigModel.Meal(id: "sdfgjvjkuhu", name: "Cassoulet", type: "Goûter", season: "Summer", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),
-                                                BigModel.Meal(id: "lyughompij", name: "Couscous", type: "Diner", season: "Autumn", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),
-                                                BigModel.Meal(id: "ttttt", name: "Tarte à la pomme", type: "Goûter", season: "Autumn", itemsAndQ: [], price: 0, spendedTime: 0, recipe: "")],
-                                favoriteMeals: [BigModel.Meal(id: "ktuyffg", name: "Andouillette", type: "Petit-déjeuner", season: "Summer", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),
-                                                BigModel.Meal(id: "yjfgj", name: "Brandade", type: "Déjeuner", season: "Winter", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),
-                                                BigModel.Meal(id: "sdfgjvjkuhu", name: "Cassoulet", type: "Goûter", season: "Spring", itemsAndQ: [], price: 0, spendedTime: 0, recipe: "")], dislikedMeals: [])
+                                proposedMeals: [BigModel.Meal(id: "ktuyffg", name: "Andouillette", type: "Petit-déjeuner", seasons: ["Spring"], itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),
+                                                BigModel.Meal(id: "yjfgj", name: "Brandade", type: "Déjeuner", seasons: ["Winter"], itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),
+                                                BigModel.Meal(id: "sdfgjvjkuhu", name: "Cassoulet", type: "Goûter", seasons: ["Summer"], itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),
+                                                BigModel.Meal(id: "lyughompij", name: "Couscous", type: "Diner", seasons: ["Autumn"], itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),
+                                                BigModel.Meal(id: "ttttt", name: "Tarte à la pomme", type: "Goûter", seasons: ["Autumn"], itemsAndQ: [], price: 0, spendedTime: 0, recipe: "")],
+                                favoriteMeals: [BigModel.Meal(id: "ktuyffg", name: "Andouillette", type: "Petit-déjeuner", seasons: ["Summer"], itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),
+                                                BigModel.Meal(id: "yjfgj", name: "Brandade", type: "Déjeuner", seasons: ["Winter"], itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""),
+                                                BigModel.Meal(id: "sdfgjvjkuhu", name: "Cassoulet", type: "Goûter", seasons: ["Spring"], itemsAndQ: [], price: 0, spendedTime: 0, recipe: "")], dislikedMeals: [])
         self.currentView = .UserView
     }
     
