@@ -38,7 +38,7 @@ class BigModel: ObservableObject {
         var dislikedMeals: [Meal]
     }
     
-    struct Recipe: Codable, Identifiable, Hashable, Comparable {
+    struct Recipe: Codable, Hashable, Comparable {
         
         static func < (lhs: BigModel.Recipe, rhs: BigModel.Recipe) -> Bool {
             lhs.recipeName < rhs.recipeName
@@ -48,7 +48,7 @@ class BigModel: ObservableObject {
             lhs.recipeName < rhs.recipeName
         }
         
-        var id: String
+        //var id: String
         var recipeName: String
         var numberOfPersons: Int
         var mealType: String
@@ -61,7 +61,6 @@ class BigModel: ObservableObject {
         
         // Hashable conformance
         func hash(into hasher: inout Hasher) {
-            hasher.combine(id)
             hasher.combine(recipeName)
             hasher.combine(numberOfPersons)
             hasher.combine(mealType)
@@ -491,7 +490,7 @@ class BigModel: ObservableObject {
                         let user = try document.data(as: User.self)
                         self.currentUser = user
                         
-                        print("Document data: \(String(describing: document.data()))")
+                       // print("Document data: \(String(describing: document.data()))")
                     }
                     catch {
                         print(error.localizedDescription)
@@ -848,7 +847,7 @@ class BigModel: ObservableObject {
                     ///
                     let responseHandler = OpenAIResponseHandler()
                     
-                    print("jsonStr : [\(jsonStr)]")
+                    //print("jsonStr : [\(jsonStr)]")
                     let jsonString = (responseHandler.decodeJson(jsonString: jsonStr)!.choices[0].text)
                     
                     return (jsonString)
@@ -898,7 +897,6 @@ class BigModel: ObservableObject {
         DispatchQueue.main.async {
             self.isLoading = true
         }
-        let prompt1 = "Voici mon modèle d'ingredients en swift : struct Item: Identifiable, Comparable, Hashable, Codable { var id: Int var category: Categories var name: String var seasons: [String] }. La variable seasons peut prendre uniquement les 4 valeurs suivantes : 'Été', 'Automne', 'Hiver', 'Printemps'. Voici mon modèle d'ItemAndQtty en swift : struct ItemAndQtty: Codable, Identifiable { var id: String var item: Item var quantity: Int } La variable categorie peut prendre seulement ces valeurs : 'legumes', 'fruits', 'strachyFoods', 'proteins', 'seasonning', 'allergies', 'cookingTools' }. Voici mon modèle de menu en swift : struct Meal: Codable, Identifiable { var id: String var name: String var type: String = \(mealType) var seasons = ['été'] var itemsAndQ: [ItemAndQtty] var price: Int var spendedTime: Int var recipe: String }. Peux tu me donner l'objet de type Meal correspondant à "
         let mealsNameList: [String] = createMealsNameList(mealType: mealType)
         currentUserTags = [:]
         
@@ -910,19 +908,23 @@ class BigModel: ObservableObject {
         }*/
         
         print("mealsNameList.count \(mealsNameList.count)")
-        print(mealsNameList)
+        //print(mealsNameList)
         
         for i in 0..<mealsNameList.count {
-         let response = processPrompt(prompt: "\(prompt1) \(mealsNameList[i]) en utilisant le modèle de menus que je t'ai donné et en renvoyant une réponse au format JSON et en écrivant les recipes sans mettre de retour à la ligne et donnant des id unique et distincts constitués de minimum 20 caractères et contenant au moins une majuscule en utilisant uniquement des caractères utf8, un chiffre et un caractère spécial à chaque menus crées ? La valeur de season de l'objet de type Meal sera 'été'. Donne moi UNIQUEMENT la réponse au format JSON, sans texte autour. Pour les ID des items, il faut qu'ils soient constitués de chiffres et de lettres mais jamais uniquement de + de 10 chiffres")
-            let formattedResponse: String = "{ \(response) }"
-        print("formattedResponse : [\(extractTextBetweenBraces(input: formattedResponse))]")
-        let meal = self.jsonTest(jsonString: formattedResponse) ?? Meal(id: "", recipe: Recipe(id: "", recipeName: "gaga", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: [])))
-            if meal.id != "dd" && !isDisliked(mealName: meal.recipe.recipeName) {
-             self.currentUserTags[meal] = false
-             self.currentUser.proposedMeals.append(meal)
-             self.storeCurrentUserInfoIntoDB(user: currentUser) {}
-         }
-         print(meal.recipe.recipeName)
+            
+            let response = processPrompt(prompt: "Donne moi les informations suivantes pour réaliser la recette \(mealsNameList[i]) : - seasons : saison(s) pour laquelle la recette est adaptée  - ingredients : liste des ingrédients et quantité nécessaire pour \(currentUser.numberOfPerson) personnes - price : prix indicatif pour l'ensemble des ingrédients (sans avoir le détail par ingrédient) - prepDuration : durée de préparation - totalDuration : durée totale - recipe : description textuelle de la recette. Formate le résultat de la manière suivante : { 'recipeName':'\(mealsNameList[i])', 'numberOfPersons':3, 'mealType':'Main course', 'seasons': ['saison1', 'saison2'], 'ingredients': [ {'name':'ingrédient1',  'quantityWithUnit':'x grammes'}, {'name':'ingrédient2',  'quantityWithUnit':'y litres'}], 'price': 4.75€, 'prepDuration': 15, 'totalDuration': 240, 'recipeDescription': { 'introduction': 'recipe high level description', 'steps': [ 'text for step 1', 'text for step 2', ] } }")
+            
+            
+            let meal = BigModel.Meal(id: UUID().uuidString, recipe: self.jsonTest(jsonString: response) ?? BigModel.Recipe(id: "dd", recipeName: "gaga", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: [])))
+                                     //?? BigModel.Recipe(id: "", recipeName: "gaga", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))))
+                
+            
+            if (meal.id != "dd") && !isDisliked(mealName: meal.recipe.recipeName) {
+                 self.currentUserTags[meal] = false
+                 self.currentUser.proposedMeals.append(meal)
+                 self.storeCurrentUserInfoIntoDB(user: currentUser) {}
+             }
+             print(meal.recipe.recipeName)
             
         }
              
@@ -977,21 +979,21 @@ class BigModel: ObservableObject {
         print("done")
     }
     
-    func jsonTest(jsonString: String) -> Meal? {
+    func jsonTest(jsonString: String) -> Recipe {
         if let jsonData = jsonString.data(using: .utf8) {
             do {
                 print("jsonString [\(jsonString)]")
-                let meal = try JSONDecoder().decode(Meal.self, from: jsonData)
-                return meal
+                let recipe = try JSONDecoder().decode(Recipe.self, from: jsonData)
+                return recipe
             } catch {
-                print(jsonString)
+                print("jsonString [\(jsonString)]")
                 print("Erreur lors de la désérialisation JSON :", error)
-                return nil
+                return BigModel.Recipe(id: "err", recipeName: "err", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))
             }
         } else {
-            print(jsonString)
+            print("jsonString [\(jsonString)]")
             print("Erreur lors de la conversion de la chaîne en données JSON")
-            return nil
+            return BigModel.Recipe(id: "err", recipeName: "err", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))
         }
     }
     
