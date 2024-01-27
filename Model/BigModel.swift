@@ -859,23 +859,18 @@ class BigModel: ObservableObject {
         print("mealsNameList.count \(mealsNameList.count)")
         print(mealsNameList)
         
-        
-        let response = processPrompt(prompt: "\(prompt1) la brandade de morue en utilisant le modèle de menus que je t'ai donné et en renvoyant une réponse au format JSON et en écrivant les recipes sans mettre de retour à la ligne et donnant des id unique et distincts constitués de minimum 20 caractères et contenant au moins une majuscule en utilisant uniquement des caractères utf8, un chiffre et un caractère spécial à chaque menus crées ? La valeur de season de l'objet de type Meal sera 'été'. Donne moi UNIQUEMENT la réponse au format JSON, sans texte autour.")
+        for i in 0..<mealsNameList.count {
+         let response = processPrompt(prompt: "\(prompt1) \(mealsNameList[i]) en utilisant le modèle de menus que je t'ai donné et en renvoyant une réponse au format JSON et en écrivant les recipes sans mettre de retour à la ligne et donnant des id unique et distincts constitués de minimum 20 caractères et contenant au moins une majuscule en utilisant uniquement des caractères utf8, un chiffre et un caractère spécial à chaque menus crées ? La valeur de season de l'objet de type Meal sera 'été'. Donne moi UNIQUEMENT la réponse au format JSON, sans texte autour.")
+             
+         let meal = self.jsonTest(jsonString: response) ?? Meal(id: "dd", name: "gagag", type: "", seasons: [], itemsAndQ: [ItemAndQtty(id: "e", item: Item(id: 88, category: "", name: "Carottes", seasons: ["été"]), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 5, category: "", name: "Carottes", seasons: ["été"]), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 0, category: "", name: "Carottes", seasons: ["été"]), quantity: 200)], price: 0, spendedTime: 0, recipe: "")
+         if meal.id != "dd" && !isDisliked(mealName: meal.name) {
+             self.currentUserTags[meal] = false
+             self.currentUser.proposedMeals.append(meal)
+             self.storeCurrentUserInfoIntoDB(user: currentUser) {}
+         }
+         print(meal.name)
             
-        let meal = self.jsonTest(jsonString: response) ?? Meal(id: "dd", name: "gagag", type: "", seasons: [], itemsAndQ: [ItemAndQtty(id: "e", item: Item(id: 88, category: "", name: "Carottes", seasons: ["été"]), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 5, category: "", name: "Carottes", seasons: ["été"]), quantity: 200), ItemAndQtty(id: "e", item: Item(id: 0, category: "", name: "Carottes", seasons: ["été"]), quantity: 200)], price: 0, spendedTime: 0, recipe: "")
-        if meal.id != "dd" && !isDisliked(mealName: meal.name) {
-            self.currentUserTags[meal] = false
-            self.currentUser.proposedMeals.append(meal)
-            self.storeCurrentUserInfoIntoDB(user: currentUser) {}
-            
-            //print("append")
         }
-        print(meal.name)
-        
-        /*for i in 0..<mealsNameList.count {
-            
-            
-        }*/
              
         DispatchQueue.main.async {
             self.isLoading = false
