@@ -121,9 +121,11 @@ struct MealsPropostion: View {
         }
         .onChange(of: type, {
             bigModel.currentUserTags = bigModel.generateTags(type: type, season: season)
+            print("type: \(type)")
         })
         .onChange(of: season, {
             bigModel.currentUserTags = bigModel.generateTags(type: type, season: season)
+            print("season: \(season)")
         })
         .alert(isPresented: $bigModel.didPreferencesChanged) {
             Alert(

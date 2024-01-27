@@ -236,31 +236,40 @@ class BigModel: ObservableObject {
         var meals: [Meal] = []
         let favoriteMeals = self.currentUser.favoriteMeals
         
-        if type != "All" {
+        if (season != "All" && type != "All") {
+            print("")
             for meal in currentUser.proposedMeals {
-                if meal.recipe.mealType == type {
+                if (meal.recipe.seasons.contains(season) && meal.recipe.mealType == type) {
                     meals.append(meal)
-                } else {}
+                }
+                
+                if meal.recipe.seasons.contains("Spring") {
+                    print("eeee")
+                }
+                
             }
-        } else {
-            meals = currentUser.proposedMeals
+            
         }
         
-        if season != "All" {
+        if (season != "All" && type == "All") {
+            print("")
             for meal in currentUser.proposedMeals {
-                
-                if meal.recipe.seasons.contains(season) {
-                    
-                    if meal.recipe.mealType == "All" {
-                        meals.append(meal)
-                    }
-                    if meal.recipe.mealType == type {
-                        meals.append(meal)
-                    } else {}
-                    
-                } else {}
+                if (meal.recipe.seasons.contains(season)) {
+                    meals.append(meal)
+                }
             }
-        } else {
+        }
+        
+        if (season == "All" && type != "All") {
+            print("")
+            for meal in currentUser.proposedMeals {
+                if (meal.recipe.mealType == type) {
+                    meals.append(meal)
+                }
+            }
+        }
+        
+        if (season == "All" && type == "All") {
             meals = currentUser.proposedMeals
         }
 
@@ -924,46 +933,6 @@ class BigModel: ObservableObject {
         
     }
     
-    func createCatObject(name: String, colour: String, age: Int) {
-        let parameters: [String: Any] = [
-            "model": "gpt-3.5-turbo-0613",
-            "messages": [
-                [
-                    "role": "user",
-                    "content": "Create a new Meal object for the meal 'Brandade de morue'."
-                ]
-            ],
-            "functions": [
-                [
-                    "name": "createCatObject",
-                    "parameters": [
-                        "type": "object",
-                        "properties": [
-                            "id": ["type": "string"],
-                            "name": ["type": "string"],
-                            "type": ["type": "string"],
-                            "seasosn": ["type": "[string]"],
-                            "itemsAndQ": ["type": "  "],
-                            "name": ["type": "string"],
-                            "name": ["type": "string"],
-                        ],
-                        "required": ["name", "colour", "age"]
-                    ]
-                ]
-            ],
-            "function_call": ["name": "createCatObject"]
-        ]
-        
-        AF.request("https://api.openai.com/v1/engines/davinci/completions", method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: ["Authorization": "Bearer YOUR_API_KEY"])
-            .validate()
-            .responseDecodable(of: Meal.self) { response in
-                guard let cat = response.value else {
-                    print("Error: \(String(describing: response.error))")
-                    return
-                }
-                print("Created Cat object: \(cat)")
-            }
-    }
     
     func extractTextBetweenBraces(input: String) -> String {
         guard let firstOpenBraceRange = input.range(of: "{"),
@@ -1072,12 +1041,12 @@ class BigModel: ObservableObject {
                                         Item(id: 0, category: "cookingTools", name: "Poireaux", seasons: ["été"])],
                                 tools: [Item(id: 0, category: "Tools", name: "Casserolle", seasons: ["été"])],
                                 budget: 0, spendedTime: 0, numberOfPerson: 0,
-                                proposedMeals: [BigModel.Meal(id: "dfkljfrjf", recipe: Recipe(id: "dfkljfrjf", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))),
-                                                BigModel.Meal(id: "002222", recipe: Recipe(id: "002222", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))),
-                                                BigModel.Meal(id: "05394939459", recipe: Recipe(id: "05394939459", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))),
-                                                BigModel.Meal(id: "59T845958", recipe: Recipe(id: "59T845958", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))),
-                                                BigModel.Meal(id: "DFORUER9UE", recipe: Recipe(id: "DFORUER9UE", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))),
-                                                BigModel.Meal(id: "IEFJEPFIO", recipe: Recipe(id: "IEFJEPFIO", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: [])))] ,
+                                proposedMeals: [BigModel.Meal(id: "dfkljfrjf", recipe: Recipe(id: "dfkljfrjf", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Diner", seasons: ["Summer", "Spring"], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))),
+                                                BigModel.Meal(id: "002222", recipe: Recipe(id: "002222", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Diner", seasons: ["Summer", "Spring"], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))),
+                                                BigModel.Meal(id: "05394939459", recipe: Recipe(id: "05394939459", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Diner", seasons: ["Summer", "Spring"], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))),
+                                                BigModel.Meal(id: "59T845958", recipe: Recipe(id: "59T845958", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Diner", seasons: ["Summer", "Spring"], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))),
+                                                BigModel.Meal(id: "DFORUER9UE", recipe: Recipe(id: "DFORUER9UE", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Diner", seasons: ["Summer", "Spring"], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))),
+                                                BigModel.Meal(id: "IEFJEPFIO", recipe: Recipe(id: "IEFJEPFIO", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Diner", seasons: ["Summer", "Spring"], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: [])))] ,
                                 
                                 favoriteMeals: [BigModel.Meal(id: "dfkljfrjf", recipe: Recipe(id: "efioejfifj", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))),
                                                 BigModel.Meal(id: "dfkljfrjf", recipe: Recipe(id: "efioejfifj", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))),
