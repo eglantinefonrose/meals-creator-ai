@@ -154,13 +154,16 @@ struct Budget_Screen: View {
                             if bigModel.screenHistory.last == .TastesView {
                                 bigModel.currentView = .TastesView
                                 bigModel.screenHistory.append(.budgetScreen)
-                            } else {
+                            }
+                            if bigModel.screenHistory.last == .UserView {
+                                bigModel.currentView = .UserView
+                                bigModel.screenHistory.append(.budgetScreen)
+                            }
+                            else {
                                 bigModel.currentView = .NumberOfPersonScreen
                                 bigModel.screenHistory.append(.budgetScreen)
                             }
                             
-                            bigModel.currentView = .NumberOfPersonScreen
-                            bigModel.screenHistory.append(.budgetScreen)
                         }
                     }
                 }.edgesIgnoringSafeArea(.all)

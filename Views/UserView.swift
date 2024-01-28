@@ -173,16 +173,14 @@ struct UserView: View {
                                      Text("Budget")
                                          .font(.largeTitle)
                                          .foregroundStyle(Color.navyBlue)
+                                     
                                      HStack {
-                                         
                                          if bigModel.currentUser.budget != 0 {
                                              Text(String(bigModel.currentUser.budget))
                                          } else {
                                              Text("Tell us your budget per week")
                                                  .foregroundColor(.gray)
                                          }
-                                         
-                                         
                                          Spacer()
                                          Image(systemName: "arrow.right.circle")
                                              .foregroundColor(Color.navyBlue)
@@ -191,6 +189,7 @@ struct UserView: View {
                                                  bigModel.screenHistory.append(.UserView)
                                              }
                                      }
+                                     
                                      Rectangle().fill(Color.navyBlue).frame(height: 1)
                                      
                                      Text("Number of person")
@@ -218,6 +217,7 @@ struct UserView: View {
                                      Text("Spent time")
                                          .font(.largeTitle)
                                          .foregroundStyle(Color.navyBlue)
+                                     
                                      HStack {
                                          if bigModel.currentUser.budget != 0 {
                                              Text(String(bigModel.currentUser.spendedTime))
@@ -233,6 +233,7 @@ struct UserView: View {
                                                  bigModel.screenHistory.append(.UserView)
                                              }
                                      }
+                                     
                                      Rectangle().fill(Color.navyBlue).frame(height: 1)
                                      
                                      VStack(alignment: .leading) {
@@ -338,6 +339,7 @@ struct UserView: View {
                         .bold()
                         .onTapGesture {
                             bigModel.currentView = .signInView
+                            bigModel.screenHistory.append(.UserView)
                         }
                 }
             }.edgesIgnoringSafeArea(.all)

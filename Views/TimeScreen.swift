@@ -101,7 +101,7 @@ struct TimeScreen: View {
                                 bigModel.screenHistory.append(.timeScreen)
                             } else {
                                 if bigModel.currentUser.proposedMeals.count == 0 {
-                                    bigModel.currentView = .MealTypeView
+                                    bigModel.currentView = .SeasonSelectionView
                                     bigModel.screenHistory.append(.timeScreen)
                                 } else {
                                     bigModel.currentView = .mealsPropositionScreen

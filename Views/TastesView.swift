@@ -58,9 +58,16 @@ struct TastesView: View {
                     .foregroundColor(.white)
             }.onTapGesture {
                 var user = bigModel.currentUser
-                bigModel.currentView = .preferencesSummary
-                bigModel.screenHistory.append(.TastesView)
-                print(bigModel.currentUser.items)
+                
+                if (bigModel.screenHistory.last == .LegumeScreen || bigModel.screenHistory.last == .FruitsScreen || bigModel.screenHistory.last == .strachyFoodsScreen || bigModel.screenHistory.last == .proteinsScreen || bigModel.screenHistory.last == .seasonningScreen || bigModel.screenHistory.last == .allergiesScreen || bigModel.screenHistory.last == .cookingToolsScreen) {
+                    bigModel.currentView = .UserView
+                    bigModel.screenHistory.append(.TastesView)
+                } else {
+                    bigModel.currentView = .preferencesSummary
+                    bigModel.screenHistory.append(.TastesView)
+                    print(bigModel.currentUser.items)
+                }
+                
             }
             
         }.edgesIgnoringSafeArea(.bottom)

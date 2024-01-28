@@ -135,7 +135,12 @@ struct PreferenceView: View {
                             bigModel.currentView = nextScreenName
                         }
                         
-                        user.items = bigModel.updatedSelectedItemsList(dict: tags, categorie: categorie)
+                        if (bigModel.currentView == .cookingToolsScreen) {
+                            user.tools = bigModel.updatedSelectedItemsList(dict: tags, categorie: categorie)
+                        } else {
+                            user.items = bigModel.updatedSelectedItemsList(dict: tags, categorie: categorie)
+                        }
+                        
                         bigModel.storeCurrentUserInfoIntoDB(user: user) {}
                         
                         print(bigModel.currentUser.items)

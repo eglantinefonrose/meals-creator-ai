@@ -14,7 +14,7 @@ struct shop_plannerApp: App {
     var body: some Scene {
         WindowGroup {
             BigRootView()
-                .environmentObject(BigModel.mocked)
+                .environmentObject(BigModel.shared)
         }
     }
 }
