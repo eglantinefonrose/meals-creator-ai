@@ -54,7 +54,7 @@ class BigModel: ObservableObject {
         var mealType: String
         var seasons: [String]
         var ingredients: [Ingredient]
-        var price: Int
+        var price: Float
         var prepDuration: Int
         var totalDuration: Int
         var recipeDescription: RecipeDescription
@@ -155,7 +155,7 @@ class BigModel: ObservableObject {
         var resultDictionary = [Item: Bool]()
         let list1 = currentUser.items
         
-        // Crée un ensemble des noms d'items dans la liste1 pour une recherche plus efficace
+        // Crée un ensemble des noms d\"items dans la liste1 pour une recherche plus efficace
         let setList1 = Set(list1.map { $0 })
 
         // Parcourt la liste2 et vérifie si chaque item est présent dans la liste1
@@ -621,7 +621,7 @@ class BigModel: ObservableObject {
         
     }
     
-    @Published var dislikedMeal: Meal = Meal(id: "", recipe: Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: [])))
+    @Published var dislikedMeal: Meal = Meal(id: "", recipe: Recipe(recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: [])))
     
     func removeMealFromList(meal: Meal, mealsList: [Meal]) -> [Meal] {
         
@@ -843,7 +843,7 @@ class BigModel: ObservableObject {
                 if let requestData = executeRequest(request: request, withSessionConfig: nil) {
                     let jsonStr = String(data: requestData, encoding: String.Encoding(rawValue: String.Encoding.utf8.rawValue))!
                     ///
-                    //MARK: I know there's an error below, but we'll fix it later on in the article, so make sure not to change anything
+                    //MARK: I know there\"s an error below, but we\"ll fix it later on in the article, so make sure not to change anything
                     ///
                     let responseHandler = OpenAIResponseHandler()
                     
@@ -863,11 +863,11 @@ class BigModel: ObservableObject {
     
     func createMealsNameList(mealType: String) -> [String] {
         
-        //let prompt1 = "Voici mon modèle d'ingredients en swift : struct Item: Identifiable, Comparable, Hashable, Codable { var id: Int var category: String var name: String var seasons: [String] }. Voici mon modèle d'ItemAndQtty en swift : struct ItemAndQtty: Codable, Identifiable { var id: String var item: Item var quantity: Int } Le type Categories est une enum : enum Categories: CaseIterable, Codable { case legumes, fruits, strachyFoods, proteins, seasonning, allergies, cookingTools }. La variable 'category' doit être écrit de la forme .nomdelacategorie. Voici mon modèle de menu en swift : struct Meal: Codable, Identifiable { var id: String var name: String var type: String = \(mealType) var season: String = \(selectedSeason) var itemsAndQ: [ItemAndQtty] var price: Int var spendedTime: Int var recipe: String }. Peux tu me donner la recette de "
+        //let prompt1 = "Voici mon modèle d\"ingredients en swift : struct Item: Identifiable, Comparable, Hashable, Codable { var id: Int var category: String var name: String var seasons: [String] }. Voici mon modèle d\"ItemAndQtty en swift : struct ItemAndQtty: Codable, Identifiable { var id: String var item: Item var quantity: Int } Le type Categories est une enum : enum Categories: CaseIterable, Codable { case legumes, fruits, strachyFoods, proteins, seasonning, allergies, cookingTools }. La variable \"category\" doit être écrit de la forme .nomdelacategorie. Voici mon modèle de menu en swift : struct Meal: Codable, Identifiable { var id: String var name: String var type: String = \(mealType) var season: String = \(selectedSeason) var itemsAndQ: [ItemAndQtty] var price: Int var spendedTime: Int var recipe: String }. Peux tu me donner la recette de "
         //var meals: [Meal] = []
         var mealsNameList: [String] = []
         
-        let response = processPrompt(prompt: "Peux tu me proposer une liste de 5 plats de type \(mealType) d'\(selectedSeason) pour une personne qui aime \(listToString(list: self.currentUser.items)) et qui a \(listToString(list: self.currentUser.tools)). Cette personne a un budget de \(currentUser.budget), veut y consacrer maximum \(currentUser.spendedTime) et pour \(currentUser.numberOfPerson). Donne moi une réponse sans retour à la ligne, en séparant uniquement les différents plats par des tirest (par exemple : \"Rillettes de thon - Brandade de morue - Spaghettis à la carbonnara\").")
+        let response = processPrompt(prompt: "Peux tu me proposer une liste de 5 plats de type \(mealType) d\"\(selectedSeason) pour une personne qui aime \(listToString(list: self.currentUser.items)) et qui a \(listToString(list: self.currentUser.tools)). Cette personne a un budget de \(currentUser.budget), veut y consacrer maximum \(currentUser.spendedTime) et pour \(currentUser.numberOfPerson). Formate le résultat de la manière suivante : \" nomDuRepas1 - nomDuRepas2 - nomDuRepas3 - nomDuRepas4 \".")
         //Donne moi des meals avec des ID distincts et différents entre eux pour chaque meals.
         mealsNameList = splitStringWithDash(inputString: response)
         
@@ -880,8 +880,8 @@ class BigModel: ObservableObject {
     }
     
     @Published var isLoading = false
-    @Published var testMealList: [Meal] = [Meal(id: "", recipe: Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: [])))]
-    @Published var selectedMeal: Meal = Meal(id: "", recipe: Recipe(id: "", recipeName: "gaga", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: [])))
+    @Published var testMealList: [Meal] = [Meal(id: "", recipe: Recipe(recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: [])))]
+    @Published var selectedMeal: Meal = Meal(id: "", recipe: Recipe(recipeName: "gaga", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: [])))
     @Published var selectedSeason: String = ""
     
     @Published var currentUserTags: [Meal: Bool] = [:]
@@ -908,18 +908,17 @@ class BigModel: ObservableObject {
         }*/
         
         print("mealsNameList.count \(mealsNameList.count)")
-        //print(mealsNameList)
+        print(mealsNameList)
         
         for i in 0..<mealsNameList.count {
+                        
+            let response = processPrompt(prompt: "Donne moi les informations suivantes pour réaliser la recette de \(mealsNameList[i]) : - seasons : saison(s) pour laquelle la recette est adaptée  - ingredients : liste des ingrédients et quantité nécessaire pour \(currentUser.numberOfPerson) personnes - price : prix indicatif pour l\"ensemble des ingrédients (sans avoir le détail par ingrédient) - prepDuration : durée de préparation - totalDuration : durée totale - recipe : description textuelle de la recette. Formate le résultat de la manière suivante : { \"recipeName\":\"\(mealsNameList[i])\", \"numberOfPersons\":3, \"mealType\":\"Main course\", \"seasons\": [\"saison1\", \"saison2\"], \"ingredients\": [ {\"name\":\"ingrédient1\",  \"quantityWithUnit\":\"x grammes\"}, {\"name\":\"ingrédient2\",  \"quantityWithUnit\":\"y litres\"}], \"price\": 4.75, \"prepDuration\": 15, \"totalDuration\": 240, \"recipeDescription\": { \"introduction\": \"recipe high level description\", \"steps\": [ \"text for step 1\", \"text for step 2\", ] } }")
             
-            let response = processPrompt(prompt: "Donne moi les informations suivantes pour réaliser la recette \(mealsNameList[i]) : - seasons : saison(s) pour laquelle la recette est adaptée  - ingredients : liste des ingrédients et quantité nécessaire pour \(currentUser.numberOfPerson) personnes - price : prix indicatif pour l'ensemble des ingrédients (sans avoir le détail par ingrédient) - prepDuration : durée de préparation - totalDuration : durée totale - recipe : description textuelle de la recette. Formate le résultat de la manière suivante : { 'recipeName':'\(mealsNameList[i])', 'numberOfPersons':3, 'mealType':'Main course', 'seasons': ['saison1', 'saison2'], 'ingredients': [ {'name':'ingrédient1',  'quantityWithUnit':'x grammes'}, {'name':'ingrédient2',  'quantityWithUnit':'y litres'}], 'price': 4.75€, 'prepDuration': 15, 'totalDuration': 240, 'recipeDescription': { 'introduction': 'recipe high level description', 'steps': [ 'text for step 1', 'text for step 2', ] } }")
+            let meal = BigModel.Meal(id: UUID().uuidString, recipe: self.jsonTest(jsonString: response) )
+            //?? BigModel.Recipe(id: "", recipeName: "gaga", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))))
+            print("UUID = \(meal.id)")
             
-            
-            let meal = BigModel.Meal(id: UUID().uuidString, recipe: self.jsonTest(jsonString: response) ?? BigModel.Recipe(id: "dd", recipeName: "gaga", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: [])))
-                                     //?? BigModel.Recipe(id: "", recipeName: "gaga", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))))
-                
-            
-            if (meal.id != "dd") && !isDisliked(mealName: meal.recipe.recipeName) {
+            if (meal.recipe.recipeName != "err") && !isDisliked(mealName: meal.recipe.recipeName) {
                  self.currentUserTags[meal] = false
                  self.currentUser.proposedMeals.append(meal)
                  self.storeCurrentUserInfoIntoDB(user: currentUser) {}
@@ -952,7 +951,7 @@ class BigModel: ObservableObject {
     func isDisliked(mealName: String) -> Bool {
         // Parcourt la liste des repas
         for repasCourant in currentUser.dislikedMeals {
-            // Vérifie si le nomRecherche correspond à l'attribut "nom" de l'objet Repas
+            // Vérifie si le nomRecherche correspond à l\"attribut "nom" de l\"objet Repas
             if repasCourant.recipe.recipeName == mealName {
                 return true
             }
@@ -965,7 +964,7 @@ class BigModel: ObservableObject {
         // Modifiez votre liste ici comme vous le souhaitez
         print("à")
         //for i in 0...10 {
-        let meal = Meal(id: "", recipe: Recipe(id: "", recipeName: "Brandade", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: [])))
+        let meal = Meal(id: "", recipe: Recipe(recipeName: "Brandade", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: [])))
             if meal.id != "" {
                 do {
                     try await Task.sleep(nanoseconds: 1000000000)
@@ -988,12 +987,12 @@ class BigModel: ObservableObject {
             } catch {
                 print("jsonString [\(jsonString)]")
                 print("Erreur lors de la désérialisation JSON :", error)
-                return BigModel.Recipe(id: "err", recipeName: "err", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))
+                return BigModel.Recipe(recipeName: "err", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))
             }
         } else {
             print("jsonString [\(jsonString)]")
             print("Erreur lors de la conversion de la chaîne en données JSON")
-            return BigModel.Recipe(id: "err", recipeName: "err", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))
+            return BigModel.Recipe(recipeName: "err", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))
         }
     }
     
@@ -1043,16 +1042,16 @@ class BigModel: ObservableObject {
                                         Item(id: 0, category: "cookingTools", name: "Poireaux", seasons: ["été"])],
                                 tools: [Item(id: 0, category: "Tools", name: "Casserolle", seasons: ["été"])],
                                 budget: 0, spendedTime: 0, numberOfPerson: 0,
-                                proposedMeals: [BigModel.Meal(id: "dfkljfrjf", recipe: Recipe(id: "dfkljfrjf", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Diner", seasons: ["Summer", "Spring"], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))),
-                                                BigModel.Meal(id: "002222", recipe: Recipe(id: "002222", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Diner", seasons: ["Summer", "Spring"], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))),
-                                                BigModel.Meal(id: "05394939459", recipe: Recipe(id: "05394939459", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Diner", seasons: ["Summer", "Spring"], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))),
-                                                BigModel.Meal(id: "59T845958", recipe: Recipe(id: "59T845958", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Diner", seasons: ["Summer", "Spring"], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))),
-                                                BigModel.Meal(id: "DFORUER9UE", recipe: Recipe(id: "DFORUER9UE", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Diner", seasons: ["Summer", "Spring"], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))),
-                                                BigModel.Meal(id: "IEFJEPFIO", recipe: Recipe(id: "IEFJEPFIO", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Diner", seasons: ["Summer", "Spring"], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: [])))] ,
+                                proposedMeals: [BigModel.Meal(id: "dfkljfrjf", recipe: Recipe(recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Diner", seasons: ["Summer", "Spring"], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))),
+                                                BigModel.Meal(id: "002222", recipe: Recipe(recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Diner", seasons: ["Summer", "Spring"], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))),
+                                                BigModel.Meal(id: "05394939459", recipe: Recipe(recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Diner", seasons: ["Summer", "Spring"], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))),
+                                                BigModel.Meal(id: "59T845958", recipe: Recipe(recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Diner", seasons: ["Summer", "Spring"], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))),
+                                                BigModel.Meal(id: "DFORUER9UE", recipe: Recipe(recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Diner", seasons: ["Summer", "Spring"], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))),
+                                                BigModel.Meal(id: "IEFJEPFIO", recipe: Recipe(recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Diner", seasons: ["Summer", "Spring"], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: [])))] ,
                                 
-                                favoriteMeals: [BigModel.Meal(id: "dfkljfrjf", recipe: Recipe(id: "efioejfifj", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))),
-                                                BigModel.Meal(id: "dfkljfrjf", recipe: Recipe(id: "efioejfifj", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))),
-                                                BigModel.Meal(id: "dfkljfrjf", recipe: Recipe(id: "efioejfifj", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))) ],
+                                favoriteMeals: [BigModel.Meal(id: "dfkljfrjf", recipe: Recipe(recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))),
+                                                BigModel.Meal(id: "dfkljfrjf", recipe: Recipe(recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))),
+                                                BigModel.Meal(id: "dfkljfrjf", recipe: Recipe(recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))) ],
                                 
                                 dislikedMeals: [])
         self.currentView = .UserView
