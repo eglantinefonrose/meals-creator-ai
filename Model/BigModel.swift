@@ -38,7 +38,7 @@ class BigModel: ObservableObject {
         var dislikedMeals: [Meal]
     }
     
-    struct Recipe: Codable, Hashable, Comparable {
+    struct Recipe: Codable, Hashable, Comparable, Identifiable {
         
         static func < (lhs: BigModel.Recipe, rhs: BigModel.Recipe) -> Bool {
             lhs.recipeName < rhs.recipeName
@@ -78,11 +78,23 @@ class BigModel: ObservableObject {
     struct Ingredient: Codable, Hashable {
         let name: String
         let quantityWithUnit: String
+        
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(name)
+            hasher.combine(quantityWithUnit)
+        }
+        
     }
 
     struct RecipeDescription: Codable, Hashable {
         let introduction: String
         let steps: [String]
+        
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(introduction)
+            hasher.combine(steps)
+        }
+        
     }
     
     struct Item: Identifiable, Comparable, Hashable, Codable {
@@ -94,20 +106,32 @@ class BigModel: ObservableObject {
         var category: String
         var name: String
         var seasons: [String]
+        
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(id)
+            hasher.combine(category)
+            hasher.combine(name)
+            hasher.combine(seasons)
+        }
+        
     }
     
     struct Meal: Codable, Identifiable, Hashable, Comparable {
         
-        static func < (lhs: BigModel.Meal, rhs: BigModel.Meal) -> Bool {
+        static func < (lhs: Meal, rhs: Meal) -> Bool {
             lhs.recipe.recipeName < rhs.recipe.recipeName
         }
         
-        static func == (lhs: BigModel.Meal, rhs: BigModel.Meal) -> Bool {
-            lhs.recipe.recipeName < rhs.recipe.recipeName
+        static func == (lhs: Meal, rhs: Meal) -> Bool {
+            lhs.id == rhs.id && lhs.recipe == rhs.recipe
         }
         
         var id: String
         var recipe: Recipe
+        
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(id)
+        }
         
     }
     
