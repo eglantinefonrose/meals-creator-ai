@@ -82,9 +82,6 @@ struct BigRootView: View {
             if bigModel.currentView == .DailyCalendar {
                 DailyCalendar()
             }
-            if bigModel.currentView == .DailyCalendar {
-                DailyCalendar()
-            }
             
         }
         

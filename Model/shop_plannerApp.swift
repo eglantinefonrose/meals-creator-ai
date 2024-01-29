@@ -14,6 +14,7 @@ struct shop_plannerApp: App {
     var body: some Scene {
         WindowGroup {
             BigRootView()
+            //BindingTest()
                 .environmentObject(BigModel.shared)
         }
     }
