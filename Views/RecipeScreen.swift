@@ -28,23 +28,55 @@ struct RecipeScreen: View {
                           .foregroundStyle(Color.navyBlue)
                           .font(.system(size: 70))
                          Spacer()
+                         Image(systemName: "hand.thumbsdown")
+                             .foregroundColor(.navyBlue)
+                             .onTapGesture {
+                                 bigModel.currentView = .BlankFile
+                                 bigModel.dislikedMeal = bigModel.selectedMeal
+                             }
+                         
                          Image(systemName: selected ? "heart.fill" : "heart")
                              .foregroundColor(.navyBlue)
                              .onTapGesture {
-                                 selected.toggle()
-                                 if isMealInList(meal: bigModel.selectedMeal) && selected {
+                                 
+                                 
+                                 /*Image(systemName: liked ? "heart.fill" : "heart")
+                                  .foregroundColor(.navyBlue)
+                                  .onTapGesture {
+                                      Task {
+                                          
+                                          if !isMealInList(meal: item) && !selected {
+                                              addToFavourite(item: item)
+                                          }
+                                          
+                                          if liked {
+                                              var user = bigModel.currentUser
+                                              let mealsList = user.favoriteMeals
+                                              user.favoriteMeals = bigModel.removeMealFromList(meal: item, mealsList: mealsList)
+                                              bigModel.storeCurrentUserInfoIntoDB(user: user) {}
+                                          }
+                                          
+                                          self.liked.toggle()
+                                          
+                                      }
+                                  }*/
+                                 
+                                 
+                                 
+                                 if !isMealInList(meal: bigModel.selectedMeal) && !selected {
                                      Task {
                                          await addToFavourite(item: bigModel.selectedMeal)
                                      }
                                  }
-                                 if !selected {
-                                     Task {
+                                 if selected {
                                          var user = bigModel.currentUser
                                          let mealsList = user.favoriteMeals
                                          user.favoriteMeals = bigModel.removeMealFromList(meal: bigModel.selectedMeal, mealsList: mealsList)
-                                         await bigModel.storeCurrentUserInfoIntoDB(user: user) {}
-                                     }
+                                         bigModel.storeCurrentUserInfoIntoDB(user: user) {}
+                                     
                                  }
+                                 selected.toggle()
+                                 
                              }
                      }
                      

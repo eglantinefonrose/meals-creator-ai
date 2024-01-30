@@ -720,6 +720,7 @@ class BigModel: ObservableObject {
             
             user.proposedMeals = mealsList
             user.favoriteMeals = favoriteMealsList
+            user.dislikedMeals.append(self.dislikedMeal)
             
             let _ = try self.db.collection("Users").document(id).setData(from: user) { _ in
                 
@@ -1198,8 +1199,7 @@ class BigModel: ObservableObject {
                                         Item(id: 0, category: "strachyFoods", name: "Poireaux", seasons: ["été"]),
                                         Item(id: 0, category: "proteins", name: "Poireaux", seasons: ["été"]),
                                         Item(id: 0, category: "seasonning", name: "Poireaux", seasons: ["été"]),
-                                        Item(id: 0, category: "allergies", name: "Poireaux", seasons: ["été"]),
-                                        Item(id: 0, category: "cookingTools", name: "Poireaux", seasons: ["été"])],
+                                        Item(id: 0, category: "allergies", name: "Poireaux", seasons: ["été"])],
                                 tools: [Item(id: 0, category: "cookingTools", name: "Casserolle", seasons: ["été"])],
                                 budget: 0, spendedTime: 0, numberOfPerson: 0,
                                 proposedMeals: [BigModel.Meal(id: "dfkljfrjf", recipe: Recipe(id: "001", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Diner", seasons: ["Summer", "Spring"], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))),

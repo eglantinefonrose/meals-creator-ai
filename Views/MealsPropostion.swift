@@ -213,8 +213,20 @@ struct MealsViewModel : View {
                     .foregroundColor(.navyBlue)
                     .onTapGesture {
                         Task {
+                            
+                            if !isMealInList(meal: item) && !liked {
+                                addToFavourite(item: item)
+                            }
+                            
+                            if liked {
+                                var user = bigModel.currentUser
+                                let mealsList = user.favoriteMeals
+                                user.favoriteMeals = bigModel.removeMealFromList(meal: item, mealsList: mealsList)
+                                bigModel.storeCurrentUserInfoIntoDB(user: user) {}
+                            }
+                            
                             self.liked.toggle()
-                            addToFavourite(item: item)
+                            
                         }
                     }
                 

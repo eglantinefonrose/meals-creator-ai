@@ -33,6 +33,7 @@ struct PreferenceSummary: View {
                             
                             ScrollView(.vertical) {
                                 VStack {
+                                    
                                     ForEach(bigModel.categoriesNameList) { category in
                                         HStack {
                                             Text(bigModel.categoryToName(categorie: category.name))
@@ -60,6 +61,27 @@ struct PreferenceSummary: View {
                                             }
                                         }
                                     }
+                                    
+                                    ScrollView(.horizontal) {
+                                        HStack {
+                                            ForEach(bigModel.currentUser.tools) { item in
+                                                ZStack {
+                                                    Rectangle()
+                                                        .foregroundColor(.white)
+                                                        .frame(width: 150, height: 150)
+                                                    VStack {
+                                                        Spacer()
+                                                        HStack {
+                                                            Text(item.name)
+                                                                .foregroundStyle(Color.navyBlue)
+                                                            Spacer()
+                                                        }
+                                                    }.padding(10)
+                                                }
+                                            }
+                                        }
+                                    }
+                                    
                                 }
                             }
                         }
