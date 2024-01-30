@@ -13,7 +13,7 @@ struct MealsPropostion: View {
     
     @EnvironmentObject var bigModel: BigModel
     let meals = ["Nouilles sautées", "Omelette", "Rillettes de thon"]
-    @State var tags: [BigModel.Meal: Bool] = [BigModel.Meal(id: "0", recipe: BigModel.Recipe(id: "3045IEKORRE¨DF", recipeName: "Penne alla rabbiata", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))):true, BigModel.Meal(id: "1", recipe: BigModel.Recipe(id: "FJVRET4E0TÖGREKF", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))):false ]
+    //@State var tags: [BigModel.Meal: Bool] = [BigModel.Meal(id: "0", recipe: BigModel.Recipe(id: "3045IEKORRE¨DF", recipeName: "Penne alla rabbiata", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: BigModel.RecipeDescription(introduction: "", steps: []))):true, BigModel.Meal(id: "1", recipe: BigModel.Recipe(id: "FJVRET4E0TÖGREKF", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: BigModel.RecipeDescription(introduction: "", steps: []))):false ]
     @State var type: String = "All"
     @State var season: String = "All"
     let columns = [GridItem(.adaptive(minimum: 150))]
@@ -87,19 +87,12 @@ struct MealsPropostion: View {
                     ScrollView {
                         VStack(alignment: .leading, spacing: 10) {
                             
-                            /*ForEach(bigModel.currentUserTags.keys.sorted(), id: \.self) { item in
+                            ForEach(bigModel.currentUserTags.keys.sorted(), id: \.self) { item in
                                 
                                 MealsViewModel(bigModel: BigModel.shared, item: item, liked: self.binding(for: item), type: type)
-                                
-                                if bigModel.currentUserTags[item] == true {
-                                    Text("p")
-                                } else {
-                                    Text("false")
-                                }
-                                
                                 Rectangle().fill(Color.navyBlue).frame(height: 1)
                                 
-                            }*/
+                            }
                             
                             /*ForEach(tags.keys.sorted(), id: \.self) { item in
                                 
@@ -143,12 +136,12 @@ struct MealsPropostion: View {
             }
         }.edgesIgnoringSafeArea(.bottom)
         .onAppear {
-            //bigModel.currentUserTags = bigModel.generateTags(type: type, season: season)
+            bigModel.currentUserTags = bigModel.generateTags(type: type, season: season)
             bigModel.currentUserTags = bigModel.generateTags(type: type, season: season)
         }
         .onChange(of: type, {
-            //bigModel.currentUserTags = bigModel.generateTags(type: type, season: season)
-            tags = bigModel.generateTags(type: type, season: season)
+            bigModel.currentUserTags = bigModel.generateTags(type: type, season: season)
+            //tags = bigModel.generateTags(type: type, season: season)
             print("type: \(type)")
         })
         .onChange(of: season, {
@@ -170,10 +163,10 @@ struct MealsPropostion: View {
     
     private func binding(for key: BigModel.Meal) -> Binding<Bool> {
         return .init(
-            //get: { bigModel.currentUserTags[key, default: false] },
-            //set: { bigModel.currentUserTags[key] = $0 })
-            get: { self.tags[key, default: false] },
-            set: { self.tags[key] = $0 })
+            get: { bigModel.currentUserTags[key, default: false] },
+            set: { bigModel.currentUserTags[key] = $0 })
+            //get: { self.tags[key, default: false] },
+            //set: { self.tags[key] = $0 })
     }
 
 }
@@ -191,7 +184,7 @@ struct Season: Identifiable {
 }
 
 
-/*struct MealsViewModel : View {
+struct MealsViewModel : View {
     
     var bigModel: BigModel
     var item: BigModel.Meal
@@ -218,7 +211,10 @@ struct Season: Identifiable {
                 Image(systemName: liked ? "heart.fill" : "heart")
                     .foregroundColor(.navyBlue)
                     .onTapGesture {
-                        self.liked.toggle()
+                        Task {
+                            self.liked.toggle()
+                            addToFavourite(item: item)
+                        }
                     }
                 
                 /*Image(systemName: "hand.thumbsdown")
@@ -246,21 +242,22 @@ struct Season: Identifiable {
                 Image(systemName: liked ? "heart.fill" : "heart")
                     .foregroundColor(.navyBlue)
                     .onTapGesture {
-                        self.liked.toggle()
-                        
-                        /*Task {
-                            liked.toggle()
-                            if isMealInList(meal: item) && liked {
-                                await addToFavourite(item: item)
+                        Task {
+                            
+                            if !isMealInList(meal: item) && !liked {
+                                addToFavourite(item: item)
                             }
-                            if !liked {
+                            
+                            if liked {
                                 var user = bigModel.currentUser
                                 let mealsList = user.favoriteMeals
                                 user.favoriteMeals = bigModel.removeMealFromList(meal: item, mealsList: mealsList)
                                 bigModel.storeCurrentUserInfoIntoDB(user: user) {}
                             }
-
-                        }*/
+                            
+                            self.liked.toggle()
+                            
+                        }
                     }
                 
                 /*Image(systemName: "hand.thumbsdown")
@@ -275,17 +272,17 @@ struct Season: Identifiable {
         }
     }
     
-    private func addToFavourite(item: BigModel.Meal) async {
+    private func addToFavourite(item: BigModel.Meal) {
         var user = bigModel.currentUser
         user.favoriteMeals.append(item)
-        await bigModel.storeCurrentUserInfoIntoDB(user: user) {}
+        bigModel.storeCurrentUserInfoIntoDB(user: user) {}
     }
     
     private func isMealInList(meal: BigModel.Meal) -> Bool {
         return (bigModel.currentUser.favoriteMeals.contains { $0.id == meal.id })
     }
     
-}*/
+}
 
 @available(iOS 17.0, *)
 struct MealsPropostion_Previews: PreviewProvider {
