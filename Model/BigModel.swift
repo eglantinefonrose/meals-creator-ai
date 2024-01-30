@@ -370,7 +370,7 @@ class BigModel: ObservableObject {
             }
         }
         
-        if categorie == "tools" {
+        if categorie == "cookingTools" {
             array = array + (currentUser.tools)
         } else {
             array = array + (currentUser.items)
@@ -1200,7 +1200,7 @@ class BigModel: ObservableObject {
                                         Item(id: 0, category: "seasonning", name: "Poireaux", seasons: ["été"]),
                                         Item(id: 0, category: "allergies", name: "Poireaux", seasons: ["été"]),
                                         Item(id: 0, category: "cookingTools", name: "Poireaux", seasons: ["été"])],
-                                tools: [Item(id: 0, category: "Tools", name: "Casserolle", seasons: ["été"])],
+                                tools: [Item(id: 0, category: "cookingTools", name: "Casserolle", seasons: ["été"])],
                                 budget: 0, spendedTime: 0, numberOfPerson: 0,
                                 proposedMeals: [BigModel.Meal(id: "dfkljfrjf", recipe: Recipe(id: "001", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Diner", seasons: ["Summer", "Spring"], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))),
                                                 BigModel.Meal(id: "002222", recipe: Recipe(id: "022", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Diner", seasons: ["Summer", "Spring"], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))),

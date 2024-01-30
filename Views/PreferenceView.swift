@@ -125,15 +125,8 @@ struct PreferenceView: View {
                 }.onTapGesture {
                     
                     Task {
-                        var user = bigModel.currentUser
                         
-                        if bigModel.screenHistory.last == .TastesView {
-                            bigModel.currentView = .TastesView
-                            bigModel.screenHistory.append(bigModel.categoryToScreenName(categorie: categorie))
-                        }
-                        else {
-                            bigModel.currentView = nextScreenName
-                        }
+                        var user = bigModel.currentUser
                         
                         if (bigModel.currentView == .cookingToolsScreen) {
                             user.tools = bigModel.updatedSelectedItemsList(dict: tags, categorie: categorie)
@@ -144,6 +137,14 @@ struct PreferenceView: View {
                         bigModel.storeCurrentUserInfoIntoDB(user: user) {}
                         
                         print(bigModel.currentUser.items)
+                        
+                        if bigModel.screenHistory.last == .TastesView {
+                            bigModel.currentView = .TastesView
+                            bigModel.screenHistory.append(bigModel.categoryToScreenName(categorie: categorie))
+                        }
+                        else {
+                            bigModel.currentView = nextScreenName
+                        }
                     }
                     
                 }

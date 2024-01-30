@@ -9,6 +9,7 @@ import SwiftUI
 import Combine
 
 @available(iOS 17.0, *)
+
 struct MealsPropostion: View {
     
     @EnvironmentObject var bigModel: BigModel
