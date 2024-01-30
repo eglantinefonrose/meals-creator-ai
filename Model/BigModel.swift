@@ -714,8 +714,13 @@ class BigModel: ObservableObject {
             // Update the UserInfo inside the Firebase DB
             var user = currentUser
             guard let id = self.auth.currentUser?.uid else { return }
-            let mealsList = removeMealFromLikedMeals()
+            
+            let mealsList = removeMealFromList(mealsList: currentUser.proposedMeals)
+            let favoriteMealsList = removeMealFromList(mealsList: currentUser.favoriteMeals)
+            
             user.proposedMeals = mealsList
+            user.favoriteMeals = favoriteMealsList
+            
             let _ = try self.db.collection("Users").document(id).setData(from: user) { _ in
                 
                 let docRef = self.db.collection("Users").document(id)
@@ -759,19 +764,18 @@ class BigModel: ObservableObject {
         
     }
     
-    private func removeMealFromLikedMeals() -> [BigModel.Meal] {
+    private func removeMealFromList(mealsList: [Meal]) -> [BigModel.Meal] {
         
-        //var newMealsList = mealsList
-        var mealsList = currentUser.proposedMeals
+        var newMealsList = mealsList
         let meal = dislikedMeal
         
         if let index = mealsList.firstIndex(where: { $0.id == meal.id }) {
-            mealsList.remove(at: index)
+            newMealsList.remove(at: index)
             print("Element retiré avec succès")
-            return mealsList
+            return newMealsList
         } else {
             print("Element non trouvé dans la liste")
-            return mealsList
+            return newMealsList
         }
         
     }

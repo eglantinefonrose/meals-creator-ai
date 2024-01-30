@@ -78,7 +78,7 @@ struct MealsPropostion: View {
                                         .padding()
                                 }.onTapGesture {
                                     type = typeValue.type
-                            }
+                                }
                             }
                             
                         }
@@ -217,12 +217,12 @@ struct MealsViewModel : View {
                         }
                     }
                 
-                /*Image(systemName: "hand.thumbsdown")
+                Image(systemName: "hand.thumbsdown")
                     .foregroundColor(.navyBlue)
                     .onTapGesture {
                         bigModel.currentView = .BlankFile
                         bigModel.dislikedMeal = item
-                    }*/
+                    }
                 
             }
             
@@ -260,12 +260,12 @@ struct MealsViewModel : View {
                         }
                     }
                 
-                /*Image(systemName: "hand.thumbsdown")
+                Image(systemName: "hand.thumbsdown")
                     .foregroundColor(.navyBlue)
                     .onTapGesture {
                         bigModel.currentView = .BlankFile
                         bigModel.dislikedMeal = item
-                    }*/
+                    }
                 
             }
             
