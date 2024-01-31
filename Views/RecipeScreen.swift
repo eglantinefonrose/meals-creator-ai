@@ -140,9 +140,16 @@ struct RecipeScreen: View {
                          }
                          //Rectangle().fill(Color.navyBlue).frame(height: 1)
                          
-                         List(bigModel.selectedMeal.recipe.recipeDescription.steps, id: \.self) { string in
-                            Text(string)
-                        }
+                         VStack(alignment: .leading) {
+                             Text(bigModel.selectedMeal.recipe.recipeDescription.introduction)
+                             
+                             List(bigModel.selectedMeal.recipe.recipeDescription.steps) { string in
+                                Text(string)
+                            }
+                             
+                             //Text("\(bigModel.selectedMeal.recipe.recipeDescription.steps.count)")
+                             
+                         }
                          
                      }
                        
