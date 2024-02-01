@@ -23,61 +23,37 @@ struct RecipeScreen: View {
                   
                   BackModel(color: Color.navyBlue, view: .mealsPropositionScreen)
                   
-                     HStack {
-                         Text(bigModel.selectedMeal.recipe.recipeName.uppercased())
+                     VStack {
+                         Text(bigModel.selectedMeal.recipe.recipeName)
                           .foregroundStyle(Color.navyBlue)
                           .font(.system(size: 70))
-                         Spacer()
-                         Image(systemName: "hand.thumbsdown")
-                             .foregroundColor(.navyBlue)
-                             .onTapGesture {
-                                 bigModel.currentView = .BlankFile
-                                 bigModel.dislikedMeal = bigModel.selectedMeal
-                             }
-                         
-                         Image(systemName: selected ? "heart.fill" : "heart")
-                             .foregroundColor(.navyBlue)
-                             .onTapGesture {
-                                 
-                                 
-                                 /*Image(systemName: liked ? "heart.fill" : "heart")
-                                  .foregroundColor(.navyBlue)
-                                  .onTapGesture {
-                                      Task {
-                                          
-                                          if !isMealInList(meal: item) && !selected {
-                                              addToFavourite(item: item)
-                                          }
-                                          
-                                          if liked {
-                                              var user = bigModel.currentUser
-                                              let mealsList = user.favoriteMeals
-                                              user.favoriteMeals = bigModel.removeMealFromList(meal: item, mealsList: mealsList)
-                                              bigModel.storeCurrentUserInfoIntoDB(user: user) {}
-                                          }
-                                          
-                                          self.liked.toggle()
-                                          
-                                      }
-                                  }*/
-                                 
-                                 
-                                 
-                                 if !isMealInList(meal: bigModel.selectedMeal) && !selected {
-                                     Task {
-                                         await addToFavourite(item: bigModel.selectedMeal)
-                                     }
+                                                  
+                         HStack {
+                             Image(systemName: "hand.thumbsdown")
+                                 .foregroundColor(.navyBlue)
+                                 .onTapGesture {
+                                     bigModel.currentView = .BlankFile
+                                     bigModel.dislikedMeal = bigModel.selectedMeal
                                  }
-                                 if selected {
-                                         var user = bigModel.currentUser
-                                         let mealsList = user.favoriteMeals
-                                         user.favoriteMeals = bigModel.removeMealFromList(meal: bigModel.selectedMeal, mealsList: mealsList)
-                                         bigModel.storeCurrentUserInfoIntoDB(user: user) {}
+                             
+                             Image(systemName: selected ? "heart.fill" : "heart")
+                                 .foregroundColor(.navyBlue)
+                                 .onTapGesture {
+                                     if !isMealInList(meal: bigModel.selectedMeal) && !selected {
+                                         Task {
+                                             await addToFavourite(item: bigModel.selectedMeal)
+                                         }
+                                     }
+                                     if selected {
+                                             var user = bigModel.currentUser
+                                             let mealsList = user.favoriteMeals
+                                             user.favoriteMeals = bigModel.removeMealFromList(meal: bigModel.selectedMeal, mealsList: mealsList)
+                                             bigModel.storeCurrentUserInfoIntoDB(user: user) {}
+                                     }
+                                     selected.toggle()
                                      
                                  }
-                                 selected.toggle()
-                                 
-                             }
+                         }
                      }
                      
                      ScrollView {
@@ -129,6 +105,8 @@ struct RecipeScreen: View {
                              Spacer()
                              Text(String(format: "%.1f", bigModel.selectedMeal.recipe.price))
                                  .foregroundStyle(Color.navyBlue)
+                             Text(bigModel.selectedMeal.recipe.currency)
+                                 .foregroundStyle(Color.navyBlue)
                          }
                          Rectangle().fill(Color.navyBlue).frame(height: 1)
                          
@@ -140,15 +118,19 @@ struct RecipeScreen: View {
                          }
                          //Rectangle().fill(Color.navyBlue).frame(height: 1)
                          
-                         VStack(alignment: .leading) {
-                             Text(bigModel.selectedMeal.recipe.recipeDescription.introduction)
-                             
-                             List(bigModel.selectedMeal.recipe.recipeDescription.steps) { string in
-                                Text(string)
-                            }
-                             
-                             //Text("\(bigModel.selectedMeal.recipe.recipeDescription.steps.count)")
-                             
+                         Spacer()
+                         
+                         HStack {
+                             VStack(alignment: .leading, spacing: 10) {
+                                 
+                                 Text(bigModel.selectedMeal.recipe.recipeDescription.introduction)
+                                 
+                                 ForEach(bigModel.selectedMeal.recipe.recipeDescription.steps, id: \.self) { txt in
+                                    Text("- \(txt)")
+                                }
+                                 
+                             }
+                             Spacer()
                          }
                          
                      }

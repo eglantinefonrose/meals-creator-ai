@@ -59,7 +59,7 @@ struct MealsPropostion: View {
                                         .padding()
                                 }.onTapGesture {
                                     season = seasonValue.season
-                            }
+                                }
                             }
                             
                         }
@@ -90,7 +90,7 @@ struct MealsPropostion: View {
                             
                             ForEach(bigModel.currentUserTags.keys.sorted(), id: \.self) { item in
                                 
-                                MealsViewModel(bigModel: BigModel.shared, item: item, liked: self.binding(for: item), type: type)
+                                MealsViewModel(bigModel: BigModel.shared, item: item, liked: self.binding(for: item), type: type, season: season)
                                 Rectangle().fill(Color.navyBlue).frame(height: 1)
                                 
                             }
@@ -141,12 +141,12 @@ struct MealsPropostion: View {
             bigModel.currentUserTags = bigModel.generateTags(type: type, season: season)
         }
         .onChange(of: type, {
-            bigModel.currentUserTags = bigModel.generateTags(type: type, season: season)
+            //bigModel.currentUserTags = bigModel.generateTags(type: type, season: season)
             //tags = bigModel.generateTags(type: type, season: season)
             print("type: \(type)")
         })
         .onChange(of: season, {
-            bigModel.currentUserTags = bigModel.generateTags(type: type, season: season)
+            //bigModel.currentUserTags = bigModel.generateTags(type: type, season: season)
             print("season: \(season)")
         })
         .alert(isPresented: $bigModel.didPreferencesChanged) {
@@ -192,11 +192,13 @@ struct MealsViewModel : View {
     @Binding var liked: Bool
     var isLiked = true
     var type: String
+    var season: String
     
     var body: some View {
+        
         HStack {
             
-            if item.recipe.mealType == type {
+            if type == "All" && item.recipe.seasons.contains(season) {
                 
                 Text(item.recipe.recipeName)
                     .font(.largeTitle)
@@ -239,7 +241,93 @@ struct MealsViewModel : View {
                 
             }
             
-            if type == "All" {
+            if item.recipe.mealType == type && season == "All" {
+                
+                Text(item.recipe.recipeName)
+                    .font(.largeTitle)
+                    .foregroundStyle(Color.navyBlue)
+                    .onTapGesture {
+                        bigModel.currentView = .RecipeScreen
+                        bigModel.screenHistory.append(.mealsPropositionScreen)
+                        bigModel.selectedMeal = item
+                    }
+                
+                Spacer()
+                
+                Image(systemName: liked ? "heart.fill" : "heart")
+                    .foregroundColor(.navyBlue)
+                    .onTapGesture {
+                        Task {
+                            
+                            if !isMealInList(meal: item) && !liked {
+                                addToFavourite(item: item)
+                            }
+                            
+                            if liked {
+                                var user = bigModel.currentUser
+                                let mealsList = user.favoriteMeals
+                                user.favoriteMeals = bigModel.removeMealFromList(meal: item, mealsList: mealsList)
+                                bigModel.storeCurrentUserInfoIntoDB(user: user) {}
+                            }
+                            
+                            self.liked.toggle()
+                            
+                        }
+                    }
+                
+                Image(systemName: "hand.thumbsdown")
+                    .foregroundColor(.navyBlue)
+                    .onTapGesture {
+                        bigModel.currentView = .BlankFile
+                        bigModel.dislikedMeal = item
+                    }
+                
+            }
+            
+            if item.recipe.mealType == type && item.recipe.seasons.contains(season) {
+                
+                Text(item.recipe.recipeName)
+                    .font(.largeTitle)
+                    .foregroundStyle(Color.navyBlue)
+                    .onTapGesture {
+                        bigModel.currentView = .RecipeScreen
+                        bigModel.screenHistory.append(.mealsPropositionScreen)
+                        bigModel.selectedMeal = item
+                    }
+                
+                Spacer()
+                
+                Image(systemName: liked ? "heart.fill" : "heart")
+                    .foregroundColor(.navyBlue)
+                    .onTapGesture {
+                        Task {
+                            
+                            if !isMealInList(meal: item) && !liked {
+                                addToFavourite(item: item)
+                            }
+                            
+                            if liked {
+                                var user = bigModel.currentUser
+                                let mealsList = user.favoriteMeals
+                                user.favoriteMeals = bigModel.removeMealFromList(meal: item, mealsList: mealsList)
+                                bigModel.storeCurrentUserInfoIntoDB(user: user) {}
+                            }
+                            
+                            self.liked.toggle()
+                            
+                        }
+                    }
+                
+                Image(systemName: "hand.thumbsdown")
+                    .foregroundColor(.navyBlue)
+                    .onTapGesture {
+                        bigModel.currentView = .BlankFile
+                        bigModel.dislikedMeal = item
+                    }
+                
+            }
+            
+            if type == "All" && season == "All" {
                 
                 Text(item.recipe.recipeName)
                     .font(.largeTitle)
