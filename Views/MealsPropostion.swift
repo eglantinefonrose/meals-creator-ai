@@ -15,10 +15,13 @@ struct MealsPropostion: View {
     @EnvironmentObject var bigModel: BigModel
     let meals = ["Nouilles sautées", "Omelette", "Rillettes de thon"]
     //@State var tags: [BigModel.Meal: Bool] = [BigModel.Meal(id: "0", recipe: BigModel.Recipe(id: "3045IEKORRE¨DF", recipeName: "Penne alla rabbiata", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: BigModel.RecipeDescription(introduction: "", steps: []))):true, BigModel.Meal(id: "1", recipe: BigModel.Recipe(id: "FJVRET4E0TÖGREKF", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: BigModel.RecipeDescription(introduction: "", steps: []))):false ]
+    
+    //\"main course\", \"breakfast\", \"dessert\", \"starter\"
+    
     @State var type: String = "All"
     @State var season: String = "All"
     let columns = [GridItem(.adaptive(minimum: 150))]
-    let types: [Type] = [Type(id: 0, typeName: "All", type: "All"), Type(id: 1, typeName: "Petit-déjeuner", type: "Petit-déjeuner"), Type(id: 2, typeName: "Déjeuner", type: "Déjeuner"), Type(id: 3, typeName: "Goûter", type: "Goûter"), Type(id: 4, typeName: "Diner", type: "Diner")]
+    let types: [Type] = [Type(id: 0, typeName: "All", type: "All"), Type(id: 1, typeName: "Breakfast", type: "Breakfast"), Type(id: 2, typeName: "Main course", type: "Main course"), Type(id: 3, typeName: "Dessert", type: "Dessert"), Type(id: 4, typeName: "Starter", type: "Starter")]
     let seasons: [Season] = [Season(id: 0, seasonName: "All", season: "All"), Season(id: 1, seasonName: "Winter", season: "Winter"), Season(id: 2, seasonName: "Spring", season: "Spring"), Season(id: 3, seasonName: "Summer", season: "Summer"), Season(id: 4, seasonName: "Autumn", season: "Autumn")]
     //let typeNames: [String] = ["All", "Petit-déjeuner", "Déjeuner", "Goûter", "Diner"]
 
@@ -91,7 +94,7 @@ struct MealsPropostion: View {
                             ForEach(bigModel.currentUserTags.keys.sorted(), id: \.self) { item in
                                 
                                 MealsViewModel(bigModel: BigModel.shared, item: item, liked: self.binding(for: item), type: type, season: season)
-                                Rectangle().fill(Color.navyBlue).frame(height: 1)
+                                
                                 
                             }
                             
@@ -196,181 +199,222 @@ struct MealsViewModel : View {
     
     var body: some View {
         
-        HStack {
+        if type == "All" && item.recipe.seasons.contains(season) {
             
-            if type == "All" && item.recipe.seasons.contains(season) {
+            VStack {
                 
-                Text(item.recipe.recipeName)
-                    .font(.largeTitle)
-                    .foregroundStyle(Color.navyBlue)
-                    .onTapGesture {
-                        bigModel.currentView = .RecipeScreen
-                        bigModel.screenHistory.append(.mealsPropositionScreen)
-                        bigModel.selectedMeal = item
-                    }
-                
-                Spacer()
-                
-                Image(systemName: liked ? "heart.fill" : "heart")
-                    .foregroundColor(.navyBlue)
-                    .onTapGesture {
-                        Task {
-                            
-                            if !isMealInList(meal: item) && !liked {
-                                addToFavourite(item: item)
-                            }
-                            
-                            if liked {
-                                var user = bigModel.currentUser
-                                let mealsList = user.favoriteMeals
-                                user.favoriteMeals = bigModel.removeMealFromList(meal: item, mealsList: mealsList)
-                                bigModel.storeCurrentUserInfoIntoDB(user: user) {}
-                            }
-                            
-                            self.liked.toggle()
-                            
+                HStack {
+                    
+                    Text(item.recipe.recipeName)
+                        .font(.largeTitle)
+                        .foregroundStyle(Color.navyBlue)
+                        .onTapGesture {
+                            bigModel.currentView = .RecipeScreen
+                            bigModel.screenHistory.append(.mealsPropositionScreen)
+                            bigModel.selectedMeal = item
                         }
-                    }
+                    
+                    Spacer()
+                    
+                    Image(systemName: liked ? "heart.fill" : "heart")
+                        .foregroundColor(.navyBlue)
+                        .onTapGesture {
+                            Task {
+                                
+                                if !isMealInList(meal: item) && !liked {
+                                    addToFavourite(item: item)
+                                }
+                                
+                                if liked {
+                                    var user = bigModel.currentUser
+                                    let mealsList = user.favoriteMeals
+                                    user.favoriteMeals = bigModel.removeMealFromList(meal: item, mealsList: mealsList)
+                                    bigModel.storeCurrentUserInfoIntoDB(user: user) {}
+                                }
+                                
+                                self.liked.toggle()
+                                
+                            }
+                        }
+                    
+                    Image(systemName: "hand.thumbsdown")
+                        .foregroundColor(.navyBlue)
+                        .onTapGesture {
+                            bigModel.currentView = .BlankFile
+                            bigModel.dislikedMeal = item
+                        }
+                    
+                }
                 
-                Image(systemName: "hand.thumbsdown")
-                    .foregroundColor(.navyBlue)
-                    .onTapGesture {
-                        bigModel.currentView = .BlankFile
-                        bigModel.dislikedMeal = item
-                    }
+                Rectangle()
+                    .frame(height: 1)
+                    .foregroundColor(Color.navyBlue)
                 
             }
-            
-            if item.recipe.mealType == type && season == "All" {
-                
-                Text(item.recipe.recipeName)
-                    .font(.largeTitle)
-                    .foregroundStyle(Color.navyBlue)
-                    .onTapGesture {
-                        bigModel.currentView = .RecipeScreen
-                        bigModel.screenHistory.append(.mealsPropositionScreen)
-                        bigModel.selectedMeal = item
-                    }
-                
-                Spacer()
-                
-                Image(systemName: liked ? "heart.fill" : "heart")
-                    .foregroundColor(.navyBlue)
-                    .onTapGesture {
-                        Task {
-                            
-                            if !isMealInList(meal: item) && !liked {
-                                addToFavourite(item: item)
-                            }
-                            
-                            if liked {
-                                var user = bigModel.currentUser
-                                let mealsList = user.favoriteMeals
-                                user.favoriteMeals = bigModel.removeMealFromList(meal: item, mealsList: mealsList)
-                                bigModel.storeCurrentUserInfoIntoDB(user: user) {}
-                            }
-                            
-                            self.liked.toggle()
-                            
-                        }
-                    }
-                
-                Image(systemName: "hand.thumbsdown")
-                    .foregroundColor(.navyBlue)
-                    .onTapGesture {
-                        bigModel.currentView = .BlankFile
-                        bigModel.dislikedMeal = item
-                    }
-                
-            }
-            
-            if item.recipe.mealType == type && item.recipe.seasons.contains(season) {
-                
-                Text(item.recipe.recipeName)
-                    .font(.largeTitle)
-                    .foregroundStyle(Color.navyBlue)
-                    .onTapGesture {
-                        bigModel.currentView = .RecipeScreen
-                        bigModel.screenHistory.append(.mealsPropositionScreen)
-                        bigModel.selectedMeal = item
-                    }
-                
-                Spacer()
-                
-                Image(systemName: liked ? "heart.fill" : "heart")
-                    .foregroundColor(.navyBlue)
-                    .onTapGesture {
-                        Task {
-                            
-                            if !isMealInList(meal: item) && !liked {
-                                addToFavourite(item: item)
-                            }
-                            
-                            if liked {
-                                var user = bigModel.currentUser
-                                let mealsList = user.favoriteMeals
-                                user.favoriteMeals = bigModel.removeMealFromList(meal: item, mealsList: mealsList)
-                                bigModel.storeCurrentUserInfoIntoDB(user: user) {}
-                            }
-                            
-                            self.liked.toggle()
-                            
-                        }
-                    }
-                
-                Image(systemName: "hand.thumbsdown")
-                    .foregroundColor(.navyBlue)
-                    .onTapGesture {
-                        bigModel.currentView = .BlankFile
-                        bigModel.dislikedMeal = item
-                    }
-                
-            }
-            
-            if type == "All" && season == "All" {
-                
-                Text(item.recipe.recipeName)
-                    .font(.largeTitle)
-                    .foregroundStyle(Color.navyBlue)
-                    .onTapGesture {
-                        bigModel.currentView = .RecipeScreen
-                        bigModel.screenHistory.append(.mealsPropositionScreen)
-                        bigModel.selectedMeal = item
-                    }
-                
-                Spacer()
-                
-                Image(systemName: liked ? "heart.fill" : "heart")
-                    .foregroundColor(.navyBlue)
-                    .onTapGesture {
-                        Task {
-                            
-                            if !isMealInList(meal: item) && !liked {
-                                addToFavourite(item: item)
-                            }
-                            
-                            if liked {
-                                var user = bigModel.currentUser
-                                let mealsList = user.favoriteMeals
-                                user.favoriteMeals = bigModel.removeMealFromList(meal: item, mealsList: mealsList)
-                                bigModel.storeCurrentUserInfoIntoDB(user: user) {}
-                            }
-                            
-                            self.liked.toggle()
-                            
-                        }
-                    }
-                
-                Image(systemName: "hand.thumbsdown")
-                    .foregroundColor(.navyBlue)
-                    .onTapGesture {
-                        bigModel.currentView = .BlankFile
-                        bigModel.dislikedMeal = item
-                    }
-                
-            }
-            
         }
+        
+        if season == "All" && item.recipe.mealType == type {
+            
+            VStack {
+                
+                HStack {
+                    
+                    Text(item.recipe.recipeName)
+                        .font(.largeTitle)
+                        .foregroundStyle(Color.navyBlue)
+                        .onTapGesture {
+                            bigModel.currentView = .RecipeScreen
+                            bigModel.screenHistory.append(.mealsPropositionScreen)
+                            bigModel.selectedMeal = item
+                        }
+                    
+                    Spacer()
+                    
+                    Image(systemName: liked ? "heart.fill" : "heart")
+                        .foregroundColor(.navyBlue)
+                        .onTapGesture {
+                            Task {
+                                
+                                if !isMealInList(meal: item) && !liked {
+                                    addToFavourite(item: item)
+                                }
+                                
+                                if liked {
+                                    var user = bigModel.currentUser
+                                    let mealsList = user.favoriteMeals
+                                    user.favoriteMeals = bigModel.removeMealFromList(meal: item, mealsList: mealsList)
+                                    bigModel.storeCurrentUserInfoIntoDB(user: user) {}
+                                }
+                                
+                                self.liked.toggle()
+                                
+                            }
+                        }
+                    
+                    Image(systemName: "hand.thumbsdown")
+                        .foregroundColor(.navyBlue)
+                        .onTapGesture {
+                            bigModel.currentView = .BlankFile
+                            bigModel.dislikedMeal = item
+                        }
+                    
+                }
+                
+                Rectangle()
+                    .frame(height: 1)
+                    .foregroundColor(Color.navyBlue)
+                
+            }
+        }
+        
+        if item.recipe.mealType == type && item.recipe.seasons.contains(season) {
+            
+            VStack {
+                
+                HStack {
+                    
+                    Text(item.recipe.recipeName)
+                        .font(.largeTitle)
+                        .foregroundStyle(Color.navyBlue)
+                        .onTapGesture {
+                            bigModel.currentView = .RecipeScreen
+                            bigModel.screenHistory.append(.mealsPropositionScreen)
+                            bigModel.selectedMeal = item
+                        }
+                    
+                    Spacer()
+                    
+                    Image(systemName: liked ? "heart.fill" : "heart")
+                        .foregroundColor(.navyBlue)
+                        .onTapGesture {
+                            Task {
+                                
+                                if !isMealInList(meal: item) && !liked {
+                                    addToFavourite(item: item)
+                                }
+                                
+                                if liked {
+                                    var user = bigModel.currentUser
+                                    let mealsList = user.favoriteMeals
+                                    user.favoriteMeals = bigModel.removeMealFromList(meal: item, mealsList: mealsList)
+                                    bigModel.storeCurrentUserInfoIntoDB(user: user) {}
+                                }
+                                
+                                self.liked.toggle()
+                                
+                            }
+                        }
+                    
+                    Image(systemName: "hand.thumbsdown")
+                        .foregroundColor(.navyBlue)
+                        .onTapGesture {
+                            bigModel.currentView = .BlankFile
+                            bigModel.dislikedMeal = item
+                        }
+                    
+                }
+                
+                Rectangle()
+                    .frame(height: 1)
+                    .foregroundColor(Color.navyBlue)
+                
+            }
+        }
+        
+        if type == "All" && season == "All" {
+            
+            VStack {
+                
+                HStack {
+                    
+                    Text(item.recipe.recipeName)
+                        .font(.largeTitle)
+                        .foregroundStyle(Color.navyBlue)
+                        .onTapGesture {
+                            bigModel.currentView = .RecipeScreen
+                            bigModel.screenHistory.append(.mealsPropositionScreen)
+                            bigModel.selectedMeal = item
+                        }
+                    
+                    Spacer()
+                    
+                    Image(systemName: liked ? "heart.fill" : "heart")
+                        .foregroundColor(.navyBlue)
+                        .onTapGesture {
+                            Task {
+                                
+                                if !isMealInList(meal: item) && !liked {
+                                    addToFavourite(item: item)
+                                }
+                                
+                                if liked {
+                                    var user = bigModel.currentUser
+                                    let mealsList = user.favoriteMeals
+                                    user.favoriteMeals = bigModel.removeMealFromList(meal: item, mealsList: mealsList)
+                                    bigModel.storeCurrentUserInfoIntoDB(user: user) {}
+                                }
+                                
+                                self.liked.toggle()
+                                
+                            }
+                        }
+                    
+                    Image(systemName: "hand.thumbsdown")
+                        .foregroundColor(.navyBlue)
+                        .onTapGesture {
+                            bigModel.currentView = .BlankFile
+                            bigModel.dislikedMeal = item
+                        }
+                    
+                }
+                
+                Rectangle()
+                    .frame(height: 1)
+                    .foregroundColor(Color.navyBlue)
+                
+            }
+        }
+        
     }
     
     private func addToFavourite(item: BigModel.Meal) {

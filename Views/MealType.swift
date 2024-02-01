@@ -11,7 +11,7 @@ struct MealType: View {
     
     @EnvironmentObject var bigModel: BigModel
     @State var selectedType: String = ""
-    @State var seasonTags: [String: Bool] = ["Petit déjeuner": false, "Déjeuner": false, "Gouter": false, "Diner": false]
+    @State var seasonTags: [String: Bool] = ["Breakfast": false, "Main course": false, "Dessert": false, "Starter": false]
     
     var body: some View {
             
@@ -29,64 +29,64 @@ struct MealType: View {
                         VStack {
                             ZStack {
                                 Rectangle()
-                                    .foregroundColor(seasonTags["Petit déjeuner"]! ? .navyBlue : .gray)
+                                    .foregroundColor(seasonTags["Breakfast"]! ? .navyBlue : .gray)
                                     .cornerRadius(20)
-                                Text("Petit déjeuner")
+                                Text("Breakfast")
                                     .foregroundStyle(Color.white)
                                     .font(.title2)
                             }.onTapGesture {
-                                selectedType = "Petit déjeuner"
-                                seasonTags["Petit déjeuner"] = true
-                                seasonTags["Gouter"] = false
-                                seasonTags["Déjeuner"] = false
-                                seasonTags["Diner"] = false
+                                selectedType = "Breakfast"
+                                seasonTags["Breakfast"] = true
+                                seasonTags["Dessert"] = false
+                                seasonTags["Main course"] = false
+                                seasonTags["Starter"] = false
                             }
                             
                             ZStack {
                                 Rectangle()
-                                    .foregroundColor(seasonTags["Gouter"]! ? .navyBlue : .gray)
+                                    .foregroundColor(seasonTags["Dessert"]! ? .navyBlue : .gray)
                                     .cornerRadius(20)
-                                Text("Gouter")
+                                Text("Dessert")
                                     .foregroundStyle(Color.white)
                                     .font(.title2)
                             }.onTapGesture {
-                                selectedType = "Gouter"
-                                seasonTags["Petit déjeuner"] = false
-                                seasonTags["Gouter"] = true
-                                seasonTags["Déjeuner"] = false
-                                seasonTags["Diner"] = false
+                                selectedType = "Dessert"
+                                seasonTags["Breakfast"] = false
+                                seasonTags["Dessert"] = true
+                                seasonTags["Main course"] = false
+                                seasonTags["Starter"] = false
                             }
                         }
                         
                         VStack {
                             ZStack {
                                 Rectangle()
-                                    .foregroundColor(seasonTags["Déjeuner"]! ? .navyBlue : .gray)
+                                    .foregroundColor(seasonTags["Main course"]! ? .navyBlue : .gray)
                                     .cornerRadius(20)
-                                Text("Déjeuner")
+                                Text("Main course")
                                     .foregroundStyle(Color.white)
                                     .font(.title2)
                             }.onTapGesture {
-                                selectedType = "Déjeuner"
-                                seasonTags["Petit déjeuner"] = false
-                                seasonTags["Gouter"] = false
-                                seasonTags["Déjeuner"] = true
-                                seasonTags["Diner"] = false
+                                selectedType = "Main course"
+                                seasonTags["Breakfast"] = false
+                                seasonTags["Dessert"] = false
+                                seasonTags["Main course"] = true
+                                seasonTags["Starter"] = false
                             }
                             
                             ZStack {
                                 Rectangle()
-                                    .foregroundColor(seasonTags["Diner"]! ? .navyBlue : .gray)
+                                    .foregroundColor(seasonTags["Starter"]! ? .navyBlue : .gray)
                                     .cornerRadius(20)
-                                Text("Diner")
+                                Text("Starter")
                                     .foregroundStyle(Color.white)
                                     .font(.title2)
                             }.onTapGesture {
-                                selectedType = "Diner"
-                                seasonTags["Petit déjeuner"] = false
-                                seasonTags["Gouter"] = false
-                                seasonTags["Déjeuner"] = false
-                                seasonTags["Diner"] = true
+                                selectedType = "Starter"
+                                seasonTags["Breakfast"] = false
+                                seasonTags["Dessert"] = false
+                                seasonTags["Main course"] = false
+                                seasonTags["Starter"] = true
                             }
                         }
                         
