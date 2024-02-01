@@ -103,10 +103,10 @@ struct MealType: View {
                 Text("Validate")
                     .foregroundStyle(Color.white)
                     .onTapGesture {
-                        var user: BigModel.User = bigModel.currentUser
-                        user.proposedMeals = []
-                        user.favoriteMeals = []
-                        bigModel.storeCurrentUserInfoIntoDB(user: user) {}
+                        //var user: BigModel.User = bigModel.currentUser
+                        //user.proposedMeals = []
+                        //user.favoriteMeals = []
+                        //bigModel.storeCurrentUserInfoIntoDB(user: user) {}
                         Task {
                             bigModel.currentView = .mealsPropositionScreen
                             bigModel.screenHistory.append(.MealTypeView)

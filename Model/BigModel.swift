@@ -916,7 +916,10 @@ class BigModel: ObservableObject {
         //print("response2 \(response2)")
         //meals.append(jsonTest(jsonString: response2) ?? Meal(id: "", name: "", itemsAndQ: [], price: 0, spendedTime: 0, recipe: ""))
         
-        return mealsNameList
+        guard mealsNameList.count >= 5 else {
+                return mealsNameList
+            }
+        return Array(mealsNameList[..<5])
         
     }
     
@@ -932,7 +935,7 @@ class BigModel: ObservableObject {
         
         DispatchQueue.main.async {
             self.isLoading = true
-            self.currentUserTags = [:]
+            //self.currentUserTags = [:]
         }
         
         let mealsNameList: [String] = self.createMealsNameList(mealType: mealType)
