@@ -280,7 +280,7 @@ struct UserView: View {
                                                      bigModel.currentView = .mealsPropositionScreen
                                                      bigModel.screenHistory.append(.UserView)
                                                      if bigModel.currentUser.proposedMeals.count == 0 {
-                                                         bigModel.currentView = .MealTypeView
+                                                         bigModel.currentView = .SeasonSelectionView
                                                      }
                                                  }
                                          }
