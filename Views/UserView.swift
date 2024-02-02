@@ -16,6 +16,8 @@ struct UserView: View {
     @State var isEditModeOn = false
     @State var firstName = ""
     @State var lastName = ""
+    @FocusState var focused1: Bool?
+    @FocusState var focused2: Bool?
     
     var body: some View {
         
@@ -51,38 +53,60 @@ struct UserView: View {
                                 TextField("", text: $newFirstName)
                                     .multilineTextAlignment(.leading)
                                     .font(.largeTitle)
-                                .foregroundColor(.white)
+                                    .foregroundColor(.white)
+                                    .focused($focused1, equals: true)
+                                    .onAppear {
+                                      DispatchQueue.main.asyncAfter(deadline: .now()) {
+                                        self.focused1 = true
+                                      }
+                                    }
                                 
                                 TextField("", text: $newLastName)
                                     .multilineTextAlignment(.leading)
                                     .font(.largeTitle)
                                     .foregroundColor(.white)
-                                
+                                    .focused($focused2, equals: true)
+                                    .onAppear {
+                                      DispatchQueue.main.asyncAfter(deadline: .now()) {
+                                        self.focused2 = true
+                                      }
+                                    }
                             }
                             
                         }
                         Spacer()
-                        Image(systemName: isEditModeOn ? "checkmark.circle" : "pencil.and.outline")
-                            .foregroundColor(.white)
-                            .bold()
-                            .onTapGesture {
-                                
-                                if isEditModeOn {
-                                    //bigModel.updateUserNames(firstName: newFirstName, lastName: newLastName)
-                                    Task {
-                                        var user = bigModel.currentUser
-                                        user.firstName = newFirstName
-                                        user.lastName = newLastName
-                                        await bigModel.storeCurrentUserInfoIntoDB(user: user) {}
-                                        firstName = newFirstName
-                                        lastName = newLastName
-                                        isEditModeOn.toggle()
-                                    }
-                                } else {
+                        
+                        if !isEditModeOn {
+                            Text("Edit")
+                                .foregroundColor(.white)
+                                .bold()
+                                .onTapGesture {
                                     isEditModeOn.toggle()
                                 }
-                                
-                            }
+                        } else {
+                            Image(systemName: "checkmark.circle")
+                                .foregroundColor(.white)
+                                .bold()
+                                .onTapGesture {
+                                    
+                                    if isEditModeOn {
+                                        //bigModel.updateUserNames(firstName: newFirstName, lastName: newLastName)
+                                        Task {
+                                            var user = bigModel.currentUser
+                                            user.firstName = newFirstName
+                                            user.lastName = newLastName
+                                            bigModel.storeCurrentUserInfoIntoDB(user: user) {}
+                                            firstName = newFirstName
+                                            lastName = newLastName
+                                            isEditModeOn.toggle()
+                                        }
+                                    } else {
+                                        isEditModeOn.toggle()
+                                    }
+                                    
+                                }
+                        }
+                        
                     }
                 }.padding(20)
             }.background(Color.navyBlue)
@@ -346,10 +370,23 @@ struct UserView: View {
             
         }.edgesIgnoringSafeArea(.bottom)
         .onAppear {
-            newFirstName = bigModel.currentUser.firstName
-            newLastName = bigModel.currentUser.lastName
-            firstName = bigModel.currentUser.firstName
-            lastName = bigModel.currentUser.lastName
+            
+            if bigModel.currentUser.firstName == "" {
+                newFirstName = "Votre prénom"
+                firstName = "Entrez votre prénom"
+            } else {
+                newFirstName = bigModel.currentUser.firstName
+                firstName = bigModel.currentUser.firstName
+            }
+            
+            if bigModel.currentUser.lastName == "" {
+                newLastName = "Votre nom"
+                lastName = "Entrez votre nom"
+            } else {
+                newLastName = bigModel.currentUser.lastName
+                lastName = bigModel.currentUser.lastName
+            }
+            
         }
         
     }
