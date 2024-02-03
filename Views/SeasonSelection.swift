@@ -19,7 +19,7 @@ struct SeasonSelection: View {
             VStack {
                 BackModel(color: .navyBlue, view: .MealTypeView)
                 
-                Text("SEASON")
+                Text("season")
                     .foregroundStyle(Color.navyBlue)
                     .font(.largeTitle)
                 
@@ -30,7 +30,7 @@ struct SeasonSelection: View {
                             Rectangle()
                                 .foregroundColor(seasonTags["Hiver"]! ? .navyBlue : .gray)
                                 .cornerRadius(20)
-                            Text("Hiver")
+                            Text("winter")
                                 .foregroundStyle(Color.white)
                                 .font(.title2)
                         }.onTapGesture {
@@ -44,7 +44,7 @@ struct SeasonSelection: View {
                             Rectangle()
                                 .foregroundColor(seasonTags["Printemps"]! ? .navyBlue : .gray)
                                 .cornerRadius(20)
-                            Text("Printemps")
+                            Text("spring")
                                 .foregroundStyle(Color.white)
                                 .font(.title2)
                         }.onTapGesture {
@@ -60,7 +60,7 @@ struct SeasonSelection: View {
                             Rectangle()
                                 .foregroundColor(seasonTags["Été"]! ? .navyBlue : .gray)
                                 .cornerRadius(20)
-                            Text("Été")
+                            Text("summer")
                                 .foregroundStyle(Color.white)
                                 .font(.title2)
                         }.onTapGesture {
@@ -74,7 +74,7 @@ struct SeasonSelection: View {
                             Rectangle()
                                 .foregroundColor(seasonTags["Automne"]! ? .navyBlue : .gray)
                                 .cornerRadius(20)
-                            Text("Automne")
+                            Text("autumn")
                                 .foregroundStyle(Color.white)
                                 .font(.title2)
                         }.onTapGesture {
@@ -95,7 +95,7 @@ struct SeasonSelection: View {
                 Rectangle()
                     .frame(height: 60)
                     .foregroundStyle(Color.navyBlue)
-                Text("Validate")
+                Text("validate")
                     .foregroundStyle(Color.white)
             }.onTapGesture {
                 bigModel.currentView = .MealTypeView

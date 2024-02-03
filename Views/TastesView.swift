@@ -15,62 +15,68 @@ struct TastesView: View {
     
     var body: some View {
         
-        VStack {
+        ZStack {
             
-            VStack(spacing: 10) {
+            Color(.lightGray)
+                .edgesIgnoringSafeArea(.all)
+            
+            VStack {
                 
-                BackModel(color: Color.navyBlue, view: .TastesView)
-                
-                Text("TASTES")
-                    .foregroundStyle(Color.navyBlue)
-                    .font(.system(size: 100))
-                Circle()
-                    .foregroundStyle(Color.navyBlue)
-                
-                VStack(alignment: .leading) {
-                    Text("Select your preferences in each categories")
+                VStack(spacing: 10) {
+                    
+                    BackModel(color: Color.navyBlue, view: .TastesView)
+                    
+                    Text("tastes")
                         .foregroundStyle(Color.navyBlue)
-                    ScrollView {
-                        VStack(alignment: .leading, spacing: 10) {
-                            ForEach(preferenceList) { preferenceList in
-                                Text(preferenceList.name)
-                                    .font(.largeTitle)
-                                    .foregroundStyle(Color.navyBlue)
-                                    .onTapGesture {
-                                        bigModel.currentView = categoryNameToNextScreen(categorie: preferenceList)
-                                        bigModel.screenHistory.append(.TastesView)
-                                    }
-                                Rectangle().fill(Color.navyBlue).frame(height: 1)
+                        .font(.system(size: 100))
+                    Circle()
+                        .foregroundStyle(Color.navyBlue)
+                    
+                    VStack(alignment: .leading) {
+                        Text("select-preferences")
+                            .foregroundStyle(Color.navyBlue)
+                        ScrollView {
+                            VStack(alignment: .leading, spacing: 10) {
+                                ForEach(preferenceList) { preferenceList in
+                                    Text(preferenceList.name)
+                                        .font(.largeTitle)
+                                        .foregroundStyle(Color.navyBlue)
+                                        .onTapGesture {
+                                            bigModel.currentView = categoryNameToNextScreen(categorie: preferenceList)
+                                            bigModel.screenHistory.append(.TastesView)
+                                        }
+                                    Rectangle().fill(Color.navyBlue).frame(height: 1)
+                                }
                             }
                         }
                     }
+                    
+                }.padding(.leading)
+                .padding(.trailing)
+                .padding(.top)
+                            
+                ZStack {
+                    Rectangle()
+                        .frame(height: 60)
+                        .foregroundStyle(Color.navyBlue)
+                    Text("validate")
+                        .foregroundColor(.white)
+                }.onTapGesture {
+                    var user = bigModel.currentUser
+                    
+                    if (bigModel.screenHistory.last == .LegumeScreen || bigModel.screenHistory.last == .FruitsScreen || bigModel.screenHistory.last == .strachyFoodsScreen || bigModel.screenHistory.last == .proteinsScreen || bigModel.screenHistory.last == .seasonningScreen || bigModel.screenHistory.last == .allergiesScreen || bigModel.screenHistory.last == .cookingToolsScreen) {
+                        bigModel.currentView = .UserView
+                        bigModel.screenHistory.append(.TastesView)
+                    } else {
+                        bigModel.currentView = .preferencesSummary
+                        bigModel.screenHistory.append(.TastesView)
+                        print(bigModel.currentUser.items)
+                    }
+                    
                 }
                 
-            }.padding(.leading)
-            .padding(.trailing)
-            .padding(.top)
-                        
-            ZStack {
-                Rectangle()
-                    .frame(height: 60)
-                    .foregroundStyle(Color.navyBlue)
-                Text("Validate")
-                    .foregroundColor(.white)
-            }.onTapGesture {
-                var user = bigModel.currentUser
-                
-                if (bigModel.screenHistory.last == .LegumeScreen || bigModel.screenHistory.last == .FruitsScreen || bigModel.screenHistory.last == .strachyFoodsScreen || bigModel.screenHistory.last == .proteinsScreen || bigModel.screenHistory.last == .seasonningScreen || bigModel.screenHistory.last == .allergiesScreen || bigModel.screenHistory.last == .cookingToolsScreen) {
-                    bigModel.currentView = .UserView
-                    bigModel.screenHistory.append(.TastesView)
-                } else {
-                    bigModel.currentView = .preferencesSummary
-                    bigModel.screenHistory.append(.TastesView)
-                    print(bigModel.currentUser.items)
-                }
-                
-            }
-            
-        }.edgesIgnoringSafeArea(.bottom)
+            }.edgesIgnoringSafeArea(.bottom)
+        }
     }
 }
 

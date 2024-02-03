@@ -23,6 +23,9 @@ struct PreferenceView: View {
         
         ZStack {
             
+            Color(.lightGray)
+                .edgesIgnoringSafeArea(.all)
+            
             VStack(spacing: 5) {
                 
                 BackModel(color: Color.navyBlue, view: bigModel.categoryToScreenName(categorie: categorie))
@@ -32,7 +35,7 @@ struct PreferenceView: View {
                     .textCase(.uppercase)
                     .font(.system(size: 78))
                 
-                TextField("Search", text: $searchText)
+                TextField("search", text: $searchText)
                     .disableAutocorrection(true)
                     .autocapitalization(.none)
                     .textFieldStyle(.roundedBorder)
@@ -46,7 +49,7 @@ struct PreferenceView: View {
                                 .cornerRadius(10)
                                 .foregroundColor(season == "All" ? Color.navyBlue : Color.gray)
                                 .frame(height: 50)
-                            Text("All")
+                            Text("all")
                                 .foregroundColor(season == "All" ? Color.white : Color.black)
                                 .padding(.horizontal, 20)
                         }.onTapGesture {
@@ -59,7 +62,7 @@ struct PreferenceView: View {
                                 .cornerRadius(10)
                                 .foregroundColor(season == "Hiver" ? Color.navyBlue : Color.gray)
                                 .frame(height: 50)
-                            Text("Hiver")
+                            Text("winter")
                                 .foregroundColor(season == "Hiver" ? Color.white : Color.black)
                                 .padding(.horizontal, 20)
                         }.onTapGesture {
@@ -72,7 +75,7 @@ struct PreferenceView: View {
                                 .cornerRadius(10)
                                 .foregroundColor(season == "Printemps" ? Color.navyBlue : Color.gray)
                                 .frame(height: 50)
-                            Text("Printemps")
+                            Text("spring")
                                 .foregroundColor(season == "Printemps" ? Color.white : Color.black)
                                 .padding(.horizontal, 20)
                         }.onTapGesture {
@@ -85,7 +88,7 @@ struct PreferenceView: View {
                                 .cornerRadius(10)
                                 .foregroundColor(season == "Été" ? Color.navyBlue : Color.gray)
                                 .frame(height: 50)
-                            Text("Été")
+                            Text("summer")
                                 .foregroundColor(season == "Été" ? Color.white : Color.black)
                                 .padding(.horizontal, 20)
                         }.onTapGesture {
@@ -98,7 +101,7 @@ struct PreferenceView: View {
                                 .cornerRadius(10)
                                 .foregroundColor(season == "Automne" ? Color.navyBlue : Color.gray)
                                 .frame(height: 50)
-                            Text("Automne")
+                            Text("autumn")
                                 .foregroundColor(season == "Automne" ? Color.white : Color.black)
                                 .padding(.horizontal, 20)
                         }.onTapGesture {
@@ -128,7 +131,7 @@ struct PreferenceView: View {
                     Rectangle()
                         .frame(height: 60)
                         .foregroundStyle(Color.navyBlue)
-                    Text("Validate")
+                    Text("validate")
                         .foregroundColor(.white)
                 }.onTapGesture {
                     

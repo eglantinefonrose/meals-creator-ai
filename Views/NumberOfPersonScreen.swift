@@ -28,10 +28,7 @@ struct NumberOfPersonScreen: View {
                     VStack(spacing: 75) {
                         
                         VStack(alignment: .leading) {
-                            Text("NUMBER")
-                                .foregroundStyle(Color.white)
-                                .font(.largeTitle)
-                            Text("of people")
+                            Text("number-of-people")
                                 .foregroundStyle(Color.white)
                                 .font(.largeTitle)
                         }
@@ -167,7 +164,7 @@ struct NumberOfPersonScreen: View {
                         Rectangle()
                             .frame(height: 60)
                             .foregroundStyle(Color.white)
-                        Text("Validate")
+                        Text("validate")
                             .foregroundStyle(Color.navyBlue)
                     }.onTapGesture {
                         Task {

@@ -25,7 +25,7 @@ struct PreferenceSummary: View {
                     
                     VStack {
                         
-                        Text("PREFERENCES")
+                        Text("preferences")
                             .foregroundStyle(Color.white)
                             .font(.largeTitle)
                         
@@ -98,7 +98,7 @@ struct PreferenceSummary: View {
                         Rectangle()
                             .frame(height: 60)
                             .foregroundStyle(Color.gray)
-                        Text("Edit")
+                        Text("edit")
                             .foregroundStyle(Color.white)
                     }.onTapGesture {
                         bigModel.screenHistory.append(.preferencesSummary)
@@ -109,7 +109,7 @@ struct PreferenceSummary: View {
                         Rectangle()
                             .frame(height: 60)
                             .foregroundStyle(Color.white)
-                        Text("Validate")
+                        Text("validate")
                             .foregroundStyle(Color.navyBlue)
                     }.onTapGesture {
                         bigModel.screenHistory.append(.preferencesSummary)

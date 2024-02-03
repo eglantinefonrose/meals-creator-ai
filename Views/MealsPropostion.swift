@@ -27,141 +27,147 @@ struct MealsPropostion: View {
 
     var body: some View {
         
-        VStack {
+        ZStack {
             
-            VStack(spacing: 10) {
+            Color(.lightGray)
+                .edgesIgnoringSafeArea(.all)
+            
+            VStack {
                 
-                BackModel(color: Color.navyBlue, view: .mealsPropositionScreen)
-                
-                Text("MEALS")
-                    .foregroundStyle(Color.navyBlue)
-                    .font(.system(size: 100))
-                    .onTapGesture {
-                        print("")
-                    }
-                
-                //Circle()
-                    //.foregroundStyle(Color.navyBlue)
-                
-                VStack {
+                VStack(spacing: 10) {
                     
-                    Text("Select a meal to see the recipe")
+                    BackModel(color: Color.navyBlue, view: .mealsPropositionScreen)
+                    
+                    Text("meals")
                         .foregroundStyle(Color.navyBlue)
+                        .font(.system(size: 100))
+                        .onTapGesture {
+                            print("")
+                        }
                     
-                    ScrollView(.horizontal) {
-                        HStack {
-                            
-                            ForEach(seasons) { seasonValue in
-                                ZStack {
-                                    Rectangle()
-                                        .cornerRadius(10)
-                                        .foregroundColor(season == seasonValue.season ? Color.navyBlue : Color.gray)
-                                        .frame(height: 50)
-                                    Text(seasonValue.seasonName)
-                                        .foregroundColor(season == seasonValue.season ? Color.white : Color.black)
-                                        .padding()
-                                }.onTapGesture {
-                                    season = seasonValue.season
+                    //Circle()
+                        //.foregroundStyle(Color.navyBlue)
+                    
+                    VStack {
+                        
+                        Text("select-meal-recipe")
+                            .foregroundStyle(Color.navyBlue)
+                        
+                        ScrollView(.horizontal) {
+                            HStack {
+                                
+                                ForEach(seasons) { seasonValue in
+                                    ZStack {
+                                        Rectangle()
+                                            .cornerRadius(10)
+                                            .foregroundColor(season == seasonValue.season ? Color.navyBlue : Color.gray)
+                                            .frame(height: 50)
+                                        Text(seasonValue.seasonName)
+                                            .foregroundColor(season == seasonValue.season ? Color.white : Color.black)
+                                            .padding()
+                                    }.onTapGesture {
+                                        season = seasonValue.season
+                                    }
                                 }
+                                
                             }
-                            
+                        }
+                        
+                        ScrollView(.horizontal) {
+                            HStack {
+                                
+                                ForEach(types) { typeValue in
+                                    ZStack {
+                                        Rectangle()
+                                            .cornerRadius(10)
+                                            .foregroundColor(type == typeValue.type ? Color.navyBlue : Color.gray)
+                                            .frame(height: 50)
+                                        Text(typeValue.typeName)
+                                            .foregroundColor(type == typeValue.type ? Color.white : Color.black)
+                                            .padding()
+                                    }.onTapGesture {
+                                        type = typeValue.type
+                                    }
+                                }
+                                
+                            }
+                        }
+                        
+                        ScrollView {
+                            VStack(alignment: .leading, spacing: 10) {
+                                
+                                ForEach(bigModel.currentUserTags.keys.sorted(), id: \.self) { item in
+                                    
+                                    MealsViewModel(bigModel: BigModel.shared, item: item, liked: self.binding(for: item), type: type, season: season)
+                                    
+                                    
+                                }
+                                
+                                /*ForEach(tags.keys.sorted(), id: \.self) { item in
+                                    
+                                    MealsViewModel(bigModel: BigModel.shared, item: item, liked: self.binding(for: item), type: type)
+                                    
+                                    if tags[item] == true {
+                                        Text("p")
+                                    } else {
+                                        Text("false")
+                                    }
+                                    
+                                    Rectangle().fill(Color.navyBlue).frame(height: 1)
+                                    
+                                }*/
+                            }
                         }
                     }
                     
-                    ScrollView(.horizontal) {
-                        HStack {
-                            
-                            ForEach(types) { typeValue in
-                                ZStack {
-                                    Rectangle()
-                                        .cornerRadius(10)
-                                        .foregroundColor(type == typeValue.type ? Color.navyBlue : Color.gray)
-                                        .frame(height: 50)
-                                    Text(typeValue.typeName)
-                                        .foregroundColor(type == typeValue.type ? Color.white : Color.black)
-                                        .padding()
-                                }.onTapGesture {
-                                    type = typeValue.type
-                                }
-                            }
-                            
+                    HStack {
+                        Spacer()
+                        if bigModel.isLoading {
+                            ProgressView()
+                                    .scaleEffect(1, anchor: .center)
+                                .progressViewStyle(CircularProgressViewStyle(tint: .gray))
                         }
+                        Spacer()
                     }
                     
-                    ScrollView {
-                        VStack(alignment: .leading, spacing: 10) {
-                            
-                            ForEach(bigModel.currentUserTags.keys.sorted(), id: \.self) { item in
-                                
-                                MealsViewModel(bigModel: BigModel.shared, item: item, liked: self.binding(for: item), type: type, season: season)
-                                
-                                
-                            }
-                            
-                            /*ForEach(tags.keys.sorted(), id: \.self) { item in
-                                
-                                MealsViewModel(bigModel: BigModel.shared, item: item, liked: self.binding(for: item), type: type)
-                                
-                                if tags[item] == true {
-                                    Text("p")
-                                } else {
-                                    Text("false")
-                                }
-                                
-                                Rectangle().fill(Color.navyBlue).frame(height: 1)
-                                
-                            }*/
-                        }
-                    }
-                }
+                }.padding(.leading)
+                .padding(.trailing)
+                .padding(.top)
                 
-                HStack {
-                    Spacer()
-                    if bigModel.isLoading {
-                        ProgressView()
-                                .scaleEffect(1, anchor: .center)
-                            .progressViewStyle(CircularProgressViewStyle(tint: .gray))
-                    }
-                    Spacer()
+                ZStack {
+                    Rectangle()
+                        .frame(height: 60)
+                        .foregroundStyle(Color.navyBlue)
+                    Text("generate-new-meals")
+                        .foregroundStyle(Color.white)
+                }.onTapGesture {
+                    bigModel.currentView = .SeasonSelectionView
                 }
-                
-            }.padding(.leading)
-            .padding(.trailing)
-            .padding(.top)
-            
-            ZStack {
-                Rectangle()
-                    .frame(height: 60)
-                    .foregroundStyle(Color.navyBlue)
-                Text("Generate new meals")
-                    .foregroundStyle(Color.white)
-            }.onTapGesture {
-                bigModel.currentView = .SeasonSelectionView
+            }.edgesIgnoringSafeArea(.bottom)
+            .onAppear {
+                bigModel.currentUserTags = bigModel.generateTags(type: type, season: season)
+                bigModel.currentUserTags = bigModel.generateTags(type: type, season: season)
             }
-        }.edgesIgnoringSafeArea(.bottom)
-        .onAppear {
-            bigModel.currentUserTags = bigModel.generateTags(type: type, season: season)
-            bigModel.currentUserTags = bigModel.generateTags(type: type, season: season)
+            .onChange(of: type, {
+                //bigModel.currentUserTags = bigModel.generateTags(type: type, season: season)
+                //tags = bigModel.generateTags(type: type, season: season)
+                print("type: \(type)")
+            })
+            .onChange(of: season, {
+                //bigModel.currentUserTags = bigModel.generateTags(type: type, season: season)
+                print("season: \(season)")
+            })
+            .alert(isPresented: $bigModel.didPreferencesChanged) {
+                Alert(
+                    title: Text("You changed your tastes, do you want to regenerate meals ?"),
+                    primaryButton: .destructive(Text("Yes")) {
+                        bigModel.didPreferencesChanged = false
+                        bigModel.currentView = .MealTypeView
+                        bigModel.screenHistory.append(.MealTypeView)
+                    },
+                    secondaryButton: .destructive(Text("No"))
+                )
         }
-        .onChange(of: type, {
-            //bigModel.currentUserTags = bigModel.generateTags(type: type, season: season)
-            //tags = bigModel.generateTags(type: type, season: season)
-            print("type: \(type)")
-        })
-        .onChange(of: season, {
-            //bigModel.currentUserTags = bigModel.generateTags(type: type, season: season)
-            print("season: \(season)")
-        })
-        .alert(isPresented: $bigModel.didPreferencesChanged) {
-            Alert(
-                title: Text("You changed your tastes, do you want to regenerate meals ?"),
-                primaryButton: .destructive(Text("Yes")) {
-                    bigModel.didPreferencesChanged = false
-                    bigModel.currentView = .MealTypeView
-                    bigModel.screenHistory.append(.MealTypeView)
-                },
-                secondaryButton: .destructive(Text("No"))
-            )
         }
     }
     

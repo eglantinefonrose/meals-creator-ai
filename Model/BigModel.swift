@@ -1067,7 +1067,7 @@ class BigModel: ObservableObject {
     }
     
     init(shouldInjectMockedData: Bool) {
-        self.currentUser = User(id: "", firstName: "", lastName: "",
+        self.currentUser = User(id: "ozeifjeiofejfoi", firstName: "Malo", lastName: "Fonrose",
                                 items: [Item(id: 0, category: "legumes", name: "Poireaux", seasons: ["été"]),
                                         Item(id: 0, category: "fruits", name: "Poireaux", seasons: ["été"]),
                                         Item(id: 0, category: "strachyFoods", name: "Poireaux", seasons: ["été"]),

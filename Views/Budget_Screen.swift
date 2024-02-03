@@ -27,10 +27,7 @@ struct Budget_Screen: View {
                     VStack(spacing: 75) {
                         
                         VStack(alignment: .leading) {
-                            Text("BUDGET")
-                                .foregroundStyle(Color.white)
-                                .font(.largeTitle)
-                            Text("per week")
+                            Text("budget-per-week")
                                 .foregroundStyle(Color.white)
                                 .font(.largeTitle)
                         }
@@ -143,7 +140,7 @@ struct Budget_Screen: View {
                         Rectangle()
                             .frame(height: 60)
                             .foregroundStyle(Color.white)
-                        Text("Validate")
+                        Text("validate")
                             .foregroundStyle(Color.navyBlue)
                     }.onTapGesture {
                         Task {

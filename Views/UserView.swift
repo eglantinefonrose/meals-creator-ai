@@ -21,372 +21,384 @@ struct UserView: View {
     
     var body: some View {
         
-        VStack {
+        ZStack {
+            
+            Color(.lightGray)
+                .edgesIgnoringSafeArea(.all)
             
             VStack {
-                VStack(spacing: 30) {
-                    
-                    HStack {
-                        Text("Back")
-                            .foregroundStyle(.white)
-                            .bold()
-                        Spacer()
-                    }
-                    
-                    Circle()
-                        .frame(width: 150)
-                        .foregroundColor(.gray)
-                    HStack {
-                        VStack(alignment: .leading) {
+                
+                VStack {
+                    VStack(spacing: 30) {
+                        
+                        HStack {
+                            Text("back")
+                                .foregroundStyle(.white)
+                                .bold()
+                            Spacer()
+                        }
+                        
+                        ZStack {
+                            Circle()
+                                .frame(width: 150)
+                                .foregroundColor(.gray)
+                            Text("\(String(bigModel.currentUser.firstName.prefix(1) ))\(String(bigModel.currentUser.lastName.prefix(1) ))")
+                                .font(.title)
+                                .bold()
+                                .foregroundColor(.white)
+                        }
+                        HStack {
+                            VStack(alignment: .leading) {
+                                
+                                if !isEditModeOn {
+                                    Text(firstName)
+                                        .font(.largeTitle)
+                                        .foregroundColor(.white)
+                                    
+                                    Text(lastName)
+                                        .font(.largeTitle)
+                                        .foregroundColor(.white)
+                                }
+                                
+                                if isEditModeOn {
+                                    TextField("", text: $newFirstName)
+                                        .multilineTextAlignment(.leading)
+                                        .font(.largeTitle)
+                                        .foregroundColor(.white)
+                                        .focused($focused1, equals: true)
+                                        .onAppear {
+                                          DispatchQueue.main.asyncAfter(deadline: .now()) {
+                                            self.focused1 = true
+                                          }
+                                        }
+                                    
+                                    TextField("", text: $newLastName)
+                                        .multilineTextAlignment(.leading)
+                                        .font(.largeTitle)
+                                        .foregroundColor(.white)
+                                        .focused($focused2, equals: true)
+                                        .onAppear {
+                                          DispatchQueue.main.asyncAfter(deadline: .now()) {
+                                            self.focused2 = true
+                                          }
+                                        }
+                                }
+                                
+                            }
+                            Spacer()
                             
                             if !isEditModeOn {
-                                Text(firstName)
-                                    .font(.largeTitle)
+                                Text("edit")
                                     .foregroundColor(.white)
-                                
-                                Text(lastName)
-                                    .font(.largeTitle)
-                                    .foregroundColor(.white)
-                            }
-                            
-                            if isEditModeOn {
-                                TextField("", text: $newFirstName)
-                                    .multilineTextAlignment(.leading)
-                                    .font(.largeTitle)
-                                    .foregroundColor(.white)
-                                    .focused($focused1, equals: true)
-                                    .onAppear {
-                                      DispatchQueue.main.asyncAfter(deadline: .now()) {
-                                        self.focused1 = true
-                                      }
-                                    }
-                                
-                                TextField("", text: $newLastName)
-                                    .multilineTextAlignment(.leading)
-                                    .font(.largeTitle)
-                                    .foregroundColor(.white)
-                                    .focused($focused2, equals: true)
-                                    .onAppear {
-                                      DispatchQueue.main.asyncAfter(deadline: .now()) {
-                                        self.focused2 = true
-                                      }
-                                    }
-                            }
-                            
-                        }
-                        Spacer()
-                        
-                        if !isEditModeOn {
-                            Text("Edit")
-                                .foregroundColor(.white)
-                                .bold()
-                                .onTapGesture {
-                                    isEditModeOn.toggle()
-                                }
-                        } else {
-                            Image(systemName: "checkmark.circle")
-                                .foregroundColor(.white)
-                                .bold()
-                                .onTapGesture {
-                                    
-                                    if isEditModeOn {
-                                        //bigModel.updateUserNames(firstName: newFirstName, lastName: newLastName)
-                                        Task {
-                                            var user = bigModel.currentUser
-                                            user.firstName = newFirstName
-                                            user.lastName = newLastName
-                                            bigModel.storeCurrentUserInfoIntoDB(user: user) {}
-                                            firstName = newFirstName
-                                            lastName = newLastName
-                                            isEditModeOn.toggle()
-                                        }
-                                    } else {
+                                    .bold()
+                                    .onTapGesture {
                                         isEditModeOn.toggle()
                                     }
-                                    
-                                }
+                            } else {
+                                Image(systemName: "checkmark.circle")
+                                    .foregroundColor(.white)
+                                    .bold()
+                                    .onTapGesture {
+                                        
+                                        if isEditModeOn {
+                                            //bigModel.updateUserNames(firstName: newFirstName, lastName: newLastName)
+                                            Task {
+                                                var user = bigModel.currentUser
+                                                user.firstName = newFirstName
+                                                user.lastName = newLastName
+                                                bigModel.storeCurrentUserInfoIntoDB(user: user) {}
+                                                firstName = newFirstName
+                                                lastName = newLastName
+                                                isEditModeOn.toggle()
+                                            }
+                                        } else {
+                                            isEditModeOn.toggle()
+                                        }
+                                        
+                                    }
+                            }
+                            
                         }
-                        
-                    }
-                }.padding(20)
-            }.background(Color.navyBlue)
-                        
-            VStack(spacing: 0) {
-                
-                VStack() {
-                    HStack {
-                        Text("Your preferences")
-                            .foregroundStyle(Color.navyBlue)
-                            .font(.title3)
-                        Spacer()
-                    }
+                    }.padding(20)
+                }.background(Color.navyBlue)
+                            
+                VStack(spacing: 0) {
                     
-                     if (bigModel.currentUser.items.count == 0 && bigModel.currentUser.budget == 0 && bigModel.currentUser.spendedTime == 0 && bigModel.currentUser.favoriteMeals.count == 0) {
-                        
-                        VStack {
-                            Spacer()
-                            Text("Start selecting what you like")
-                                .foregroundColor(.gray)
-                                .onTapGesture {
-                                    bigModel.currentView = .welcomeView
-                                    bigModel.screenHistory.append(.UserView)
-                                }
+                    VStack() {
+                        HStack {
+                            Text("pref")
+                                .foregroundStyle(Color.navyBlue)
+                                .font(.title3)
                             Spacer()
                         }
                         
-                     } else {
-                             ScrollView {
-                                 VStack(alignment: .leading) {
-                                     
+                         if (bigModel.currentUser.items.count == 0 && bigModel.currentUser.budget == 0 && bigModel.currentUser.spendedTime == 0 && bigModel.currentUser.favoriteMeals.count == 0) {
+                            
+                            VStack {
+                                Spacer()
+                                Text("start-selecting")
+                                    .foregroundColor(.gray)
+                                    .onTapGesture {
+                                        bigModel.currentView = .welcomeView
+                                        bigModel.screenHistory.append(.UserView)
+                                    }
+                                Spacer()
+                            }
+                            
+                         } else {
+                                 ScrollView {
                                      VStack(alignment: .leading) {
-                                         Text("Tastes")
-                                             .font(.largeTitle)
-                                             .foregroundStyle(Color.navyBlue)
-                                         HStack {
-                                             if bigModel.currentUser.items.count != 0 {
-                                                 ScrollView(.horizontal) {
-                                                    HStack {
-                                                        ForEach(bigModel.currentUser.items) { item in
-                                                            Text(item.name)
+                                         
+                                         VStack(alignment: .leading) {
+                                             Text("tastes")
+                                                 .font(.largeTitle)
+                                                 .foregroundStyle(Color.navyBlue)
+                                             HStack {
+                                                 if bigModel.currentUser.items.count != 0 {
+                                                     ScrollView(.horizontal) {
+                                                        HStack {
+                                                            ForEach(bigModel.currentUser.items) { item in
+                                                                Text(item.name)
+                                                            }
                                                         }
-                                                    }
-                                                 }
-                                             } else {
-                                                 Text("Tell us what you like")
-                                                     .foregroundColor(.gray)
-                                             }
-                                             Spacer()
-                                             Image(systemName: "arrow.right.circle")
-                                                 .foregroundColor(Color.navyBlue)
-                                                 .onTapGesture {
-                                                     bigModel.currentView = .TastesView
-                                                     bigModel.screenHistory.append(.UserView)
-                                                 }
-                                         }
-                                         Rectangle().fill(Color.navyBlue).frame(height: 1)
-                                     }
-                                     
-                                     VStack(alignment: .leading) {
-                                         Text("Tools")
-                                             .font(.largeTitle)
-                                             .foregroundStyle(Color.navyBlue)
-                                         HStack {
-                                             if bigModel.currentUser.tools.count != 0 {
-                                                 ScrollView(.horizontal) {
-                                                     HStack {
-                                                         ForEach(bigModel.currentUser.tools) { item in
-                                                                 Text(item.name)
-                                                         }
                                                      }
-                                                 }
-                                             } else {
-                                                 Text("Tell us which tools you want to use")
-                                                     .foregroundColor(.gray)
-                                             }
-                                             Spacer()
-                                             Image(systemName: "arrow.right.circle")
-                                                 .foregroundColor(Color.navyBlue)
-                                                 .onTapGesture {
-                                                     bigModel.currentView = .cookingToolsScreen
-                                                     bigModel.screenHistory.append(.UserView)
-                                                 }
-                                         }
-                                         Rectangle().fill(Color.navyBlue).frame(height: 1)
-                                     }
-                                     
-                                     Text("Budget")
-                                         .font(.largeTitle)
-                                         .foregroundStyle(Color.navyBlue)
-                                     
-                                     HStack {
-                                         if bigModel.currentUser.budget != 0 {
-                                             Text(String(bigModel.currentUser.budget))
-                                         } else {
-                                             Text("Tell us your budget per week")
-                                                 .foregroundColor(.gray)
-                                         }
-                                         Spacer()
-                                         Image(systemName: "arrow.right.circle")
-                                             .foregroundColor(Color.navyBlue)
-                                             .onTapGesture {
-                                                 bigModel.currentView = .budgetScreen
-                                                 bigModel.screenHistory.append(.UserView)
-                                             }
-                                     }
-                                     
-                                     Rectangle().fill(Color.navyBlue).frame(height: 1)
-                                     
-                                     Text("Number of person")
-                                         .font(.largeTitle)
-                                         .foregroundStyle(Color.navyBlue)
-                                 
-                                     HStack {
-                                             if bigModel.currentUser.numberOfPerson != 0 {
-                                                 Text(String(bigModel.currentUser.numberOfPerson))
-                                             } else {
-                                                 Text("Tell us how many people you want to cook for")
-                                                     .foregroundColor(.gray)
-                                             }
-                                             Spacer()
-                                             Image(systemName: "arrow.right.circle")
-                                                 .foregroundColor(Color.navyBlue)
-                                                 .onTapGesture {
-                                                     bigModel.currentView = .NumberOfPersonScreen
-                                                     bigModel.screenHistory.append(.UserView)
-                                                 }
-                                     }
-                                 
-                                     Rectangle().fill(Color.navyBlue).frame(height: 1)
-                                     
-                                     Text("Spent time")
-                                         .font(.largeTitle)
-                                         .foregroundStyle(Color.navyBlue)
-                                     
-                                     HStack {
-                                         if bigModel.currentUser.budget != 0 {
-                                             Text(String(bigModel.currentUser.spendedTime))
-                                         } else {
-                                             Text("Tell us the time your want to spend per meal")
-                                                 .foregroundColor(.gray)
-                                         }
-                                         Spacer()
-                                         Image(systemName: "arrow.right.circle")
-                                             .foregroundColor(Color.navyBlue)
-                                             .onTapGesture {
-                                                 bigModel.currentView = .timeScreen
-                                                 bigModel.screenHistory.append(.UserView)
-                                             }
-                                     }
-                                     
-                                     Rectangle().fill(Color.navyBlue).frame(height: 1)
-                                     
-                                     VStack(alignment: .leading) {
-                                         Text("Proposed meals")
-                                             .font(.largeTitle)
-                                             .foregroundStyle(Color.navyBlue)
-                                         HStack {
-                                             
-                                             /*if bigModel.currentUser.items.count != 0 && bigModel.currentUser.tools.count != 0 && bigModel.currentUser.numberOfPerson != 0 && bigModel.currentUser.budget != 0 && bigModel.currentUser.spendedTime != 0 {
-                                                 HStack {
-                                                     Text("Click here to propose meals according to your tastes")
+                                                 } else {
+                                                     Text("tell-us")
                                                          .foregroundColor(.gray)
-                                                     Spacer()
                                                  }
-                                             }*/
-                                             
-                                             if bigModel.currentUser.proposedMeals.count != 0 {
-                                                 ScrollView(.horizontal) {
-                                                     HStack {
-                                                         ForEach(bigModel.currentUser.proposedMeals) { meal in
-                                                             Text(meal.recipe.recipeName)
+                                                 Spacer()
+                                                 Image(systemName: "arrow.right.circle")
+                                                     .foregroundColor(Color.navyBlue)
+                                                     .onTapGesture {
+                                                         bigModel.currentView = .TastesView
+                                                         bigModel.screenHistory.append(.UserView)
+                                                     }
+                                             }
+                                             Rectangle().fill(Color.navyBlue).frame(height: 1)
+                                         }
+                                         
+                                         VStack(alignment: .leading) {
+                                             Text("tools")
+                                                 .font(.largeTitle)
+                                                 .foregroundStyle(Color.navyBlue)
+                                             HStack {
+                                                 if bigModel.currentUser.tools.count != 0 {
+                                                     ScrollView(.horizontal) {
+                                                         HStack {
+                                                             ForEach(bigModel.currentUser.tools) { item in
+                                                                     Text(item.name)
+                                                             }
                                                          }
                                                      }
+                                                 } else {
+                                                     Text("tellus-1")
+                                                         .foregroundColor(.gray)
                                                  }
+                                                 Spacer()
+                                                 Image(systemName: "arrow.right.circle")
+                                                     .foregroundColor(Color.navyBlue)
+                                                     .onTapGesture {
+                                                         bigModel.currentView = .cookingToolsScreen
+                                                         bigModel.screenHistory.append(.UserView)
+                                                     }
+                                             }
+                                             Rectangle().fill(Color.navyBlue).frame(height: 1)
+                                         }
+                                         
+                                         Text("budget")
+                                             .font(.largeTitle)
+                                             .foregroundStyle(Color.navyBlue)
+                                         
+                                         HStack {
+                                             if bigModel.currentUser.budget != 0 {
+                                                 Text(String(bigModel.currentUser.budget))
                                              } else {
-                                                 if bigModel.currentUser.items.count != 0 && bigModel.currentUser.tools.count != 0 && bigModel.currentUser.numberOfPerson != 0 && bigModel.currentUser.budget != 0 && bigModel.currentUser.spendedTime != 0 {
+                                                 Text("tellus-2")
+                                                     .foregroundColor(.gray)
+                                             }
+                                             Spacer()
+                                             Image(systemName: "arrow.right.circle")
+                                                 .foregroundColor(Color.navyBlue)
+                                                 .onTapGesture {
+                                                     bigModel.currentView = .budgetScreen
+                                                     bigModel.screenHistory.append(.UserView)
+                                                 }
+                                         }
+                                         
+                                         Rectangle().fill(Color.navyBlue).frame(height: 1)
+                                         
+                                         Text("number-of-person")
+                                             .font(.largeTitle)
+                                             .foregroundStyle(Color.navyBlue)
+                                     
+                                         HStack {
+                                                 if bigModel.currentUser.numberOfPerson != 0 {
+                                                     Text(String(bigModel.currentUser.numberOfPerson))
+                                                 } else {
+                                                     Text("tellus-3")
+                                                         .foregroundColor(.gray)
+                                                 }
+                                                 Spacer()
+                                                 Image(systemName: "arrow.right.circle")
+                                                     .foregroundColor(Color.navyBlue)
+                                                     .onTapGesture {
+                                                         bigModel.currentView = .NumberOfPersonScreen
+                                                         bigModel.screenHistory.append(.UserView)
+                                                     }
+                                         }
+                                     
+                                         Rectangle().fill(Color.navyBlue).frame(height: 1)
+                                         
+                                         Text("spent-time")
+                                             .font(.largeTitle)
+                                             .foregroundStyle(Color.navyBlue)
+                                         
+                                         HStack {
+                                             if bigModel.currentUser.budget != 0 {
+                                                 Text(String(bigModel.currentUser.spendedTime))
+                                             } else {
+                                                 Text("tellus-4")
+                                                     .foregroundColor(.gray)
+                                             }
+                                             Spacer()
+                                             Image(systemName: "arrow.right.circle")
+                                                 .foregroundColor(Color.navyBlue)
+                                                 .onTapGesture {
+                                                     bigModel.currentView = .timeScreen
+                                                     bigModel.screenHistory.append(.UserView)
+                                                 }
+                                         }
+                                         
+                                         Rectangle().fill(Color.navyBlue).frame(height: 1)
+                                         
+                                         VStack(alignment: .leading) {
+                                             Text("proposed-meals")
+                                                 .font(.largeTitle)
+                                                 .foregroundStyle(Color.navyBlue)
+                                             HStack {
+                                                 
+                                                 /*if bigModel.currentUser.items.count != 0 && bigModel.currentUser.tools.count != 0 && bigModel.currentUser.numberOfPerson != 0 && bigModel.currentUser.budget != 0 && bigModel.currentUser.spendedTime != 0 {
                                                      HStack {
                                                          Text("Click here to propose meals according to your tastes")
                                                              .foregroundColor(.gray)
                                                          Spacer()
                                                      }
+                                                 }*/
+                                                 
+                                                 if bigModel.currentUser.proposedMeals.count != 0 {
+                                                     ScrollView(.horizontal) {
+                                                         HStack {
+                                                             ForEach(bigModel.currentUser.proposedMeals) { meal in
+                                                                 Text(meal.recipe.recipeName)
+                                                             }
+                                                         }
+                                                     }
+                                                 } else {
+                                                     if bigModel.currentUser.items.count != 0 && bigModel.currentUser.tools.count != 0 && bigModel.currentUser.numberOfPerson != 0 && bigModel.currentUser.budget != 0 && bigModel.currentUser.spendedTime != 0 {
+                                                         HStack {
+                                                             Text("click-here")
+                                                                 .foregroundColor(.gray)
+                                                             Spacer()
+                                                         }
+                                                     } else {
+                                                         HStack {
+                                                             Text("fill-infos")
+                                                                 .foregroundColor(.gray)
+                                                             Spacer()
+                                                         }
+                                                                                                     }
+                                                    }
+                                                 
+                                                 Image(systemName: "arrow.right.circle")
+                                                     .foregroundColor(Color.navyBlue)
+                                                     .onTapGesture {
+                                                         bigModel.currentView = .mealsPropositionScreen
+                                                         bigModel.screenHistory.append(.UserView)
+                                                         if bigModel.currentUser.proposedMeals.count == 0 {
+                                                             bigModel.currentView = .SeasonSelectionView
+                                                         }
+                                                     }
+                                             }
+                                             Rectangle().fill(Color.navyBlue).frame(height: 1)
+                                         }
+                                         
+                                         VStack(alignment: .leading) {
+                                             Text("fav-meals")
+                                                 .font(.largeTitle)
+                                                 .foregroundStyle(Color.navyBlue)
+                                             HStack {
+                                                 if bigModel.currentUser.favoriteMeals.count != 0 {
+                                                     ScrollView(.horizontal) {
+                                                         HStack {
+                                                             ForEach(bigModel.currentUser.favoriteMeals) { meal in
+                                                                 Text(meal.recipe.recipeName)
+                                                             }
+                                                         }
+                                                     }
                                                  } else {
                                                      HStack {
-                                                         Text("Fill the informations above to generate your suitable meals list")
+                                                         Text("fill-infos2")
                                                              .foregroundColor(.gray)
                                                          Spacer()
                                                      }
-                                                                                                 }
-                                                }
-                                             
-                                             Image(systemName: "arrow.right.circle")
-                                                 .foregroundColor(Color.navyBlue)
-                                                 .onTapGesture {
-                                                     bigModel.currentView = .mealsPropositionScreen
-                                                     bigModel.screenHistory.append(.UserView)
-                                                     if bigModel.currentUser.proposedMeals.count == 0 {
-                                                         bigModel.currentView = .SeasonSelectionView
-                                                     }
                                                  }
-                                         }
-                                         Rectangle().fill(Color.navyBlue).frame(height: 1)
-                                     }
-                                     
-                                     VStack(alignment: .leading) {
-                                         Text("Favorite meals")
-                                             .font(.largeTitle)
-                                             .foregroundStyle(Color.navyBlue)
-                                         HStack {
-                                             if bigModel.currentUser.favoriteMeals.count != 0 {
-                                                 ScrollView(.horizontal) {
-                                                     HStack {
-                                                         ForEach(bigModel.currentUser.favoriteMeals) { meal in
-                                                             Text(meal.recipe.recipeName)
+                                                 Image(systemName: "arrow.right.circle")
+                                                     .foregroundColor(Color.navyBlue)
+                                                     .onTapGesture {
+                                                         if bigModel.currentUser.items.count != 0 && bigModel.currentUser.budget != 0 && bigModel.currentUser.numberOfPerson != 0 && bigModel.currentUser.spendedTime != 0 {
+                                                             bigModel.currentView = .mealsPropositionScreen
                                                          }
                                                      }
-                                                 }
-                                             } else {
-                                                 HStack {
-                                                     Text("Fill the informations above to generate your favorite meals list")
-                                                         .foregroundColor(.gray)
-                                                     Spacer()
-                                                 }
                                              }
-                                             Image(systemName: "arrow.right.circle")
-                                                 .foregroundColor(Color.navyBlue)
-                                                 .onTapGesture {
-                                                     if bigModel.currentUser.items.count != 0 && bigModel.currentUser.budget != 0 && bigModel.currentUser.numberOfPerson != 0 && bigModel.currentUser.spendedTime != 0 {
-                                                         bigModel.currentView = .mealsPropositionScreen
-                                                     }
-                                                 }
+                                             
                                          }
                                          
                                      }
-                                     
                                  }
                              }
                          }
-                     }
+                        
+                        
+                        
+                    }.padding(.horizontal, 20)
                     
-                    
-                    
-                }.padding(.horizontal, 20)
+     
                 
- 
-            
-            VStack {
-                ZStack {
-                    Rectangle()
-                        .frame(height: 60)
-                        .foregroundStyle(Color.navyBlue)
-                    Text("Log out")
-                        .foregroundStyle(Color.white)
-                        .bold()
-                        .onTapGesture {
-                            bigModel.currentView = .signInView
-                            bigModel.screenHistory.append(.UserView)
-                        }
+                VStack {
+                    ZStack {
+                        Rectangle()
+                            .frame(height: 60)
+                            .foregroundStyle(Color.navyBlue)
+                        Text("log-out")
+                            .foregroundStyle(Color.white)
+                            .bold()
+                            .onTapGesture {
+                                bigModel.currentView = .signInView
+                                bigModel.screenHistory.append(.UserView)
+                            }
+                    }
+                }.edgesIgnoringSafeArea(.all)
+                
+            }.edgesIgnoringSafeArea(.bottom)
+            .onAppear {
+                
+                if bigModel.currentUser.firstName == "" {
+                    newFirstName = "ur-first-name"
+                    firstName = "enter-ur-first-name"
+                } else {
+                    newFirstName = bigModel.currentUser.firstName
+                    firstName = bigModel.currentUser.firstName
                 }
-            }.edgesIgnoringSafeArea(.all)
-            
-        }.edgesIgnoringSafeArea(.bottom)
-        .onAppear {
-            
-            if bigModel.currentUser.firstName == "" {
-                newFirstName = "Votre prénom"
-                firstName = "Entrez votre prénom"
-            } else {
-                newFirstName = bigModel.currentUser.firstName
-                firstName = bigModel.currentUser.firstName
-            }
-            
-            if bigModel.currentUser.lastName == "" {
-                newLastName = "Votre nom"
-                lastName = "Entrez votre nom"
-            } else {
-                newLastName = bigModel.currentUser.lastName
-                lastName = bigModel.currentUser.lastName
-            }
-            
+                
+                if bigModel.currentUser.lastName == "" {
+                    newLastName = "ur-last-name"
+                    lastName = "enter-ur-last-name"
+                } else {
+                    newLastName = bigModel.currentUser.lastName
+                    lastName = bigModel.currentUser.lastName
+                }
+                
+        }
         }
         
     }

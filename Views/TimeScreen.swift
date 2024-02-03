@@ -27,10 +27,7 @@ struct TimeScreen: View {
                     VStack(spacing: 75) {
                         
                         VStack(alignment: .leading) {
-                            Text("SPENT")
-                                .foregroundStyle(Color.white)
-                                .font(.largeTitle)
-                            Text("time per meal")
+                            Text("spent-time-per-meal")
                                 .foregroundStyle(Color.white)
                                 .font(.largeTitle)
                         }
@@ -87,7 +84,7 @@ struct TimeScreen: View {
                         Rectangle()
                             .frame(height: 60)
                             .foregroundStyle(Color.white)
-                        Text("Validate")
+                        Text("validate")
                             .foregroundStyle(Color.navyBlue)
                     }.onTapGesture {
                         

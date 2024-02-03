@@ -35,10 +35,10 @@ struct BlankFile: View {
                         bigModel.currentView = .mealsPropositionScreen
                 })*/
                 
-                    Alert(title: Text("Are you sure you want to dislike this meal ?"),
-                          message: Text("It will be deleted from your proposed meals list."),
-                          primaryButton: .destructive(Text("No")) {},
-                          secondaryButton: .destructive(Text("Yes")) {
+                    Alert(title: Text("dislike-meal"),
+                          message: Text("dislike-meal-2"),
+                          primaryButton: .destructive(Text("no")) {},
+                          secondaryButton: .destructive(Text("yes")) {
                             
                             bigModel.storeInDBAndFetchNewProposedMealsList()
                             

@@ -15,7 +15,7 @@ struct BackModel: View {
     
     var body: some View {
         HStack {
-            Text("Back")
+            Text("back")
                 .foregroundStyle(color)
                 .bold()
                 .onTapGesture {
