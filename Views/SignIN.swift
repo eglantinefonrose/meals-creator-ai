@@ -38,6 +38,7 @@ struct SignIN: View {
                         Spacer()
                         VStack(alignment: .trailing, spacing: 0) {
                             Text("sign-in")
+                                .textCase(.uppercase)
                                 .foregroundStyle(Color.navyBlue)
                                 .font(.system(size: 75))
                         }

@@ -27,6 +27,7 @@ struct TastesView: View {
                     BackModel(color: Color.navyBlue, view: .TastesView)
                     
                     Text("tastes")
+                        .textCase(.uppercase)
                         .foregroundStyle(Color.navyBlue)
                         .font(.system(size: 100))
                     Circle()

@@ -35,10 +35,16 @@ struct PreferenceView: View {
                     .textCase(.uppercase)
                     .font(.system(size: 78))
                 
-                TextField("search", text: $searchText)
-                    .disableAutocorrection(true)
+                ZStack {
+                    Rectangle()
+                        .foregroundColor(.white)
+                        .cornerRadius(15)
+                        .frame(height: 40)
+                    TextField("search", text: $searchText)
+                        .disableAutocorrection(true)
+                        .padding(10)
                     .autocapitalization(.none)
-                    .textFieldStyle(.roundedBorder)
+                }
                 
                 ScrollView(.horizontal) {
                    

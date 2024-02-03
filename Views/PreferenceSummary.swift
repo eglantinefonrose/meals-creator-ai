@@ -28,6 +28,7 @@ struct PreferenceSummary: View {
                         Text("preferences")
                             .foregroundStyle(Color.white)
                             .font(.largeTitle)
+                            .textCase(.uppercase)
                         
                         VStack {
                             

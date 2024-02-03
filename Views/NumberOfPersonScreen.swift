@@ -21,6 +21,7 @@ struct NumberOfPersonScreen: View {
                 .edgesIgnoringSafeArea(.all)
             
             VStack {
+                
                 VStack(spacing: 10) {
                     
                     BackModel(color: Color.white, view: .budgetScreen)
