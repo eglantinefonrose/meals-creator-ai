@@ -97,6 +97,10 @@ struct BigRootView: View {
             SeasonSelection()
         }
         
+        if bigModel.currentView == .dailyCalendar {
+            DailyCalendar()
+        }
+        
     }
 }
 //case legumes, fruits, strachyFoods, proteins, seasonning, allergies, cookingTools
@@ -123,4 +127,5 @@ enum ViewEnum: String {
     case DailyCalendar
     case MealTypeView
     case SeasonSelectionView
+    case dailyCalendar
 }

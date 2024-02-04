@@ -36,6 +36,7 @@ class BigModel: ObservableObject {
         var proposedMeals: [Meal]
         var favoriteMeals: [Meal]
         var dislikedMeals: [Meal]
+        var events: [Event]
     }
     
     struct Meal: Codable, Identifiable, Hashable, Comparable {
@@ -166,7 +167,16 @@ class BigModel: ObservableObject {
         var quantity: Int
     }
     
-    @Published var currentUser: User = User(id: "", firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, numberOfPerson: 0, proposedMeals: [], favoriteMeals: [], dislikedMeals: [])
+    struct Event: Identifiable, Codable, Equatable {
+        var id: String
+        var timeEpoch: Int
+        var breakfastMeal: Meal?
+        var lunchMeal: Meal?
+        var snackMeal: Meal?
+        var dinnerMeal: Meal?
+    }
+    
+    @Published var currentUser: User = User(id: "", firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, numberOfPerson: 0, proposedMeals: [], favoriteMeals: [], dislikedMeals: [], events: [])
     
     /*let items = [Item(id: 0, category: "legumes", name: "Carotte", seasons: ["été"]), Item(id: 1, category: "legumes", name: "Poireaux", seasons: ["automne", "été"]),Item(id: 2, category: "legumes", name: "Courgette", seasons: ["automne", "hiver"]),Item(id: 3, category: "legumes", name: "Aubergine", seasons: ["hiver"]),Item(id: 4, category: "legumes", name: "Brocolli", seasons: ["printemps"]),
                  Item(id: 5, category: "fruits", name: "Pomme", seasons: ["printemps"]), Item(id: 6, category: "fruits", name: "Poire", seasons: ["automne"]),
@@ -425,7 +435,7 @@ class BigModel: ObservableObject {
             print("Logged In Success")
             
             guard let id = self.auth.currentUser?.uid else { return }
-            self.currentUser = User(firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, numberOfPerson: 0, proposedMeals: [], favoriteMeals: [], dislikedMeals: [])
+            self.currentUser = User(firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, numberOfPerson: 0, proposedMeals: [], favoriteMeals: [], dislikedMeals: [], events: [])
                         
             let docRef = self.db.collection("Users").document(id)
 
@@ -486,7 +496,7 @@ class BigModel: ObservableObject {
         
         guard let id = self.auth.currentUser?.uid else { return }
         let docRef = self.db.collection("Users").document(id)
-        let newUser = User(id: id, firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, numberOfPerson: 0, proposedMeals: [], favoriteMeals: [], dislikedMeals: [])
+        let newUser = User(id: id, firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, numberOfPerson: 0, proposedMeals: [], favoriteMeals: [], dislikedMeals: [], events: [])
         
         docRef.getDocument { (document, error) in
             
@@ -536,7 +546,7 @@ class BigModel: ObservableObject {
         
         guard let id = self.auth.currentUser?.uid else { return }
         let docRef = self.db.collection("Users").document(id)
-        let newUser = User(id: id, firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, numberOfPerson: 0, proposedMeals: [], favoriteMeals: [], dislikedMeals: [])
+        let newUser = User(id: id, firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, numberOfPerson: 0, proposedMeals: [], favoriteMeals: [], dislikedMeals: [], events: [])
         
         docRef.getDocument { (document, error) in
             
@@ -595,7 +605,7 @@ class BigModel: ObservableObject {
             let _ = try self.db.collection("Users").document(id).setData(from: user) { _ in
                 
                 let docRef = self.db.collection("Users").document(id)
-                let newUser = User(firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, numberOfPerson: 0, proposedMeals: [], favoriteMeals: [], dislikedMeals: [])
+                let newUser = User(firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, numberOfPerson: 0, proposedMeals: [], favoriteMeals: [], dislikedMeals: [], events: [])
                 
                 docRef.getDocument { (document, error) in
                     
@@ -674,7 +684,7 @@ class BigModel: ObservableObject {
         
         guard let id = self.auth.currentUser?.uid else { return }
         let docRef = self.db.collection("Users").document(id)
-        let user = User(id: id, firstName: firstName, lastName: lastName, items: self.currentUser.items, tools: [], budget: self.currentUser.budget, spendedTime: self.currentUser.spendedTime, numberOfPerson: 0, proposedMeals: self.currentUser.proposedMeals, favoriteMeals: self.currentUser.favoriteMeals, dislikedMeals: self.currentUser.dislikedMeals)
+        let user = User(id: id, firstName: firstName, lastName: lastName, items: self.currentUser.items, tools: self.currentUser.tools, budget: self.currentUser.budget, spendedTime: self.currentUser.spendedTime, numberOfPerson: 0, proposedMeals: self.currentUser.proposedMeals, favoriteMeals: self.currentUser.favoriteMeals, dislikedMeals: self.currentUser.dislikedMeals, events: self.currentUser.events)
         
         docRef.getDocument { (document, error) in
             do {
@@ -1060,6 +1070,61 @@ class BigModel: ObservableObject {
     //
     //
     //
+    //MARK:
+    //
+    //
+    //
+    //
+    
+    var selectedTimeEpoch: Int = 0
+    var selectedMealType: String = ""
+    
+    let defaultEvent : Event = Event(id: "", timeEpoch: 0, breakfastMeal: BigModel.Meal(id: "", recipe: BigModel.Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))), lunchMeal: BigModel.Meal(id: "", recipe: BigModel.Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))), snackMeal: BigModel.Meal(id: "", recipe: BigModel.Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))), dinnerMeal: BigModel.Meal(id: "", recipe: BigModel.Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))))
+    
+    func addMealToCalendar(mealType: String, meal: Meal, date: Date) {
+        
+        var user: User = currentUser
+                
+        if let index = self.currentUser.events.firstIndex(where: { Date(timeIntervalSince1970: TimeInterval($0.timeEpoch)) == date }) {
+                        
+            if mealType == "Breakfast" {
+                user.events[index].breakfastMeal = meal
+            }
+            if mealType == "Lunch" {
+                user.events[index].lunchMeal = meal
+            }
+            if mealType == "Snack" {
+                user.events[index].snackMeal = meal
+            }
+            if mealType == "Dinner" {
+                user.events[index].dinnerMeal = meal
+            }
+            
+        } else {
+            
+            if mealType == "Breakfast" {
+                user.events.append(Event(id: "\(date.timeIntervalSince1970)", timeEpoch: Int(date.timeIntervalSince1970), breakfastMeal: meal))
+            }
+            if mealType == "Lunch" {
+                user.events.append(Event(id: "\(date.timeIntervalSince1970)", timeEpoch: Int(date.timeIntervalSince1970), breakfastMeal: meal))
+            }
+            if mealType == "Snack" {
+                user.events.append(Event(id: "\(date.timeIntervalSince1970)", timeEpoch: Int(date.timeIntervalSince1970), breakfastMeal: meal))
+            }
+            if mealType == "Dinner" {
+                user.events.append(Event(id: "\(date.timeIntervalSince1970)", timeEpoch: Int(date.timeIntervalSince1970), breakfastMeal: meal))
+            }
+            
+        }
+        
+        self.storeCurrentUserInfoIntoDB(user: user) {}
+        
+    }
+    
+    
+    //
+    //
+    //
     //
     //
     
@@ -1088,7 +1153,7 @@ class BigModel: ObservableObject {
                                                 BigModel.Meal(id: "dfkljfrjf", recipe: Recipe(id: "EURF40ET0", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(id: "", introduction: "", steps: []))),
                                                 BigModel.Meal(id: "dfkljfrjf", recipe: Recipe(id: "UEFE04RT4EJOR¨F", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(id: "", introduction: "", steps: []))) ],
                                 
-                                dislikedMeals: [])
+                                dislikedMeals: [], events: [])
         self.currentView = .UserView
     }
     

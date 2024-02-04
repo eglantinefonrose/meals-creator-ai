@@ -153,7 +153,7 @@ struct MealsPropostion: View {
                     },
                     secondaryButton: .destructive(Text("No"))
                 )
-        }
+            }
         }
     }
     
@@ -201,7 +201,15 @@ struct MealsViewModel : View {
                         .font(.largeTitle)
                         .foregroundStyle(Color.navyBlue)
                         .onTapGesture {
-                            bigModel.currentView = .RecipeScreen
+                            
+                            if bigModel.screenHistory.last == .DailyCalendar {
+                                print(bigModel.selectedTimeEpoch)
+                                bigModel.addMealToCalendar(mealType: bigModel.selectedMealType, meal: bigModel.selectedMeal, date: bigModel.selectedDate)
+                                bigModel.currentView = .DailyCalendar
+                            } else {
+                                bigModel.currentView = .RecipeScreen
+                            }
+                            
                             bigModel.screenHistory.append(.mealsPropositionScreen)
                             bigModel.selectedMeal = item
                         }
@@ -255,7 +263,14 @@ struct MealsViewModel : View {
                         .font(.largeTitle)
                         .foregroundStyle(Color.navyBlue)
                         .onTapGesture {
-                            bigModel.currentView = .RecipeScreen
+                            if bigModel.screenHistory.last == .DailyCalendar {
+                                print(bigModel.selectedDate)
+                                bigModel.addMealToCalendar(mealType: bigModel.selectedMealType, meal: bigModel.selectedMeal, date: bigModel.selectedDate)
+                                bigModel.currentView = .DailyCalendar
+                            } else {
+                                bigModel.currentView = .RecipeScreen
+                            }
+                            
                             bigModel.screenHistory.append(.mealsPropositionScreen)
                             bigModel.selectedMeal = item
                         }
@@ -309,7 +324,14 @@ struct MealsViewModel : View {
                         .font(.largeTitle)
                         .foregroundStyle(Color.navyBlue)
                         .onTapGesture {
-                            bigModel.currentView = .RecipeScreen
+                            if bigModel.screenHistory.last == .DailyCalendar {
+                                print(bigModel.selectedDate)
+                                bigModel.addMealToCalendar(mealType: bigModel.selectedMealType, meal: bigModel.selectedMeal, date: bigModel.selectedDate)
+                                bigModel.currentView = .DailyCalendar
+                            } else {
+                                bigModel.currentView = .RecipeScreen
+                            }
+                            
                             bigModel.screenHistory.append(.mealsPropositionScreen)
                             bigModel.selectedMeal = item
                         }
@@ -363,7 +385,14 @@ struct MealsViewModel : View {
                         .font(.largeTitle)
                         .foregroundStyle(Color.navyBlue)
                         .onTapGesture {
-                            bigModel.currentView = .RecipeScreen
+                            if bigModel.screenHistory.last == .DailyCalendar {
+                                print(bigModel.selectedDate)
+                                bigModel.addMealToCalendar(mealType: bigModel.selectedMealType, meal: bigModel.selectedMeal, date: bigModel.selectedDate)
+                                bigModel.currentView = .DailyCalendar
+                            } else {
+                                bigModel.currentView = .RecipeScreen
+                            }
+                            
                             bigModel.screenHistory.append(.mealsPropositionScreen)
                             bigModel.selectedMeal = item
                         }

@@ -345,6 +345,28 @@ struct UserView: View {
                                              
                                          }
                                          
+                                         Rectangle().fill(Color.navyBlue).frame(height: 1)
+                                         
+                                         Text("your-meal-planner")
+                                             .font(.largeTitle)
+                                             .foregroundStyle(Color.navyBlue)
+                                         
+                                         HStack {
+                                             if bigModel.currentUser.events != [] {
+                                                 Text(String(bigModel.currentUser.spendedTime))
+                                             } else {
+                                                 Text("tellus-5")
+                                                     .foregroundColor(.gray)
+                                             }
+                                             Spacer()
+                                             Image(systemName: "arrow.right.circle")
+                                                 .foregroundColor(Color.navyBlue)
+                                                 .onTapGesture {
+                                                     bigModel.currentView = .dailyCalendar
+                                                     bigModel.screenHistory.append(.UserView)
+                                                 }
+                                         }
+                                         
                                      }
                                  }
                              }
