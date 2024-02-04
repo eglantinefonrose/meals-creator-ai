@@ -929,6 +929,7 @@ class BigModel: ObservableObject {
     @Published var selectedSeason: String = ""
     
     @Published var currentUserTags: [Meal: Bool] = [:]
+    @Published var currentUserFavMealTags: [Meal: Bool] = [:]
     @Published var didPreferencesChanged: Bool = false
     
     func createMeals(mealType: String) async {

@@ -102,20 +102,6 @@ struct MealsPropostion: View {
                                     
                                     
                                 }
-                                
-                                /*ForEach(tags.keys.sorted(), id: \.self) { item in
-                                    
-                                    MealsViewModel(bigModel: BigModel.shared, item: item, liked: self.binding(for: item), type: type)
-                                    
-                                    if tags[item] == true {
-                                        Text("p")
-                                    } else {
-                                        Text("false")
-                                    }
-                                    
-                                    Rectangle().fill(Color.navyBlue).frame(height: 1)
-                                    
-                                }*/
                             }
                         }
                     }

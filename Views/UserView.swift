@@ -277,14 +277,6 @@ struct UserView: View {
                                                  .foregroundStyle(Color.navyBlue)
                                              HStack {
                                                  
-                                                 /*if bigModel.currentUser.items.count != 0 && bigModel.currentUser.tools.count != 0 && bigModel.currentUser.numberOfPerson != 0 && bigModel.currentUser.budget != 0 && bigModel.currentUser.spendedTime != 0 {
-                                                     HStack {
-                                                         Text("Click here to propose meals according to your tastes")
-                                                             .foregroundColor(.gray)
-                                                         Spacer()
-                                                     }
-                                                 }*/
-                                                 
                                                  if bigModel.currentUser.proposedMeals.count != 0 {
                                                      ScrollView(.horizontal) {
                                                          HStack {
@@ -346,7 +338,7 @@ struct UserView: View {
                                                      .foregroundColor(Color.navyBlue)
                                                      .onTapGesture {
                                                          if bigModel.currentUser.items.count != 0 && bigModel.currentUser.budget != 0 && bigModel.currentUser.numberOfPerson != 0 && bigModel.currentUser.spendedTime != 0 {
-                                                             bigModel.currentView = .mealsPropositionScreen
+                                                             bigModel.currentView = .FavoriteMealsScreen
                                                          }
                                                      }
                                              }

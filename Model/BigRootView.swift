@@ -71,7 +71,11 @@ struct BigRootView: View {
                 RecipeScreen()
             }
             if bigModel.currentView == .FavoriteMealsScreen {
-                FavoriteMealsScreen()
+                if #available(iOS 17.0, *) {
+                    FavoriteMealsScreen()
+                } else {
+                    // Fallback on earlier versions
+                }
             }
             if bigModel.currentView == .BlankFile {
                 BlankFile()

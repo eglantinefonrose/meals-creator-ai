@@ -32,7 +32,6 @@ struct PreferenceView: View {
                 
                 Text(bigModel.categoryName(categorie: categorie))
                     .foregroundStyle(Color.navyBlue)
-                    .textCase(.uppercase)
                     .font(.system(size: 78))
                 
                 ZStack {
@@ -200,6 +199,7 @@ struct TagButton: View {
         
         ZStack {
             Rectangle()
+                .cornerRadius(10)
                 .frame(minWidth: 150, minHeight: 150)
                 .foregroundColor(selected ? .navyBlue : .gray)
             Text(txt)
