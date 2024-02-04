@@ -203,8 +203,7 @@ struct MealsViewModel : View {
                         .onTapGesture {
                             
                             if bigModel.screenHistory.last == .DailyCalendar {
-                                print(bigModel.selectedTimeEpoch)
-                                bigModel.addMealToCalendar(mealType: bigModel.selectedMealType, meal: bigModel.selectedMeal, date: bigModel.selectedDate)
+                                bigModel.addMealToCalendar(mealType: bigModel.selectedMealType, meal: bigModel.selectedMeal, dateTime: bigModel.selectedTimeEpoch)
                                 bigModel.currentView = .DailyCalendar
                             } else {
                                 bigModel.currentView = .RecipeScreen
@@ -264,8 +263,7 @@ struct MealsViewModel : View {
                         .foregroundStyle(Color.navyBlue)
                         .onTapGesture {
                             if bigModel.screenHistory.last == .DailyCalendar {
-                                print(bigModel.selectedDate)
-                                bigModel.addMealToCalendar(mealType: bigModel.selectedMealType, meal: bigModel.selectedMeal, date: bigModel.selectedDate)
+                                bigModel.addMealToCalendar(mealType: bigModel.selectedMealType, meal: bigModel.selectedMeal, dateTime: bigModel.selectedTimeEpoch)
                                 bigModel.currentView = .DailyCalendar
                             } else {
                                 bigModel.currentView = .RecipeScreen
@@ -325,8 +323,7 @@ struct MealsViewModel : View {
                         .foregroundStyle(Color.navyBlue)
                         .onTapGesture {
                             if bigModel.screenHistory.last == .DailyCalendar {
-                                print(bigModel.selectedDate)
-                                bigModel.addMealToCalendar(mealType: bigModel.selectedMealType, meal: bigModel.selectedMeal, date: bigModel.selectedDate)
+                                bigModel.addMealToCalendar(mealType: bigModel.selectedMealType, meal: bigModel.selectedMeal, dateTime: bigModel.selectedTimeEpoch)
                                 bigModel.currentView = .DailyCalendar
                             } else {
                                 bigModel.currentView = .RecipeScreen
@@ -386,8 +383,7 @@ struct MealsViewModel : View {
                         .foregroundStyle(Color.navyBlue)
                         .onTapGesture {
                             if bigModel.screenHistory.last == .DailyCalendar {
-                                print(bigModel.selectedDate)
-                                bigModel.addMealToCalendar(mealType: bigModel.selectedMealType, meal: bigModel.selectedMeal, date: bigModel.selectedDate)
+                                bigModel.addMealToCalendar(mealType: bigModel.selectedMealType, meal: bigModel.selectedMeal, dateTime: bigModel.selectedTimeEpoch)
                                 bigModel.currentView = .DailyCalendar
                             } else {
                                 bigModel.currentView = .RecipeScreen
