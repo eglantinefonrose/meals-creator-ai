@@ -106,7 +106,7 @@ struct UserView: View {
                                                 var user = bigModel.currentUser
                                                 user.firstName = newFirstName
                                                 user.lastName = newLastName
-                                                bigModel.storeCurrentUserInfoIntoDB(user: user) {}
+                                                bigModel.storeCurrentUserInfoIntoDB(user: user)
                                                 firstName = newFirstName
                                                 lastName = newLastName
                                                 isEditModeOn.toggle()

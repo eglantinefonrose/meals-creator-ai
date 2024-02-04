@@ -203,14 +203,17 @@ struct MealsViewModel : View {
                         .onTapGesture {
                             
                             if bigModel.screenHistory.last == .DailyCalendar {
-                                bigModel.addMealToCalendar(mealType: bigModel.selectedMealType, meal: bigModel.selectedMeal, dateTime: bigModel.selectedTimeEpoch)
-                                bigModel.currentView = .DailyCalendar
+                                bigModel.addMealToCalendar(mealType: bigModel.selectedMealType, meal: item, dateTime: bigModel.selectedTimeEpoch) { _,_,_ in
+                                    bigModel.currentView = .DailyCalendar
+                                }
+                                
                             } else {
                                 bigModel.currentView = .RecipeScreen
                             }
                             
                             bigModel.screenHistory.append(.mealsPropositionScreen)
                             bigModel.selectedMeal = item
+                            
                         }
                     
                     Spacer()
@@ -219,20 +222,16 @@ struct MealsViewModel : View {
                         .foregroundColor(.navyBlue)
                         .onTapGesture {
                             Task {
-                                
                                 if !isMealInList(meal: item) && !liked {
                                     addToFavourite(item: item)
                                 }
-                                
                                 if liked {
                                     var user = bigModel.currentUser
                                     let mealsList = user.favoriteMeals
                                     user.favoriteMeals = bigModel.removeMealFromList(meal: item, mealsList: mealsList)
-                                    bigModel.storeCurrentUserInfoIntoDB(user: user) {}
+                                    bigModel.storeCurrentUserInfoIntoDB(user: user)
                                 }
-                                
                                 self.liked.toggle()
-                                
                             }
                         }
                     
@@ -262,15 +261,19 @@ struct MealsViewModel : View {
                         .font(.largeTitle)
                         .foregroundStyle(Color.navyBlue)
                         .onTapGesture {
+                            
                             if bigModel.screenHistory.last == .DailyCalendar {
-                                bigModel.addMealToCalendar(mealType: bigModel.selectedMealType, meal: bigModel.selectedMeal, dateTime: bigModel.selectedTimeEpoch)
-                                bigModel.currentView = .DailyCalendar
+                                bigModel.addMealToCalendar(mealType: bigModel.selectedMealType, meal: item, dateTime: bigModel.selectedTimeEpoch) { _,_,_ in
+                                    bigModel.currentView = .DailyCalendar
+                                }
+                                
                             } else {
                                 bigModel.currentView = .RecipeScreen
                             }
                             
                             bigModel.screenHistory.append(.mealsPropositionScreen)
                             bigModel.selectedMeal = item
+                            
                         }
                     
                     Spacer()
@@ -288,7 +291,7 @@ struct MealsViewModel : View {
                                     var user = bigModel.currentUser
                                     let mealsList = user.favoriteMeals
                                     user.favoriteMeals = bigModel.removeMealFromList(meal: item, mealsList: mealsList)
-                                    bigModel.storeCurrentUserInfoIntoDB(user: user) {}
+                                    bigModel.storeCurrentUserInfoIntoDB(user: user)
                                 }
                                 
                                 self.liked.toggle()
@@ -322,15 +325,19 @@ struct MealsViewModel : View {
                         .font(.largeTitle)
                         .foregroundStyle(Color.navyBlue)
                         .onTapGesture {
+                            
                             if bigModel.screenHistory.last == .DailyCalendar {
-                                bigModel.addMealToCalendar(mealType: bigModel.selectedMealType, meal: bigModel.selectedMeal, dateTime: bigModel.selectedTimeEpoch)
-                                bigModel.currentView = .DailyCalendar
+                                bigModel.addMealToCalendar(mealType: bigModel.selectedMealType, meal: item, dateTime: bigModel.selectedTimeEpoch) { _,_,_ in
+                                    bigModel.currentView = .DailyCalendar
+                                }
+                                
                             } else {
                                 bigModel.currentView = .RecipeScreen
                             }
                             
                             bigModel.screenHistory.append(.mealsPropositionScreen)
                             bigModel.selectedMeal = item
+                            
                         }
                     
                     Spacer()
@@ -348,7 +355,7 @@ struct MealsViewModel : View {
                                     var user = bigModel.currentUser
                                     let mealsList = user.favoriteMeals
                                     user.favoriteMeals = bigModel.removeMealFromList(meal: item, mealsList: mealsList)
-                                    bigModel.storeCurrentUserInfoIntoDB(user: user) {}
+                                    bigModel.storeCurrentUserInfoIntoDB(user: user)
                                 }
                                 
                                 self.liked.toggle()
@@ -382,15 +389,18 @@ struct MealsViewModel : View {
                         .font(.largeTitle)
                         .foregroundStyle(Color.navyBlue)
                         .onTapGesture {
+                            
                             if bigModel.screenHistory.last == .DailyCalendar {
-                                bigModel.addMealToCalendar(mealType: bigModel.selectedMealType, meal: bigModel.selectedMeal, dateTime: bigModel.selectedTimeEpoch)
+                                bigModel.addMealToCalendar(mealType: bigModel.selectedMealType, meal: item, dateTime: bigModel.selectedTimeEpoch) { _,_,_ in }
                                 bigModel.currentView = .DailyCalendar
+                                
                             } else {
                                 bigModel.currentView = .RecipeScreen
                             }
                             
                             bigModel.screenHistory.append(.mealsPropositionScreen)
                             bigModel.selectedMeal = item
+                            
                         }
                     
                     Spacer()
@@ -408,7 +418,7 @@ struct MealsViewModel : View {
                                     var user = bigModel.currentUser
                                     let mealsList = user.favoriteMeals
                                     user.favoriteMeals = bigModel.removeMealFromList(meal: item, mealsList: mealsList)
-                                    bigModel.storeCurrentUserInfoIntoDB(user: user) {}
+                                    bigModel.storeCurrentUserInfoIntoDB(user: user)
                                 }
                                 
                                 self.liked.toggle()
@@ -437,7 +447,7 @@ struct MealsViewModel : View {
     private func addToFavourite(item: BigModel.Meal) {
         var user = bigModel.currentUser
         user.favoriteMeals.append(item)
-        bigModel.storeCurrentUserInfoIntoDB(user: user) {}
+        bigModel.storeCurrentUserInfoIntoDB(user: user)
     }
     
     private func isMealInList(meal: BigModel.Meal) -> Bool {

@@ -52,6 +52,7 @@ struct DailyCalendar: View {
                             }.onTapGesture {
                                 withAnimation(.interactiveSpring) { // Ajout de l'animation lors du clic
                                     self.selectedDate = Calendar.current.date(byAdding: .day, value: dayDelay, to: self.selectedDate)!
+                                    bigModel.selectedTimeEpoch = selectedDate.timeIntervalSince1970
                                     print(self.selectedDate)
                                 }
                             }
@@ -62,9 +63,11 @@ struct DailyCalendar: View {
                             self.swipeDirection = direction
                             if (direction == .left) {
                                 self.selectedDate = Calendar.current.date(byAdding: .day, value: 1, to: self.selectedDate)!
+                                bigModel.selectedTimeEpoch = selectedDate.timeIntervalSince1970
                             }
                             if (direction == .right) {
                                 self.selectedDate = Calendar.current.date(byAdding: .day, value: -1, to: self.selectedDate)!
+                                bigModel.selectedTimeEpoch = selectedDate.timeIntervalSince1970
                             }
                         }
                     }
@@ -120,7 +123,7 @@ struct DailyCalendar: View {
                                 
                             }.onTapGesture {
                                 bigModel.selectedMealType = "Breakfast"
-                                bigModel.selectedTimeEpoch = selectedDate.timeIntervalSince1970
+                                //bigModel.selectedTimeEpoch = selectedDate.timeIntervalSince1970
                                 print(selectedDate.timeIntervalSince1970)
                                 bigModel.currentView = .mealsPropositionScreen
                                 bigModel.screenHistory.append(.DailyCalendar)
@@ -178,7 +181,7 @@ struct DailyCalendar: View {
                                 
                             }.onTapGesture {
                                 bigModel.selectedMealType = "Lunch"
-                                bigModel.selectedTimeEpoch = selectedDate.timeIntervalSince1970
+                                //bigModel.selectedTimeEpoch = selectedDate.timeIntervalSince1970
                                 print(selectedDate.timeIntervalSince1970)
                                 bigModel.currentView = .mealsPropositionScreen
                                 bigModel.screenHistory.append(.DailyCalendar)
@@ -235,7 +238,7 @@ struct DailyCalendar: View {
                                 
                             }.onTapGesture {
                                 bigModel.selectedMealType = "Snack"
-                                bigModel.selectedTimeEpoch = selectedDate.timeIntervalSince1970
+                                //bigModel.selectedTimeEpoch = selectedDate.timeIntervalSince1970
                                 print(selectedDate.timeIntervalSince1970)
                                 bigModel.currentView = .mealsPropositionScreen
                                 bigModel.screenHistory.append(.DailyCalendar)
@@ -292,7 +295,7 @@ struct DailyCalendar: View {
                                 
                             }.onTapGesture {
                                 bigModel.selectedMealType = "Dinner"
-                                bigModel.selectedTimeEpoch = selectedDate.timeIntervalSince1970
+                                //bigModel.selectedTimeEpoch = selectedDate.timeIntervalSince1970
                                 print(selectedDate.timeIntervalSince1970)
                                 bigModel.currentView = .mealsPropositionScreen
                                 bigModel.screenHistory.append(.DailyCalendar)
@@ -308,6 +311,7 @@ struct DailyCalendar: View {
                 }.padding(20)
             }.onAppear {
                 self.currentEvent = tabEventWithValue()
+                self.selectedDate = Date(timeIntervalSince1970: bigModel.selectedTimeEpoch)
             }
             
             .onChange(of: self.selectedDate) { oldValue, newValue in
@@ -349,7 +353,7 @@ struct DailyCalendar: View {
     
     func tabEventWithValue() -> BigModel.Event {
         
-        bigModel.selectedTimeEpoch = selectedDate.timeIntervalSince1970
+        //bigModel.selectedTimeEpoch = selectedDate.timeIntervalSince1970
         print("[\(selectedDate.timeIntervalSince1970)]")
         
         if let index = bigModel.currentUser.events.firstIndex(where: {

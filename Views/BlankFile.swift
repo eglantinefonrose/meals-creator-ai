@@ -52,9 +52,9 @@ struct BlankFile: View {
     private func addToDisliked(item: BigModel.Meal) {
         var user = bigModel.currentUser
         user.proposedMeals = bigModel.removeMealFromList(meal: item, mealsList: bigModel.currentUser.proposedMeals)
-        bigModel.storeCurrentUserInfoIntoDB(user: user) {}
+        bigModel.storeCurrentUserInfoIntoDB(user: user)
         user.dislikedMeals.append(item)
-        bigModel.storeCurrentUserInfoIntoDB(user: user) {}
+        bigModel.storeCurrentUserInfoIntoDB(user: user)
     }
     
 }

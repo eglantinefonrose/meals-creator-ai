@@ -91,7 +91,7 @@ struct TimeScreen: View {
                         Task {
                             var user = bigModel.currentUser
                             user.spendedTime = time
-                            bigModel.storeCurrentUserInfoIntoDB(user: user) {}
+                            bigModel.storeCurrentUserInfoIntoDB(user: user)
                             
                             if bigModel.screenHistory.last == .UserView {
                                 bigModel.currentView = .UserView

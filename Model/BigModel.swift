@@ -573,7 +573,7 @@ class BigModel: ObservableObject {
         }
     }
     
-    func storeCurrentUserInfoIntoDB(user: User, completion: @escaping () -> Void) {
+    func storeCurrentUserInfoIntoDB(user: User) {
                 
         do {
             // Update the UserInfo inside the Firebase DB
@@ -967,7 +967,7 @@ class BigModel: ObservableObject {
             if (meal.recipe.recipeName != "err") && !isDisliked(mealName: meal.recipe.recipeName) {
                  self.currentUserTags[meal] = false
                  self.currentUser.proposedMeals.append(meal)
-                 self.storeCurrentUserInfoIntoDB(user: currentUser) {}
+                 self.storeCurrentUserInfoIntoDB(user: currentUser)
              }
              print(meal.recipe.recipeName)
             
@@ -1076,7 +1076,7 @@ class BigModel: ObservableObject {
     //
     //
     
-    var selectedTimeEpoch: Double = 0
+    var selectedTimeEpoch: Double = Date().timeIntervalSince1970
     var selectedMealType: String = ""
     
     func datesAreIdentical(date1: Date, date2: Date) -> Bool {
@@ -1091,7 +1091,7 @@ class BigModel: ObservableObject {
     
     let defaultEvent : Event = Event(id: "", timeEpoch: 0, breakfastMeal: BigModel.Meal(id: "", recipe: BigModel.Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))), lunchMeal: BigModel.Meal(id: "", recipe: BigModel.Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))), snackMeal: BigModel.Meal(id: "", recipe: BigModel.Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))), dinnerMeal: BigModel.Meal(id: "", recipe: BigModel.Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))))
     
-    func addMealToCalendar(mealType: String, meal: Meal, dateTime: Double) {
+    func addMealToCalendar(mealType: String, meal: Meal, dateTime: Double, handler: ((String, Meal, Double)->Void)) {
         
         var user: User = currentUser
                 
@@ -1127,7 +1127,11 @@ class BigModel: ObservableObject {
             
         }
         
-        self.storeCurrentUserInfoIntoDB(user: user) {}
+        self.storeCurrentUserInfoIntoDB(user: user)
+        
+        if currentUser.events[0].dinnerMeal != nil {
+            handler(mealType, meal, dateTime)
+        }
         
     }
     

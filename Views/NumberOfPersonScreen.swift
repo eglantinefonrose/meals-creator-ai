@@ -172,7 +172,7 @@ struct NumberOfPersonScreen: View {
                             var user = bigModel.currentUser
                             user.numberOfPerson = numberOfPerson
                             
-                            bigModel.storeCurrentUserInfoIntoDB(user: user) {}
+                            bigModel.storeCurrentUserInfoIntoDB(user: user)
                             
                             if bigModel.screenHistory.last == .UserView {
                                 bigModel.currentView = .UserView
