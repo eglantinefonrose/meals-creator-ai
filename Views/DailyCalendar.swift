@@ -151,7 +151,7 @@ struct DailyCalendar: View {
                                             .font(.title)
                                     }
                                 } else {
-                                    if currentEvent.dinnerMeal != nil {
+                                    if currentEvent.lunchMeal != nil {
                                         VStack {
                                             Spacer()
                                             HStack {
@@ -208,7 +208,7 @@ struct DailyCalendar: View {
                                             .font(.title)
                                     }
                                 } else {
-                                    if currentEvent.dinnerMeal != nil {
+                                    if currentEvent.snackMeal != nil {
                                         VStack {
                                             Spacer()
                                             HStack {
@@ -310,8 +310,8 @@ struct DailyCalendar: View {
                 self.currentEvent = tabEventWithValue()
             }
             
-            .onChange(of: bigModel.selectedTimeEpoch) { oldValue, newValue in
-                
+            .onChange(of: self.selectedDate) { oldValue, newValue in
+                self.currentEvent = tabEventWithValue()
             }
             
             

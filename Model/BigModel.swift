@@ -1079,13 +1079,23 @@ class BigModel: ObservableObject {
     var selectedTimeEpoch: Double = 0
     var selectedMealType: String = ""
     
+    func datesAreIdentical(date1: Date, date2: Date) -> Bool {
+        let calendar = Calendar.current
+        let components1 = calendar.dateComponents([.year, .month, .day], from: date1)
+        let components2 = calendar.dateComponents([.year, .month, .day], from: date2)
+        
+        return components1.year == components2.year &&
+               components1.month == components2.month &&
+               components1.day == components2.day
+    }
+    
     let defaultEvent : Event = Event(id: "", timeEpoch: 0, breakfastMeal: BigModel.Meal(id: "", recipe: BigModel.Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))), lunchMeal: BigModel.Meal(id: "", recipe: BigModel.Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))), snackMeal: BigModel.Meal(id: "", recipe: BigModel.Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))), dinnerMeal: BigModel.Meal(id: "", recipe: BigModel.Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))))
     
     func addMealToCalendar(mealType: String, meal: Meal, dateTime: Double) {
         
         var user: User = currentUser
                 
-        if let index = self.currentUser.events.firstIndex(where: { $0.timeEpoch == dateTime }) {
+        if let index = self.currentUser.events.firstIndex(where: { datesAreIdentical(date1: Date(timeIntervalSince1970: dateTime), date2: Date(timeIntervalSince1970: $0.timeEpoch) ) }) {
                         
             if mealType == "Breakfast" {
                 user.events[index].breakfastMeal = meal
@@ -1106,13 +1116,13 @@ class BigModel: ObservableObject {
                 user.events.append(Event(id: "\(dateTime)", timeEpoch: dateTime, breakfastMeal: meal))
             }
             if mealType == "Lunch" {
-                user.events.append(Event(id: "\(dateTime)", timeEpoch: dateTime, breakfastMeal: meal))
+                user.events.append(Event(id: "\(dateTime)", timeEpoch: dateTime, lunchMeal: meal))
             }
             if mealType == "Snack" {
-                user.events.append(Event(id: "\(dateTime)", timeEpoch: dateTime, breakfastMeal: meal))
+                user.events.append(Event(id: "\(dateTime)", timeEpoch: dateTime, snackMeal: meal))
             }
             if mealType == "Dinner" {
-                user.events.append(Event(id: "\(dateTime)", timeEpoch: dateTime, breakfastMeal: meal))
+                user.events.append(Event(id: "\(dateTime)", timeEpoch: dateTime, dinnerMeal: meal))
             }
             
         }
