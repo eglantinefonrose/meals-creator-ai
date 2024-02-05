@@ -1136,6 +1136,35 @@ class BigModel: ObservableObject {
     }
     
     
+    func removeMealFromEvent(mealType: String) {
+        
+        var user: User = currentUser
+                
+        if let index = self.currentUser.events.firstIndex(where: { datesAreIdentical(date1: Date(timeIntervalSince1970: self.selectedTimeEpoch), date2: Date(timeIntervalSince1970: $0.timeEpoch) ) }) {
+                        
+            if mealType == "Breakfast" {
+                user.events[index].breakfastMeal = nil
+            }
+            if mealType == "Lunch" {
+                user.events[index].lunchMeal = nil
+            }
+            if mealType == "Snack" {
+                user.events[index].snackMeal = nil
+            }
+            if mealType == "Dinner" {
+                user.events[index].dinnerMeal = nil
+            }
+            
+        } else {
+            
+            
+        }
+        
+        self.storeCurrentUserInfoIntoDB(user: user)
+        
+    }
+    
+    
     //
     //
     //

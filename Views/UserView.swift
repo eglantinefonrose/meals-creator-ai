@@ -353,7 +353,7 @@ struct UserView: View {
                                          
                                          HStack {
                                              if bigModel.currentUser.events != [] {
-                                                 Text(String(bigModel.currentUser.spendedTime))
+                                                 Text("click-here-events")
                                              } else {
                                                  Text("tellus-5")
                                                      .foregroundColor(.gray)

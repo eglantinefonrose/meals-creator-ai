@@ -79,6 +79,7 @@ struct DailyCalendar: View {
                             HStack {
                                 Text("breakfast")
                                     .font(.title3)
+                                    .foregroundStyle(Color(.navyBlue))
                                 Spacer()
                             }
                             
@@ -92,8 +93,10 @@ struct DailyCalendar: View {
                                     VStack {
                                         Text("+")
                                             .font(.largeTitle)
+                                            .foregroundStyle(Color(.navyBlue))
                                         Text("add-a-meal")
                                             .font(.title)
+                                            .foregroundStyle(Color(.navyBlue))
                                     }
                                 } else {
                                     if currentEvent.breakfastMeal != nil {
@@ -102,12 +105,19 @@ struct DailyCalendar: View {
                                             HStack {
                                                 Text(currentEvent.breakfastMeal!.recipe.recipeName)
                                                     .font(.largeTitle)
+                                                    .foregroundStyle(Color(.navyBlue))
                                                 Spacer()
                                             }
                                             HStack {
                                                 Text("\(currentEvent.breakfastMeal!.recipe.prepDuration) - \(currentEvent.breakfastMeal!.recipe.price)\(currentEvent.breakfastMeal!.recipe.currency)")
                                                     .font(.title3)
+                                                    .foregroundStyle(Color(.navyBlue))
                                                 Spacer()
+                                                Image(systemName: "trash")
+                                                    .foregroundStyle(Color(.navyBlue))
+                                                    .onTapGesture {
+                                                        bigModel.removeMealFromEvent(mealType: "Breakfast")
+                                                    }
                                             }
                                         }.padding(20)
                                     }
@@ -115,8 +125,10 @@ struct DailyCalendar: View {
                                         VStack {
                                             Text("+")
                                                 .font(.largeTitle)
+                                                .foregroundStyle(Color(.navyBlue))
                                             Text("add-a-meal")
                                                 .font(.title)
+                                                .foregroundStyle(Color(.navyBlue))
                                         }
                                     }
                                 }
@@ -137,6 +149,7 @@ struct DailyCalendar: View {
                             HStack {
                                 Text("lunch")
                                     .font(.title3)
+                                    .foregroundStyle(Color(.navyBlue))
                                 Spacer()
                             }
                             
@@ -150,8 +163,10 @@ struct DailyCalendar: View {
                                     VStack {
                                         Text("+")
                                             .font(.largeTitle)
+                                            .foregroundStyle(Color(.navyBlue))
                                         Text("add-a-meal")
                                             .font(.title)
+                                            .foregroundStyle(Color(.navyBlue))
                                     }
                                 } else {
                                     if currentEvent.lunchMeal != nil {
@@ -160,12 +175,19 @@ struct DailyCalendar: View {
                                             HStack {
                                                 Text(currentEvent.lunchMeal!.recipe.recipeName)
                                                     .font(.largeTitle)
+                                                    .foregroundStyle(Color(.navyBlue))
                                                 Spacer()
                                             }
                                             HStack {
                                                 Text("\(currentEvent.lunchMeal!.recipe.prepDuration) - \(currentEvent.lunchMeal!.recipe.price)\(currentEvent.lunchMeal!.recipe.currency)")
                                                     .font(.title3)
+                                                    .foregroundStyle(Color(.navyBlue))
                                                 Spacer()
+                                                Image(systemName: "trash")
+                                                    .foregroundStyle(Color(.navyBlue))
+                                                    .onTapGesture {
+                                                        bigModel.removeMealFromEvent(mealType: "Lunch")
+                                                    }
                                             }
                                         }.padding(20)
                                     }
@@ -173,8 +195,10 @@ struct DailyCalendar: View {
                                         VStack {
                                             Text("+")
                                                 .font(.largeTitle)
+                                                .foregroundStyle(Color(.navyBlue))
                                             Text("add-a-meal")
                                                 .font(.title)
+                                                .foregroundStyle(Color(.navyBlue))
                                         }
                                     }
                                 }
@@ -194,6 +218,7 @@ struct DailyCalendar: View {
                             HStack {
                                 Text("snack")
                                     .font(.title3)
+                                    .foregroundStyle(Color(.navyBlue))
                                 Spacer()
                             }
                             
@@ -207,8 +232,10 @@ struct DailyCalendar: View {
                                     VStack {
                                         Text("+")
                                             .font(.largeTitle)
+                                            .foregroundStyle(Color(.navyBlue))
                                         Text("add-a-meal")
                                             .font(.title)
+                                            .foregroundStyle(Color(.navyBlue))
                                     }
                                 } else {
                                     if currentEvent.snackMeal != nil {
@@ -217,12 +244,19 @@ struct DailyCalendar: View {
                                             HStack {
                                                 Text(currentEvent.snackMeal!.recipe.recipeName)
                                                     .font(.largeTitle)
+                                                    .foregroundStyle(Color(.navyBlue))
                                                 Spacer()
                                             }
                                             HStack {
                                                 Text("\(currentEvent.snackMeal!.recipe.prepDuration) - \(currentEvent.snackMeal!.recipe.price)\(currentEvent.snackMeal!.recipe.currency)")
                                                     .font(.title3)
+                                                    .foregroundStyle(Color(.navyBlue))
                                                 Spacer()
+                                                Image(systemName: "trash")
+                                                    .foregroundStyle(Color(.navyBlue))
+                                                    .onTapGesture {
+                                                        bigModel.removeMealFromEvent(mealType: "Snack")
+                                                    }
                                             }
                                         }.padding(20)
                                     }
@@ -230,8 +264,10 @@ struct DailyCalendar: View {
                                         VStack {
                                             Text("+")
                                                 .font(.largeTitle)
+                                                .foregroundStyle(Color(.navyBlue))
                                             Text("add-a-meal")
                                                 .font(.title)
+                                                .foregroundStyle(Color(.navyBlue))
                                         }
                                     }
                                 }
@@ -251,6 +287,7 @@ struct DailyCalendar: View {
                             HStack {
                                 Text("dinner")
                                     .font(.title3)
+                                    .foregroundStyle(Color(.navyBlue))
                                 Spacer()
                             }
                             
@@ -264,8 +301,10 @@ struct DailyCalendar: View {
                                     VStack {
                                         Text("+")
                                             .font(.largeTitle)
+                                            .foregroundStyle(Color(.navyBlue))
                                         Text("add-a-meal")
                                             .font(.title)
+                                            .foregroundStyle(Color(.navyBlue))
                                     }
                                 } else {
                                     if currentEvent.dinnerMeal != nil {
@@ -274,12 +313,19 @@ struct DailyCalendar: View {
                                             HStack {
                                                 Text(currentEvent.dinnerMeal!.recipe.recipeName)
                                                     .font(.largeTitle)
+                                                    .foregroundStyle(Color(.navyBlue))
                                                 Spacer()
                                             }
                                             HStack {
                                                 Text("\(currentEvent.dinnerMeal!.recipe.prepDuration) - \(currentEvent.dinnerMeal!.recipe.price)\(currentEvent.dinnerMeal!.recipe.currency)")
                                                     .font(.title3)
+                                                    .foregroundStyle(Color(.navyBlue))
                                                 Spacer()
+                                                Image(systemName: "trash")
+                                                    .foregroundStyle(Color(.navyBlue))
+                                                    .onTapGesture {
+                                                        bigModel.removeMealFromEvent(mealType: "Dinner")
+                                                    }
                                             }
                                         }.padding(20)
                                     }
@@ -287,8 +333,10 @@ struct DailyCalendar: View {
                                         VStack {
                                             Text("+")
                                                 .font(.largeTitle)
+                                                .foregroundStyle(Color(.navyBlue))
                                             Text("add-a-meal")
                                                 .font(.title)
+                                                .foregroundStyle(Color(.navyBlue))
                                         }
                                     }
                                 }
@@ -309,7 +357,11 @@ struct DailyCalendar: View {
                     Spacer()
                     
                 }.padding(20)
-            }.onAppear {
+                .edgesIgnoringSafeArea(.bottom)
+                
+            }.edgesIgnoringSafeArea(.bottom)
+            
+            .onAppear {
                 self.currentEvent = tabEventWithValue()
                 self.selectedDate = Date(timeIntervalSince1970: bigModel.selectedTimeEpoch)
             }
