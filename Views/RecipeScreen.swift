@@ -196,10 +196,11 @@ struct RecipeScreen: View {
                              Rectangle()
                                  .frame(height: 60)
                                  .foregroundStyle(Color.navyBlue)
-                             Text("add-to-favs")
+                             Text("save-in-planner")
                                  .foregroundStyle(Color.white)
                          }.onTapGesture {
-                             bigModel.currentUser.favoriteMeals.append(bigModel.selectedMeal)
+                             bigModel.currentView = .DailyCalendar
+                             bigModel.screenHistory.append(.RecipeScreen)
                          }
                      }
                      

@@ -98,11 +98,16 @@ struct DailyCalendar: View {
                                             .font(.title)
                                             .foregroundStyle(Color(.navyBlue))
                                     }.onTapGesture {
-                                        bigModel.selectedMealType = "Breakfast"
-                                        //bigModel.selectedTimeEpoch = selectedDate.timeIntervalSince1970
-                                        print(selectedDate.timeIntervalSince1970)
-                                        bigModel.currentView = .mealsPropositionScreen
-                                        bigModel.screenHistory.append(.DailyCalendar)
+                                        
+                                        if bigModel.screenHistory.last == .RecipeScreen {
+                                            bigModel.selectedMealType = "Breakfast"
+                                            bigModel.addMealToCalendar(mealType: bigModel.selectedMealType, meal: bigModel.selectedMeal, dateTime: bigModel.selectedTimeEpoch)
+                                        } else {
+                                            bigModel.selectedMealType = "Breakfast"
+                                            print(selectedDate.timeIntervalSince1970)
+                                            bigModel.currentView = .mealsPropositionScreen
+                                            bigModel.screenHistory.append(.DailyCalendar)
+                                        }
                                         
                                     }
                                 } else {
@@ -142,11 +147,16 @@ struct DailyCalendar: View {
                                                 .font(.title)
                                                 .foregroundStyle(Color(.navyBlue))
                                         }.onTapGesture {
-                                            bigModel.selectedMealType = "Breakfast"
-                                            //bigModel.selectedTimeEpoch = selectedDate.timeIntervalSince1970
-                                            print(selectedDate.timeIntervalSince1970)
-                                            bigModel.currentView = .mealsPropositionScreen
-                                            bigModel.screenHistory.append(.DailyCalendar)
+                                            
+                                            if bigModel.screenHistory.last == .RecipeScreen {
+                                                bigModel.selectedMealType = "Breakfast"
+                                                bigModel.addMealToCalendar(mealType: bigModel.selectedMealType, meal: bigModel.selectedMeal, dateTime: bigModel.selectedTimeEpoch)
+                                            } else {
+                                                bigModel.selectedMealType = "Breakfast"
+                                                print(selectedDate.timeIntervalSince1970)
+                                                bigModel.currentView = .mealsPropositionScreen
+                                                bigModel.screenHistory.append(.DailyCalendar)
+                                            }
                                             
                                         }
                                     }
@@ -180,11 +190,16 @@ struct DailyCalendar: View {
                                             .font(.title)
                                             .foregroundStyle(Color(.navyBlue))
                                     }.onTapGesture {
-                                        bigModel.selectedMealType = "Breakfast"
-                                        //bigModel.selectedTimeEpoch = selectedDate.timeIntervalSince1970
-                                        print(selectedDate.timeIntervalSince1970)
-                                        bigModel.currentView = .mealsPropositionScreen
-                                        bigModel.screenHistory.append(.DailyCalendar)
+                                        
+                                        if bigModel.screenHistory.last == .RecipeScreen {
+                                            bigModel.selectedMealType = "Breakfast"
+                                            bigModel.addMealToCalendar(mealType: bigModel.selectedMealType, meal: bigModel.selectedMeal, dateTime: bigModel.selectedTimeEpoch)
+                                        } else {
+                                            bigModel.selectedMealType = "Breakfast"
+                                            print(selectedDate.timeIntervalSince1970)
+                                            bigModel.currentView = .mealsPropositionScreen
+                                            bigModel.screenHistory.append(.DailyCalendar)
+                                        }
                                         
                                     }
                                 } else {
@@ -224,11 +239,17 @@ struct DailyCalendar: View {
                                                 .font(.title)
                                                 .foregroundStyle(Color(.navyBlue))
                                         }.onTapGesture {
-                                            bigModel.selectedMealType = "Lunch"
-                                            //bigModel.selectedTimeEpoch = selectedDate.timeIntervalSince1970
-                                            print(selectedDate.timeIntervalSince1970)
-                                            bigModel.currentView = .mealsPropositionScreen
-                                            bigModel.screenHistory.append(.DailyCalendar)
+                                            
+                                            if bigModel.screenHistory.last == .RecipeScreen {
+                                                bigModel.selectedMealType = "Lunch"
+                                                bigModel.addMealToCalendar(mealType: bigModel.selectedMealType, meal: bigModel.selectedMeal, dateTime: bigModel.selectedTimeEpoch)
+                                            } else {
+                                                bigModel.selectedMealType = "Lunch"
+                                                print(selectedDate.timeIntervalSince1970)
+                                                bigModel.currentView = .mealsPropositionScreen
+                                                bigModel.screenHistory.append(.DailyCalendar)
+                                            }
+                                            
                                         }
                                     }
                                 }
@@ -261,11 +282,16 @@ struct DailyCalendar: View {
                                             .font(.title)
                                             .foregroundStyle(Color(.navyBlue))
                                     }.onTapGesture {
-                                        bigModel.selectedMealType = "Breakfast"
-                                        //bigModel.selectedTimeEpoch = selectedDate.timeIntervalSince1970
-                                        print(selectedDate.timeIntervalSince1970)
-                                        bigModel.currentView = .mealsPropositionScreen
-                                        bigModel.screenHistory.append(.DailyCalendar)
+                                        
+                                        if bigModel.screenHistory.last == .RecipeScreen {
+                                            bigModel.selectedMealType = "Snack"
+                                            bigModel.addMealToCalendar(mealType: bigModel.selectedMealType, meal: bigModel.selectedMeal, dateTime: bigModel.selectedTimeEpoch)
+                                        } else {
+                                            bigModel.selectedMealType = "Snack"
+                                            print(selectedDate.timeIntervalSince1970)
+                                            bigModel.currentView = .mealsPropositionScreen
+                                            bigModel.screenHistory.append(.DailyCalendar)
+                                        }
                                         
                                     }
                                 } else {
@@ -305,11 +331,17 @@ struct DailyCalendar: View {
                                                 .font(.title)
                                                 .foregroundStyle(Color(.navyBlue))
                                         }.onTapGesture {
-                                            bigModel.selectedMealType = "Snack"
-                                            //bigModel.selectedTimeEpoch = selectedDate.timeIntervalSince1970
-                                            print(selectedDate.timeIntervalSince1970)
-                                            bigModel.currentView = .mealsPropositionScreen
-                                            bigModel.screenHistory.append(.DailyCalendar)
+                                            
+                                            if bigModel.screenHistory.last == .RecipeScreen {
+                                                bigModel.selectedMealType = "Snack"
+                                                bigModel.addMealToCalendar(mealType: bigModel.selectedMealType, meal: bigModel.selectedMeal, dateTime: bigModel.selectedTimeEpoch)
+                                            } else {
+                                                bigModel.selectedMealType = "Snack"
+                                                print(selectedDate.timeIntervalSince1970)
+                                                bigModel.currentView = .mealsPropositionScreen
+                                                bigModel.screenHistory.append(.DailyCalendar)
+                                            }
+                                            
                                         }
                                     }
                                 }
@@ -342,11 +374,16 @@ struct DailyCalendar: View {
                                             .font(.title)
                                             .foregroundStyle(Color(.navyBlue))
                                     }.onTapGesture {
-                                        bigModel.selectedMealType = "Breakfast"
-                                        //bigModel.selectedTimeEpoch = selectedDate.timeIntervalSince1970
-                                        print(selectedDate.timeIntervalSince1970)
-                                        bigModel.currentView = .mealsPropositionScreen
-                                        bigModel.screenHistory.append(.DailyCalendar)
+                                        
+                                        if bigModel.screenHistory.last == .RecipeScreen {
+                                            bigModel.selectedMealType = "Dinner"
+                                            bigModel.addMealToCalendar(mealType: bigModel.selectedMealType, meal: bigModel.selectedMeal, dateTime: bigModel.selectedTimeEpoch)
+                                        } else {
+                                            bigModel.selectedMealType = "Dinner"
+                                            print(selectedDate.timeIntervalSince1970)
+                                            bigModel.currentView = .mealsPropositionScreen
+                                            bigModel.screenHistory.append(.DailyCalendar)
+                                        }
                                         
                                     }
                                 } else {
@@ -386,11 +423,17 @@ struct DailyCalendar: View {
                                                 .font(.title)
                                                 .foregroundStyle(Color(.navyBlue))
                                         }.onTapGesture {
-                                            bigModel.selectedMealType = "Dinner"
-                                            //bigModel.selectedTimeEpoch = selectedDate.timeIntervalSince1970
-                                            print(selectedDate.timeIntervalSince1970)
-                                            bigModel.currentView = .mealsPropositionScreen
-                                            bigModel.screenHistory.append(.DailyCalendar)
+                                            
+                                            if bigModel.screenHistory.last == .RecipeScreen {
+                                                bigModel.selectedMealType = "Dinner"
+                                                bigModel.addMealToCalendar(mealType: bigModel.selectedMealType, meal: bigModel.selectedMeal, dateTime: bigModel.selectedTimeEpoch)
+                                            } else {
+                                                bigModel.selectedMealType = "Dinner"
+                                                print(selectedDate.timeIntervalSince1970)
+                                                bigModel.currentView = .mealsPropositionScreen
+                                                bigModel.screenHistory.append(.DailyCalendar)
+                                            }
+                                            
                                         }
                                     }
                                 }
