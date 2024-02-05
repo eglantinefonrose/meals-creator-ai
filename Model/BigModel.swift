@@ -598,6 +598,21 @@ class BigModel: ObservableObject {
             let mealsList = removeMealFromList(mealsList: currentUser.proposedMeals)
             let favoriteMealsList = removeMealFromList(mealsList: currentUser.favoriteMeals)
             
+            for i in (0...((user.events.count)-1)) {
+                if user.events[i].breakfastMeal == dislikedMeal {
+                    user.events[i].breakfastMeal = nil
+                }
+                if user.events[i].lunchMeal == dislikedMeal {
+                    user.events[i].lunchMeal = nil
+                }
+                if user.events[i].snackMeal == dislikedMeal {
+                    user.events[i].snackMeal = nil
+                }
+                if user.events[i].dinnerMeal == dislikedMeal {
+                    user.events[i].dinnerMeal = nil
+                }
+            }
+            
             user.proposedMeals = mealsList
             user.favoriteMeals = favoriteMealsList
             user.dislikedMeals.append(self.dislikedMeal)
@@ -649,8 +664,25 @@ class BigModel: ObservableObject {
         
         var newMealsList = mealsList
         let meal = dislikedMeal
+        var user = currentUser
         
         if let index = mealsList.firstIndex(where: { $0.id == meal.id }) {
+            
+            for i in (0...((user.events.count)-1)) {
+                if user.events[i].breakfastMeal == dislikedMeal {
+                    user.events[i].breakfastMeal = nil
+                }
+                if user.events[i].lunchMeal == dislikedMeal {
+                    user.events[i].lunchMeal = nil
+                }
+                if user.events[i].snackMeal == dislikedMeal {
+                    user.events[i].snackMeal = nil
+                }
+                if user.events[i].dinnerMeal == dislikedMeal {
+                    user.events[i].dinnerMeal = nil
+                }
+            }
+            
             newMealsList.remove(at: index)
             print("Element retiré avec succès")
             return newMealsList
