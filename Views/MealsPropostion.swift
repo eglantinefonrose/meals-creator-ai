@@ -203,10 +203,7 @@ struct MealsViewModel : View {
                         .onTapGesture {
                             
                             if bigModel.screenHistory.last == .DailyCalendar {
-                                bigModel.addMealToCalendar(mealType: bigModel.selectedMealType, meal: item, dateTime: bigModel.selectedTimeEpoch) { _,_,_ in
-                                    bigModel.currentView = .DailyCalendar
-                                }
-                                
+                                bigModel.addMealToCalendar(mealType: bigModel.selectedMealType, meal: item, dateTime: bigModel.selectedTimeEpoch)
                             } else {
                                 bigModel.currentView = .RecipeScreen
                             }
@@ -263,10 +260,7 @@ struct MealsViewModel : View {
                         .onTapGesture {
                             
                             if bigModel.screenHistory.last == .DailyCalendar {
-                                bigModel.addMealToCalendar(mealType: bigModel.selectedMealType, meal: item, dateTime: bigModel.selectedTimeEpoch) { _,_,_ in
-                                    bigModel.currentView = .DailyCalendar
-                                }
-                                
+                                bigModel.addMealToCalendar(mealType: bigModel.selectedMealType, meal: item, dateTime: bigModel.selectedTimeEpoch)
                             } else {
                                 bigModel.currentView = .RecipeScreen
                             }
@@ -327,10 +321,7 @@ struct MealsViewModel : View {
                         .onTapGesture {
                             
                             if bigModel.screenHistory.last == .DailyCalendar {
-                                bigModel.addMealToCalendar(mealType: bigModel.selectedMealType, meal: item, dateTime: bigModel.selectedTimeEpoch) { _,_,_ in
-                                    bigModel.currentView = .DailyCalendar
-                                }
-                                
+                                bigModel.addMealToCalendar(mealType: bigModel.selectedMealType, meal: item, dateTime: bigModel.selectedTimeEpoch)
                             } else {
                                 bigModel.currentView = .RecipeScreen
                             }
@@ -391,9 +382,7 @@ struct MealsViewModel : View {
                         .onTapGesture {
                             
                             if bigModel.screenHistory.last == .DailyCalendar {
-                                bigModel.addMealToCalendar(mealType: bigModel.selectedMealType, meal: item, dateTime: bigModel.selectedTimeEpoch) { _,_,_ in }
-                                bigModel.currentView = .DailyCalendar
-                                
+                                bigModel.addMealToCalendar(mealType: bigModel.selectedMealType, meal: item, dateTime: bigModel.selectedTimeEpoch)
                             } else {
                                 bigModel.currentView = .RecipeScreen
                             }

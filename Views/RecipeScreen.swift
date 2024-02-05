@@ -25,7 +25,7 @@ struct RecipeScreen: View {
             
             VStack {
                 
-                 VStack {
+                 VStack(spacing: 0) {
                      
                      VStack(spacing: 10) {
                          
@@ -157,6 +157,9 @@ struct RecipeScreen: View {
                                          }
                                          Spacer()
                                      }
+                                     
+                                     Spacer()
+                                         .frame(height: 20)
                                  
                                 }.background(GeometryReader {
                                     Color.clear.preference(key: ViewOffsetKey.self,
@@ -182,18 +185,22 @@ struct RecipeScreen: View {
                              
                          }
                            
-                    }.padding(20)
+                     }.padding(.top, 20)
+                     .padding(.horizontal, 20)
                                       
-                     Spacer()
+                     //Spacer()
                      
-                     ZStack {
-                         Rectangle()
-                             .frame(height: 60)
-                             .foregroundStyle(Color.navyBlue)
-                         Text("add-to-favs")
-                             .foregroundStyle(Color.white)
-                     }.onTapGesture {
-                         bigModel.currentUser.favoriteMeals.append(bigModel.selectedMeal)
+                     VStack {
+                         //Spacer()
+                         ZStack {
+                             Rectangle()
+                                 .frame(height: 60)
+                                 .foregroundStyle(Color.navyBlue)
+                             Text("add-to-favs")
+                                 .foregroundStyle(Color.white)
+                         }.onTapGesture {
+                             bigModel.currentUser.favoriteMeals.append(bigModel.selectedMeal)
+                         }
                      }
                      
                  }

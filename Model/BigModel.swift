@@ -1091,49 +1091,132 @@ class BigModel: ObservableObject {
     
     let defaultEvent : Event = Event(id: "", timeEpoch: 0, breakfastMeal: BigModel.Meal(id: "", recipe: BigModel.Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))), lunchMeal: BigModel.Meal(id: "", recipe: BigModel.Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))), snackMeal: BigModel.Meal(id: "", recipe: BigModel.Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))), dinnerMeal: BigModel.Meal(id: "", recipe: BigModel.Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))))
     
-    func addMealToCalendar(mealType: String, meal: Meal, dateTime: Double, handler: ((String, Meal, Double)->Void)) {
+    func addMealToCalendar(mealType: String, meal: Meal, dateTime: Double) {
         
-        var user: User = currentUser
+        do {
+            // Update the UserInfo inside the Firebase DB
+            var user = currentUser
+            guard let id = self.auth.currentUser?.uid else { return }
+                                
+            if let index = self.currentUser.events.firstIndex(where: { datesAreIdentical(date1: Date(timeIntervalSince1970: dateTime), date2: Date(timeIntervalSince1970: $0.timeEpoch) ) }) {
+                            
+                if mealType == "Breakfast" {
+                    user.events[index].breakfastMeal = meal
+                    self.currentUser.events[index].breakfastMeal = nil
+                }
+                if mealType == "Lunch" {
+                    user.events[index].lunchMeal = meal
+                    self.currentUser.events[index].lunchMeal = nil
+                }
+                if mealType == "Snack" {
+                    user.events[index].snackMeal = meal
+                    self.currentUser.events[index].snackMeal = nil
+                }
+                if mealType == "Dinner" {
+                    user.events[index].dinnerMeal = meal
+                    self.currentUser.events[index].dinnerMeal = nil
+                }
                 
-        if let index = self.currentUser.events.firstIndex(where: { datesAreIdentical(date1: Date(timeIntervalSince1970: dateTime), date2: Date(timeIntervalSince1970: $0.timeEpoch) ) }) {
-                        
-            if mealType == "Breakfast" {
-                user.events[index].breakfastMeal = meal
-            }
-            if mealType == "Lunch" {
-                user.events[index].lunchMeal = meal
-            }
-            if mealType == "Snack" {
-                user.events[index].snackMeal = meal
-            }
-            if mealType == "Dinner" {
-                user.events[index].dinnerMeal = meal
-            }
-            
-        } else {
-            
-            if mealType == "Breakfast" {
-                user.events.append(Event(id: "\(dateTime)", timeEpoch: dateTime, breakfastMeal: meal))
-            }
-            if mealType == "Lunch" {
-                user.events.append(Event(id: "\(dateTime)", timeEpoch: dateTime, lunchMeal: meal))
-            }
-            if mealType == "Snack" {
-                user.events.append(Event(id: "\(dateTime)", timeEpoch: dateTime, snackMeal: meal))
-            }
-            if mealType == "Dinner" {
-                user.events.append(Event(id: "\(dateTime)", timeEpoch: dateTime, dinnerMeal: meal))
+            } else {
+                
+                if mealType == "Breakfast" {
+                    user.events.append(Event(id: "\(dateTime)", timeEpoch: dateTime, breakfastMeal: meal))
+                }
+                if mealType == "Lunch" {
+                    user.events.append(Event(id: "\(dateTime)", timeEpoch: dateTime, lunchMeal: meal))
+                }
+                if mealType == "Snack" {
+                    user.events.append(Event(id: "\(dateTime)", timeEpoch: dateTime, snackMeal: meal))
+                }
+                if mealType == "Dinner" {
+                    user.events.append(Event(id: "\(dateTime)", timeEpoch: dateTime, dinnerMeal: meal))
+                }
+                
             }
             
+            let _ = try self.db.collection("Users").document(id).setData(from: user) { _ in
+                
+                let docRef = self.db.collection("Users").document(id)
+                let newUser = User(firstName: "", lastName: "", items: [], tools: [], budget: 0, spendedTime: 0, numberOfPerson: 0, proposedMeals: [], favoriteMeals: [], dislikedMeals: [], events: [])
+                
+                docRef.getDocument { (document, error) in
+                    
+                    if let document = document {
+                        if document.exists {
+                            do {
+                                self.currentUser.firstName = ""
+                                let user = try document.data(as: User.self)
+                                self.currentUser = user
+                                let tabElement = self.tabEventWithValue(selectedDate: Date(timeIntervalSince1970: dateTime))
+                                
+                                if mealType == "Breakfast" {
+                                    if tabElement.breakfastMeal != nil {
+                                        print("🧛🏼‍♀️")
+                                        self.currentView = .DailyCalendar
+                                    }
+                                }
+                                if mealType == "Lunch" {
+                                    if tabElement.lunchMeal != nil {
+                                        print("🧛🏼‍♀️")
+                                        self.currentView = .DailyCalendar
+                                    }
+                                }
+                                if mealType == "Snack" {
+                                    if tabElement.snackMeal != nil {
+                                        print("🧛🏼‍♀️")
+                                        self.currentView = .DailyCalendar
+                                    }
+                                }
+                                if mealType == "Dinner" {
+                                    if tabElement.dinnerMeal != nil {
+                                        print("🧛🏼‍♀️")
+                                        self.currentView = .DailyCalendar
+                                    }
+                                }
+                                
+                                print("Document data: \(String(describing: document.data()))")
+                                
+                            }
+                            catch {
+                                print(error.localizedDescription)
+                            }
+                        } else {
+                            do {
+                                let _ = try self.db.collection("Users").document(id).setData(from: newUser)
+                            } catch {
+                                
+                            }
+                        }
+                    }
+                }
+                
+            }
+            // Refresh the BigModel from the DB
+            
+            print("done")
+        } catch {
+            print("ERR001[updateCurrentUserInfoInDB]=\(error)")
         }
         
-        self.storeCurrentUserInfoIntoDB(user: user)
-        
-        if currentUser.events[0].dinnerMeal != nil {
-            handler(mealType, meal, dateTime)
-        }
         
     }
+    
+    func tabEventWithValue(selectedDate: Date) -> BigModel.Event {
+        
+        //self.selectedTimeEpoch = selectedDate.timeIntervalSince1970
+        //print("[\(selectedDate.timeIntervalSince1970)]")
+        
+        if let index = self.currentUser.events.firstIndex(where: {
+            
+            datesAreIdentical(date1: Date(timeIntervalSince1970: self.selectedTimeEpoch), date2: Date(timeIntervalSince1970: $0.timeEpoch) )
+            
+        }) {
+            return currentUser.events[index]
+        } else {
+            return BigModel.Event(id: "", timeEpoch: 0, breakfastMeal: BigModel.Meal(id: "", recipe: BigModel.Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))), lunchMeal: BigModel.Meal(id: "", recipe: BigModel.Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))), snackMeal: BigModel.Meal(id: "", recipe: BigModel.Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))), dinnerMeal: BigModel.Meal(id: "", recipe: BigModel.Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))))
+        }
+        
+   }
     
     
     func removeMealFromEvent(mealType: String) {

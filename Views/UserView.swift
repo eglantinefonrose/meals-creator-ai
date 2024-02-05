@@ -362,7 +362,7 @@ struct UserView: View {
                                              Image(systemName: "arrow.right.circle")
                                                  .foregroundColor(Color.navyBlue)
                                                  .onTapGesture {
-                                                     bigModel.currentView = .dailyCalendar
+                                                     bigModel.currentView = .DailyCalendar
                                                      bigModel.screenHistory.append(.UserView)
                                                  }
                                          }

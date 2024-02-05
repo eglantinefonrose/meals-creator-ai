@@ -97,9 +97,6 @@ struct BigRootView: View {
             SeasonSelection()
         }
         
-        if bigModel.currentView == .dailyCalendar {
-            DailyCalendar()
-        }
         
     }
 }
@@ -127,5 +124,4 @@ enum ViewEnum: String {
     case DailyCalendar
     case MealTypeView
     case SeasonSelectionView
-    case dailyCalendar
 }
