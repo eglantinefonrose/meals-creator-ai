@@ -12,7 +12,7 @@ import Combine
 
 struct FavoriteMealsScreen: View {
     
-    @EnvironmentObject var bigModel: BigModel
+    @StateObject var bigModel: BigModel
     let meals = ["Nouilles sautées", "Omelette", "Rillettes de thon"]
     
     @State var type: String = "All"
@@ -436,7 +436,6 @@ struct FavouriteViewModel : View {
 @available(iOS 17.0, *)
 struct FavoriteMealsScreen_Previews: PreviewProvider {
     static var previews: some View {
-        FavoriteMealsScreen()
-            .environmentObject(BigModel(shouldInjectMockedData: true))
+        FavoriteMealsScreen(bigModel: BigModel.mocked)
     }
 }
