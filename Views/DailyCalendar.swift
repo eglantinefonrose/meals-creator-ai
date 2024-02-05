@@ -9,7 +9,7 @@ import SwiftUI
 
 struct DailyCalendar: View {
     
-    @EnvironmentObject var bigModel: BigModel
+    @ObservedObject var bigModel: BigModel = BigModel.shared
     let epochTime: TimeInterval = 0
     @State private var swipeDirection: SwipeGestureModifier.SwipeDirection? = nil
     @State var currentEvent: BigModel.Event = BigModel.Event(id: "", timeEpoch: 0, breakfastMeal: BigModel.Meal(id: "", recipe: BigModel.Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))), lunchMeal: BigModel.Meal(id: "", recipe: BigModel.Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))), snackMeal: BigModel.Meal(id: "", recipe: BigModel.Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))), dinnerMeal: BigModel.Meal(id: "", recipe: BigModel.Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))))
@@ -94,14 +94,15 @@ struct DailyCalendar: View {
                                         Text("+")
                                             .font(.largeTitle)
                                             .foregroundStyle(Color(.navyBlue))
-                                        Text("add-a-meal")
+                                        Text(bigModel.isUserTryingAddNewMealToCalendar ? "click-to-add" : bigModel.isUserTryingAddNewMealToCalendar ? "click-to-add" : "add-a-meal")
                                             .font(.title)
                                             .foregroundStyle(Color(.navyBlue))
                                     }.onTapGesture {
                                         
-                                        if bigModel.screenHistory.last == .RecipeScreen {
+                                        if bigModel.isUserTryingAddNewMealToCalendar {
                                             bigModel.selectedMealType = "Breakfast"
                                             bigModel.addMealToCalendar(mealType: bigModel.selectedMealType, meal: bigModel.selectedMeal, dateTime: bigModel.selectedTimeEpoch)
+                                            bigModel.isUserTryingAddNewMealToCalendar.toggle()
                                         } else {
                                             bigModel.selectedMealType = "Breakfast"
                                             print(selectedDate.timeIntervalSince1970)
@@ -143,7 +144,7 @@ struct DailyCalendar: View {
                                             Text("+")
                                                 .font(.largeTitle)
                                                 .foregroundStyle(Color(.navyBlue))
-                                            Text("add-a-meal")
+                                            Text(bigModel.isUserTryingAddNewMealToCalendar ? "click-to-add" : "add-a-meal")
                                                 .font(.title)
                                                 .foregroundStyle(Color(.navyBlue))
                                         }.onTapGesture {
@@ -186,14 +187,15 @@ struct DailyCalendar: View {
                                         Text("+")
                                             .font(.largeTitle)
                                             .foregroundStyle(Color(.navyBlue))
-                                        Text("add-a-meal")
+                                        Text(bigModel.isUserTryingAddNewMealToCalendar ? "click-to-add" : bigModel.isUserTryingAddNewMealToCalendar ? "click-to-add" : "add-a-meal")
                                             .font(.title)
                                             .foregroundStyle(Color(.navyBlue))
                                     }.onTapGesture {
                                         
-                                        if bigModel.screenHistory.last == .RecipeScreen {
+                                        if bigModel.isUserTryingAddNewMealToCalendar {
                                             bigModel.selectedMealType = "Breakfast"
                                             bigModel.addMealToCalendar(mealType: bigModel.selectedMealType, meal: bigModel.selectedMeal, dateTime: bigModel.selectedTimeEpoch)
+                                            bigModel.isUserTryingAddNewMealToCalendar.toggle()
                                         } else {
                                             bigModel.selectedMealType = "Breakfast"
                                             print(selectedDate.timeIntervalSince1970)
@@ -235,7 +237,7 @@ struct DailyCalendar: View {
                                             Text("+")
                                                 .font(.largeTitle)
                                                 .foregroundStyle(Color(.navyBlue))
-                                            Text("add-a-meal")
+                                            Text(bigModel.isUserTryingAddNewMealToCalendar ? "click-to-add" : "add-a-meal")
                                                 .font(.title)
                                                 .foregroundStyle(Color(.navyBlue))
                                         }.onTapGesture {
@@ -278,14 +280,15 @@ struct DailyCalendar: View {
                                         Text("+")
                                             .font(.largeTitle)
                                             .foregroundStyle(Color(.navyBlue))
-                                        Text("add-a-meal")
+                                        Text(bigModel.isUserTryingAddNewMealToCalendar ? "click-to-add" : "add-a-meal")
                                             .font(.title)
                                             .foregroundStyle(Color(.navyBlue))
                                     }.onTapGesture {
                                         
-                                        if bigModel.screenHistory.last == .RecipeScreen {
+                                        if bigModel.isUserTryingAddNewMealToCalendar {
                                             bigModel.selectedMealType = "Snack"
                                             bigModel.addMealToCalendar(mealType: bigModel.selectedMealType, meal: bigModel.selectedMeal, dateTime: bigModel.selectedTimeEpoch)
+                                            bigModel.isUserTryingAddNewMealToCalendar.toggle()
                                         } else {
                                             bigModel.selectedMealType = "Snack"
                                             print(selectedDate.timeIntervalSince1970)
@@ -327,7 +330,7 @@ struct DailyCalendar: View {
                                             Text("+")
                                                 .font(.largeTitle)
                                                 .foregroundStyle(Color(.navyBlue))
-                                            Text("add-a-meal")
+                                            Text(bigModel.isUserTryingAddNewMealToCalendar ? "click-to-add" : "add-a-meal")
                                                 .font(.title)
                                                 .foregroundStyle(Color(.navyBlue))
                                         }.onTapGesture {
@@ -370,14 +373,15 @@ struct DailyCalendar: View {
                                         Text("+")
                                             .font(.largeTitle)
                                             .foregroundStyle(Color(.navyBlue))
-                                        Text("add-a-meal")
+                                        Text(bigModel.isUserTryingAddNewMealToCalendar ? "click-to-add" : "add-a-meal")
                                             .font(.title)
                                             .foregroundStyle(Color(.navyBlue))
                                     }.onTapGesture {
                                         
-                                        if bigModel.screenHistory.last == .RecipeScreen {
+                                        if bigModel.isUserTryingAddNewMealToCalendar {
                                             bigModel.selectedMealType = "Dinner"
                                             bigModel.addMealToCalendar(mealType: bigModel.selectedMealType, meal: bigModel.selectedMeal, dateTime: bigModel.selectedTimeEpoch)
+                                            bigModel.isUserTryingAddNewMealToCalendar.toggle()
                                         } else {
                                             bigModel.selectedMealType = "Dinner"
                                             print(selectedDate.timeIntervalSince1970)
@@ -419,7 +423,7 @@ struct DailyCalendar: View {
                                             Text("+")
                                                 .font(.largeTitle)
                                                 .foregroundStyle(Color(.navyBlue))
-                                            Text("add-a-meal")
+                                            Text(bigModel.isUserTryingAddNewMealToCalendar ? "click-to-add" : "add-a-meal")
                                                 .font(.title)
                                                 .foregroundStyle(Color(.navyBlue))
                                         }.onTapGesture {
@@ -457,7 +461,9 @@ struct DailyCalendar: View {
                 self.currentEvent = bigModel.tabEventWithValue(selectedDate: selectedDate)
                 self.selectedDate = Date(timeIntervalSince1970: bigModel.selectedTimeEpoch)
             }
-            
+            .onChange(of: bigModel.currentUser) {
+                self.currentEvent = bigModel.tabEventWithValue(selectedDate: selectedDate)
+            }
             .onChange(of: self.selectedDate) { oldValue, newValue in
                 self.currentEvent = bigModel.tabEventWithValue(selectedDate: selectedDate)
             }

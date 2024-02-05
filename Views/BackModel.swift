@@ -9,7 +9,7 @@ import SwiftUI
 
 struct BackModel: View {
     
-    @EnvironmentObject var bigModel: BigModel
+    @ObservedObject var bigModel: BigModel = BigModel.shared
     var color: Color
     var view: ViewEnum
     

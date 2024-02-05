@@ -10,7 +10,7 @@ import SwiftUI
 struct UserView: View {
     
     let preferences = [Preference(id: 0, name: "Tastes", nextScreen: .TastesView), Preference(id: 1, name: "Budget", nextScreen: .budgetScreen), Preference(id: 2, name: "Spended time", nextScreen: .timeScreen), Preference(id: 3, name: "Proposed meals", nextScreen: .mealsPropositionScreen), Preference(id: 4, name: "Favorite meals", nextScreen: .mealsPropositionScreen)]
-    @EnvironmentObject var bigModel: BigModel
+    @ObservedObject var bigModel: BigModel = BigModel.shared
     @State var newFirstName: String = ""
     @State var newLastName: String = ""
     @State var isEditModeOn = false

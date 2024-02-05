@@ -68,11 +68,11 @@ struct BigRootView: View {
                 }
             }
             if bigModel.currentView == .RecipeScreen {
-                RecipeScreen()
+                RecipeScreen(bigModel: BigModel.shared)
             }
             if bigModel.currentView == .FavoriteMealsScreen {
                 if #available(iOS 17.0, *) {
-                    FavoriteMealsScreen()
+                    FavoriteMealsScreen(bigModel: BigModel.shared)
                 } else {
                     // Fallback on earlier versions
                 }

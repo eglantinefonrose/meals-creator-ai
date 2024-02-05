@@ -9,7 +9,7 @@ import SwiftUI
 
 struct PreferenceSummary: View {
     
-    @EnvironmentObject var bigModel: BigModel
+    @ObservedObject var bigModel: BigModel = BigModel.shared
     let columns = [GridItem(.adaptive(minimum: 150))]
     
     var body: some View {

@@ -11,7 +11,7 @@ struct Budget_Screen: View {
     
     @State var budget = 0
     @State var budgetString = "0"
-    @EnvironmentObject var bigModel: BigModel
+    @ObservedObject var bigModel: BigModel = BigModel.shared
     
     var body: some View {
         ZStack {

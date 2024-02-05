@@ -24,7 +24,7 @@ class BigModel: ObservableObject {
     @Published var currentView: ViewEnum = .signInView
     @Published var screenHistory: [ViewEnum] = []
     
-    struct User: Identifiable, Codable {
+    struct User: Identifiable, Codable, Equatable {
         @DocumentID var id: String?
         var firstName: String
         var lastName: String
@@ -1181,6 +1181,8 @@ class BigModel: ObservableObject {
                                 self.currentUser = user
                                 let tabElement = self.tabEventWithValue(selectedDate: Date(timeIntervalSince1970: dateTime))
                                 
+                                //tests pour savoir si le model a bien été updaté
+                                
                                 if mealType == "Breakfast" {
                                     if tabElement.breakfastMeal != nil {
                                         print("🧛🏼‍♀️")
@@ -1206,7 +1208,7 @@ class BigModel: ObservableObject {
                                     }
                                 }
                                 
-                                print("Document data: \(String(describing: document.data()))")
+                                //print("Document data: \(String(describing: document.data()))")
                                 
                             }
                             catch {
@@ -1230,13 +1232,11 @@ class BigModel: ObservableObject {
             print("ERR001[updateCurrentUserInfoInDB]=\(error)")
         }
         
-        
     }
     
+    @Published var isUserTryingAddNewMealToCalendar: Bool = false
+    
     func tabEventWithValue(selectedDate: Date) -> BigModel.Event {
-        
-        //self.selectedTimeEpoch = selectedDate.timeIntervalSince1970
-        //print("[\(selectedDate.timeIntervalSince1970)]")
         
         if let index = self.currentUser.events.firstIndex(where: {
             

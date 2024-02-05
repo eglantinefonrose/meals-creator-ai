@@ -12,7 +12,7 @@ import Combine
 
 struct MealsPropostion: View {
     
-    @EnvironmentObject var bigModel: BigModel
+    @ObservedObject var bigModel: BigModel = BigModel.shared
     let meals = ["Nouilles sautées", "Omelette", "Rillettes de thon"]
     //@State var tags: [BigModel.Meal: Bool] = [BigModel.Meal(id: "0", recipe: BigModel.Recipe(id: "3045IEKORRE¨DF", recipeName: "Penne alla rabbiata", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: BigModel.RecipeDescription(introduction: "", steps: []))):true, BigModel.Meal(id: "1", recipe: BigModel.Recipe(id: "FJVRET4E0TÖGREKF", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: BigModel.RecipeDescription(introduction: "", steps: []))):false ]
     

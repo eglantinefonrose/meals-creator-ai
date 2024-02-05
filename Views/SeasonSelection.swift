@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SeasonSelection: View {
     
-    @EnvironmentObject var bigModel: BigModel
+    @ObservedObject var bigModel: BigModel = BigModel.shared
     @State var seasonTags: [String: Bool] = ["Hiver": false, "Printemps": false, "Été": false, "Automne": false]
     
     var body: some View {

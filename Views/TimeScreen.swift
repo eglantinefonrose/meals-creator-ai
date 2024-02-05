@@ -11,8 +11,8 @@ struct TimeScreen: View {
     
     @State var time = 0
     @State var timeString = "0"
-    @EnvironmentObject var bigModel: BigModel
-    
+    @ObservedObject var bigModel: BigModel = BigModel.shared
+
     var body: some View {
         ZStack {
             

@@ -10,7 +10,7 @@ import SwiftUI
 struct TastesView: View {
     
     //var preferenceList = ["Legumes", "Fruits", "Starchy foods", "Meat", "Seasonning", "Allergies", "Cooking tools"]
-    @EnvironmentObject var bigModel: BigModel
+    @ObservedObject var bigModel: BigModel = BigModel.shared
     var preferenceList = [PreferenceItem(id: 0, name: "Legumes"), PreferenceItem(id: 1, name: "Fruits"), PreferenceItem(id: 2, name: "Starchy foods"), PreferenceItem(id: 3, name: "Meat"), PreferenceItem(id: 4, name: "Seasonning"), PreferenceItem(id: 5, name: "Allergies"), PreferenceItem(id: 6, name: "Cooking tools")]
     
     var body: some View {

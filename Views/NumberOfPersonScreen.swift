@@ -12,8 +12,8 @@ struct NumberOfPersonScreen: View {
     
     @State var numberOfPerson = 4
     @State var numberOfPersonString = "0"
-    @EnvironmentObject var bigModel: BigModel
-    
+    @ObservedObject var bigModel: BigModel = BigModel.shared
+
     var body: some View {
         ZStack {
             

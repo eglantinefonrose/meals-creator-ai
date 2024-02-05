@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MealType: View {
     
-    @EnvironmentObject var bigModel: BigModel
+    @ObservedObject var bigModel: BigModel = BigModel.shared
     @State var selectedType: String = ""
     @State var seasonTags: [String: Bool] = ["Breakfast": false, "Main course": false, "Dessert": false, "Starter": false]
     

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct RecipeScreen: View {
     
-    @EnvironmentObject var bigModel: BigModel
+    @ObservedObject var bigModel: BigModel = BigModel.shared
     let columns = [GridItem(.adaptive(minimum: 150))]
     @State var circleSize: CGFloat = UIScreen.main.bounds.height/3
     @State var imageSize: CGFloat = UIScreen.main.bounds.height/4
@@ -199,6 +199,7 @@ struct RecipeScreen: View {
                              Text("save-in-planner")
                                  .foregroundStyle(Color.white)
                          }.onTapGesture {
+                             bigModel.isUserTryingAddNewMealToCalendar = true
                              bigModel.currentView = .DailyCalendar
                              bigModel.screenHistory.append(.RecipeScreen)
                          }
@@ -229,7 +230,6 @@ struct RecipeScreen: View {
 
 struct RecipeScreen_Previews: PreviewProvider {
     static var previews: some View {
-        RecipeScreen()
-            .environmentObject(BigModel(shouldInjectMockedData: true))
+        RecipeScreen(bigModel: BigModel.mocked)
     }
 }
