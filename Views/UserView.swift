@@ -54,10 +54,16 @@ struct UserView: View {
                                     Text(firstName)
                                         .font(.largeTitle)
                                         .foregroundColor(.white)
+                                        .onTapGesture {
+                                            isEditModeOn.toggle()
+                                        }
                                     
                                     Text(lastName)
                                         .font(.largeTitle)
                                         .foregroundColor(.white)
+                                        .onTapGesture {
+                                            isEditModeOn.toggle()
+                                        }
                                 }
                                 
                                 if isEditModeOn {
