@@ -47,9 +47,19 @@ struct SignIN: View {
                     
                     Circle()
                         .foregroundStyle(Color.navyBlue)
+                        //
+                        // IMPORTANT - Ce code ne sert qu'à insérer la clé OpenAI API dans le keychain du compte Apple
+                        //             et ne devrait pas exister, mais on n'a pas trouvé comment mettre la clé dans la keychain
+                        //             autrement.
+                        //
+                        //             On ne doit mettre la clé dans le code que de manière TRES TEMPORAIRE, juste le temps de
+                        //             la stocker dans la keychain. Et ensuite on doit l'enlever pour éviter qu'elle se retrouve
+                        //             sur Github
+                        //
                         .onTapGesture {
+                            //
                             let keychain = Keychain(service: "net.proutechos.openai")
-                            keychain["key.teevity.dev001"] = "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"
+                            keychain["key"] = "enter-the-key-here-just-for-the-injection-into-the-keychain"
                         }
                     
                     Spacer()
