@@ -208,7 +208,7 @@ class BigModel: ObservableObject {
         var resultDictionary = [Item: Bool]()
         let list1 = currentUser.items
         
-        // Crée un ensemble des noms d\"items dans la liste1 pour une recherche plus efficace
+        // Crée un ensemble des noms d'items dans la liste1 pour une recherche plus efficace
         let setList1 = Set(list1.map { $0 })
 
         // Parcourt la liste2 et vérifie si chaque item est présent dans la liste1

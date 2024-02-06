@@ -18,6 +18,8 @@ struct PreferenceView: View {
     var nextScreenName: ViewEnum
     @State private var searchText = ""
     @State var season: String = "All"
+    @State var currentItems: [BigModel.Item] = []
+    //@Binding var selected: Bool = projectedValue
     
     var body: some View {
         
@@ -59,7 +61,7 @@ struct PreferenceView: View {
                                 .padding(.horizontal, 20)
                         }.onTapGesture {
                             season = "All"
-                            tags = bigModel.extractTagsPerCategorieAndSeason(categorie: categorie, season: "All")
+                            tags = extractTagsPerCategorieAndSeason(tagList: compareLists(list1: currentItems), categorie: categorie, season: "All")
                         }
                         
                         ZStack {
@@ -72,7 +74,7 @@ struct PreferenceView: View {
                                 .padding(.horizontal, 20)
                         }.onTapGesture {
                             season = "Hiver"
-                            tags = bigModel.extractTagsPerCategorieAndSeason(categorie: categorie, season: "hiver")
+                            tags = extractTagsPerCategorieAndSeason(tagList: compareLists(list1: currentItems), categorie: categorie, season: "hiver")
                         }
                         
                         ZStack {
@@ -85,7 +87,7 @@ struct PreferenceView: View {
                                 .padding(.horizontal, 20)
                         }.onTapGesture {
                             season = "Printemps"
-                            tags = bigModel.extractTagsPerCategorieAndSeason(categorie: categorie, season: "printemps")
+                            tags = extractTagsPerCategorieAndSeason(tagList: compareLists(list1: currentItems), categorie: categorie, season: "printemps")
                         }
                         
                         ZStack {
@@ -98,7 +100,7 @@ struct PreferenceView: View {
                                 .padding(.horizontal, 20)
                         }.onTapGesture {
                             season = "Été"
-                            tags = bigModel.extractTagsPerCategorieAndSeason(categorie: categorie, season: "été")
+                            tags = extractTagsPerCategorieAndSeason(tagList: compareLists(list1: currentItems), categorie: categorie, season: "été")
                         }
                         
                         ZStack {
@@ -111,7 +113,7 @@ struct PreferenceView: View {
                                 .padding(.horizontal, 20)
                         }.onTapGesture {
                             season = "Automne"
-                            tags = bigModel.extractTagsPerCategorieAndSeason(categorie: categorie, season: "automne")
+                            tags = extractTagsPerCategorieAndSeason(tagList: compareLists(list1: currentItems), categorie: categorie, season: "automne")
                         }
                         
                     }
@@ -121,7 +123,9 @@ struct PreferenceView: View {
                 ScrollView {
                     LazyVGrid(columns: columns, spacing: 5) {
                         ForEach(searchResults, id: \.self) { k in
-                            TagButton(selected: self.binding(for: k), txt: k.name)
+                            
+                            TagButton(selected: self.binding(for: k), txt: k.name, item: k, currentItems: currentItems)
+                            
                         }
                     }
                 }.padding(.vertical, 10)
@@ -166,7 +170,8 @@ struct PreferenceView: View {
                 }
             }.edgesIgnoringSafeArea(.all)
         }.onAppear {
-            tags = bigModel.extractTagsPerCategorieAndSeason(categorie: categorie, season: "All")
+            currentItems = bigModel.currentUser.items
+            tags = extractTagsPerCategorieAndSeason(tagList: compareLists(list1: currentItems), categorie: categorie, season: "All")
             print("tags")
             print(tags)
         }
@@ -174,6 +179,7 @@ struct PreferenceView: View {
     }
     
     private func binding(for key: BigModel.Item) -> Binding<Bool> {
+        
         return .init(
             get: { self.tags[key, default: false] },
             set: { self.tags[key] = $0 })
@@ -187,6 +193,44 @@ struct PreferenceView: View {
         }
     }
     
+    func compareLists(list1: [BigModel.Item]) -> [BigModel.Item: Bool] {
+        var resultDictionary = [BigModel.Item: Bool]()
+        
+        // Crée un ensemble des noms d'items dans la liste1 pour une recherche plus efficace
+        let setList1 = Set(list1.map { $0 })
+
+        // Parcourt la liste2 et vérifie si chaque item est présent dans la liste1
+        for item in bigModel.items {
+            resultDictionary[item] = setList1.contains(item)
+        }
+
+        return resultDictionary
+    }
+    
+    private func extractTagsPerCategorieAndSeason(tagList: [BigModel.Item: Bool], categorie: String, season: String) -> [BigModel.Item:Bool] {
+        var tags: [BigModel.Item:Bool] = [:]
+        
+        for (key, value) in tagList {
+            if key.category == categorie {
+                if key.seasons.contains(season) {
+                    tags[key] = value
+                }
+                if season == "All" {
+                    tags[key] = value
+                }
+            }
+        }
+        return tags
+    }
+    
+    private func removeFromList(list: [BigModel.Item], item: BigModel.Item) -> [BigModel.Item] {
+        var newList: [BigModel.Item] = list
+        if let index = list.firstIndex(where: { $0.id == item.id }) {
+            newList.remove(at: index)
+        }
+        return newList
+    }
+    
 }
 
 struct TagButton: View {
@@ -194,6 +238,8 @@ struct TagButton: View {
     @EnvironmentObject var bigModel: BigModel
     @Binding var selected: Bool
     var txt: String
+    var item: BigModel.Item
+    @State var currentItems: [BigModel.Item]
     
     var body: some View {
         
@@ -208,8 +254,22 @@ struct TagButton: View {
             self.selected.toggle()
             if bigModel.currentUser.proposedMeals != [] {
                 bigModel.didPreferencesChanged = true
+                if !selected {
+                    self.currentItems = removeFromList(list: self.currentItems, item: item)
+                } else {
+                    currentItems.append(item)
+                }
             }
         }
+        
+    }
+    
+    private func removeFromList(list: [BigModel.Item], item: BigModel.Item) -> [BigModel.Item] {
+        var newList: [BigModel.Item] = list
+        if let index = list.firstIndex(where: { $0.id == item.id }) {
+            newList.remove(at: index)
+        }
+        return newList
     }
 
 }
