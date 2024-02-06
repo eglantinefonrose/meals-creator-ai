@@ -187,7 +187,8 @@ class BigModel: ObservableObject {
                  Item(id: 15, category: "cookingTools", name: "Stove", seasons: ["été","automne","hiver","printemps"]), Item(id: 16, category: "cookingTools", name: "pan", seasons: ["été","automne","hiver","printemps"]), Item(id: 17, category: "cookingTools", name: "oven", seasons: ["été","automne","hiver","printemps"])
     ]*/
     
-     var items: [Item] = []
+    var items: [Item] = []
+    var currentItems: [Item] = []
     
     func isInTheList(item: Item) -> Bool {
         
@@ -281,6 +282,26 @@ class BigModel: ObservableObject {
         }
         
         return Array(Set(array))
+    }
+    
+    func updatedSelectedItemsList2(list: [Item], categorie: String) -> [Item] {
+        
+        var array: [Item] = []
+        
+        if categorie == "cookingTools" {
+            array = currentUser.tools
+        } else {
+            array = currentUser.items
+        }
+        
+        if let index = self.currentUser.items.firstIndex(where: { $0.category == categorie }) {
+            array.remove(at: index)
+        } else {
+            
+        }
+        
+        array = array + list
+        return array
     }
     
     func generateTags(type: String, season: String) -> [Meal: Bool] {
