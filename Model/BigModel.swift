@@ -431,6 +431,7 @@ class BigModel: ObservableObject {
     let auth = Auth.auth()
     @Published var nonce = ""
     let db = Firestore.firestore()
+    @Published var isNewUser: Bool = false
     
     func authentificateWithApple(credential: ASAuthorizationAppleIDCredential) {
         
@@ -482,6 +483,7 @@ class BigModel: ObservableObject {
                       //self.currentUser = try document.data(as: User.self)
                       self.currentView = .UserView
                       self.screenHistory.append(.signInView)
+                      self.isNewUser = true
                       /*do {
                           let newDocRef : DocumentReference = try self.db.collection("Users").addDocument(from: newUser)
                           newDocRef.getDocument { (document, error) in

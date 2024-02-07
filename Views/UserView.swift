@@ -145,7 +145,7 @@ struct UserView: View {
                                 Text("start-selecting")
                                     .foregroundColor(.gray)
                                     .onTapGesture {
-                                        bigModel.currentView = .welcomeView
+                                        bigModel.currentView = .TastesView
                                         bigModel.screenHistory.append(.UserView)
                                     }
                                 Spacer()

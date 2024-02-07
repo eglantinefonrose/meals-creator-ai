@@ -11,7 +11,27 @@ struct TastesView: View {
     
     //var preferenceList = ["Legumes", "Fruits", "Starchy foods", "Meat", "Seasonning", "Allergies", "Cooking tools"]
     @ObservedObject var bigModel: BigModel = BigModel.shared
-    var preferenceList = [PreferenceItem(id: 0, name: "Legumes"), PreferenceItem(id: 1, name: "Fruits"), PreferenceItem(id: 2, name: "Starchy foods"), PreferenceItem(id: 3, name: "Meat"), PreferenceItem(id: 4, name: "Seasonning"), PreferenceItem(id: 5, name: "Allergies"), PreferenceItem(id: 6, name: "Cooking tools")]
+    
+    /*switch categorie {
+     case "legumes":
+         return "Legumes"
+     case "fruits":
+         return "Fruits"
+     case "strachyFoods":
+         return "Strachy foods"
+     case "proteins":
+         return "Proteins"
+     case "seasonning":
+         return "Seasonning"
+     case "allergies":
+         return "Allergies"
+     case "cookingTools":
+         return "Cooking tools"
+ default:
+     return ""
+ }*/
+    
+    var preferenceList = [PreferenceItem(id: 0, name: "legumes"), PreferenceItem(id: 1, name: "fruits"), PreferenceItem(id: 2, name: "strachyFoods"), PreferenceItem(id: 3, name: "proteins"), PreferenceItem(id: 4, name: "seasonning"), PreferenceItem(id: 5, name: "allergies"), PreferenceItem(id: 6, name: "cookingTools")]
     
     var body: some View {
         
@@ -39,14 +59,41 @@ struct TastesView: View {
                         ScrollView {
                             VStack(alignment: .leading, spacing: 10) {
                                 ForEach(preferenceList) { preferenceList in
-                                    Text(preferenceList.name)
-                                        .font(.largeTitle)
-                                        .foregroundStyle(Color.navyBlue)
-                                        .onTapGesture {
-                                            bigModel.currentView = categoryNameToNextScreen(categorie: preferenceList)
-                                            bigModel.screenHistory.append(.TastesView)
+                                    
+                                    VStack {
+                                        
+                                        HStack {
+                                            Text(bigModel.categoryToName(categorie: preferenceList.name))
+                                                .font(.largeTitle)
+                                                .foregroundStyle(Color.navyBlue)
+                                                .onTapGesture {
+                                                    bigModel.currentView = categoryNameToNextScreen(categorie: preferenceList)
+                                                    bigModel.screenHistory.append(.TastesView)
+                                                }
+                                            Spacer()
                                         }
-                                    Rectangle().fill(Color.navyBlue).frame(height: 1)
+                                        
+                                        /*HStack {
+                                            if bigModel.currentUser.items.count != 0 {
+                                                ScrollView(.horizontal) {
+                                                   HStack {
+                                                       ForEach(bigModel.currentUser.items) { item in
+                                                           if (item.category == preferenceList.name) {
+                                                               Text(item.name)
+                                                           }
+                                                       }
+                                                   }
+                                                }
+                                            } else {
+                                                Text("tell-us")
+                                                    .foregroundColor(.gray)
+                                            }
+                                            Spacer()
+                                        }*/
+                                        
+                                        Rectangle().fill(Color.navyBlue).frame(height: 1)
+                                    }
+                                    
                                 }
                             }
                         }

@@ -164,13 +164,14 @@ struct PreferenceView: View {
                         
                         //print(bigModel.currentUser.items)
                         
-                        if bigModel.screenHistory.last == .TastesView {
+                        //if bigModel.screenHistory.last == .TastesView {
                             bigModel.currentView = .TastesView
                             bigModel.screenHistory.append(bigModel.categoryToScreenName(categorie: categorie))
-                        }
-                        else {
+                        /*}
+                        if bigModel.isNewUser {
                             bigModel.currentView = nextScreenName
-                        }
+                            bigModel.screenHistory.append(bigModel.categoryToScreenName(categorie: categorie))
+                        }*/
                     }
                     
                 }

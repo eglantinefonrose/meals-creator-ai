@@ -114,6 +114,7 @@ struct PreferenceSummary: View {
                     }.onTapGesture {
                         bigModel.screenHistory.append(.preferencesSummary)
                         bigModel.currentView = .budgetScreen
+                        bigModel.isNewUser = false
                     }
                 }.edgesIgnoringSafeArea(.all)
                 
