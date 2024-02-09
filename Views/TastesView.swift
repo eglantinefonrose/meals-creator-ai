@@ -73,15 +73,40 @@ struct TastesView: View {
                                             Spacer()
                                         }
                                         
-                                        /*HStack {
+                                        HStack {
                                             if bigModel.currentUser.items.count != 0 {
                                                 ScrollView(.horizontal) {
                                                    HStack {
                                                        ForEach(bigModel.currentUser.items) { item in
                                                            if (item.category == preferenceList.name) {
-                                                               Text(item.name)
+                                                               
+                                                               if bigModel.images.count != 0 {
+                                                                   if let index = bigModel.images.firstIndex(where: { $0.id == item.id }) {
+                                                                       bigModel.images[index].image
+                                                                           .resizable()
+                                                                           .frame(width: 100, height: 100)
+                                                                   }
+                                                               }
+                                                               
+                                                               /*ForEach(bigModel.images) { image in
+                                                                   if (item.id == image.id) {
+                                                                       Image(uiImage: image)
+                                                                           .resizable()
+                                                                           .frame(width: 100, height: 100)
+                                                                   }
+                                                               }*/
                                                            }
                                                        }
+                                                       
+                                                       /*Image(uiImage: UIImage(named: "broccoli")!)
+                                                           .resizable()
+                                                           .frame(width: 100, height: 100)
+                                                       
+                                                       Image(uiImage: UIImage(named: "pasta")!)
+                                                           .resizable()
+                                                           .frame(width: 100, height: 100)*/
+                                                       
+                                                      //Image(UIImage(named: "Broccoli Tattoo"))
                                                    }
                                                 }
                                             } else {
@@ -89,7 +114,7 @@ struct TastesView: View {
                                                     .foregroundColor(.gray)
                                             }
                                             Spacer()
-                                        }*/
+                                        }
                                         
                                         Rectangle().fill(Color.navyBlue).frame(height: 1)
                                     }

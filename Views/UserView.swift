@@ -418,7 +418,11 @@ struct UserView: View {
                     lastName = bigModel.currentUser.lastName
                 }
                 
-        }
+            }
+        }.onAppear {
+            Task {
+                await bigModel.fetchAllImages()
+            }
         }
         
     }

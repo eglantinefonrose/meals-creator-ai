@@ -9,12 +9,14 @@ import Foundation
 import SwiftUI
 import Firebase
 import FirebaseAuth
+import FirebaseStorage
 import FirebaseFirestore
 import FirebaseFirestoreSwift
 import AuthenticationServices
 import Combine
 import Alamofire
 import KeychainAccess
+import FirebaseStorage
 
 class BigModel: ObservableObject {
     
@@ -160,6 +162,15 @@ class BigModel: ObservableObject {
         
     }
     
+    struct ImageType: Identifiable {
+        
+        var id: Int
+        var image: Image
+        
+    }
+    
+    //let images: [ImageType] = [ImageType(id: 1, image: UIImage(named: "leek")!), Image(id: 2, image: UIImage(named: "zucchini")!), Image(id: 4, image: UIImage(named: "broccoli")!), Image(id: 8, image: UIImage(named: "pasta")!), ImageType(id: 11, image: UIImage(named: "steak")!)]
+    var images: [ImageType] = []
     
     struct ItemAndQtty: Codable, Identifiable, Hashable {
         var id: String
@@ -563,6 +574,91 @@ class BigModel: ObservableObject {
             }
         }
         task.resume()
+    }
+    
+    /*func fetchImage(url: String, id: Int) async throws -> Image {
+        
+        let storage = Storage.storage()
+        let gcsReference = storage.reference(forURL: url)
+
+        let imageData = try await gcsReference.data(maxSize: 10 * 1024 * 1024)
+
+        guard let uiImage = UIImage(data: imageData) else {
+            throw NSError(domain: "MyApp", code: 1, userInfo: [NSLocalizedDescriptionKey: "Error converting image data to UIImage."])
+        }
+
+        return ImageType(id: id, image: uiImage)
+        
+    }*/
+    
+    /*func fetchImage(url: String, id: Int) -> Image {
+        var image: Image = Image("tumblr_inline_os040rQzAr1qzi27c_540")
+        let storage = Storage.storage()
+        let gsReference = storage.reference(forURL: url)
+
+        gsReference.getData(maxSize: 10 * 1024 * 1024) { data, error in
+            if let error = error {
+                print("Error fetching image: \(error.localizedDescription)")
+                return
+            }
+
+            guard let imageData = data, let uiImage = UIImage(data: imageData) else {
+                print("Error converting image data to UIImage.")
+                return
+            }
+
+            image = Image(uiImage: uiImage)
+            
+        }
+        
+        print("image")
+        return image
+        
+    }*/
+    
+    func fetchImage(url: String) async throws -> Image {
+        
+        let storage = Storage.storage()
+        let gcsReference = storage.reference(forURL: url)
+
+        let imageData = try await gcsReference.data(maxSize: 10 * 1024 * 1024)
+
+        guard let uiImage = UIImage(data: imageData) else {
+            throw NSError(domain: "MyApp", code: 1, userInfo: [NSLocalizedDescriptionKey: "Error converting image data to UIImage."])
+        }
+
+        return Image(uiImage: uiImage)
+        
+    }
+    
+    func fetchAllImages() async {
+        
+        for i in (0...18) {
+            
+            do {
+                
+                //if i == 0 {
+                    let image = try await self.fetchImage(url: "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item000.jpg?alt=media&token=f25549a3-80b0-493c-88a5-e5f28effa82a")
+                    self.images.append(ImageType(id: i, image: image))
+                /*}
+                if i<10 {
+                    let image = try await self.fetchImage(url: "item00\(i)")
+                    self.images.append(ImageType(id: i, image: image))
+                } else {
+                    let image = try await self.fetchImage(url: "item0\(i)")
+                    self.images.append(ImageType(id: i, image: image))
+                }*/
+                
+            }
+            
+            catch {
+                print("error \(error.localizedDescription)")
+            }
+            
+        }
+        
+        print("done")
+        
     }
     
     func googleSignInUserUpdate() {
