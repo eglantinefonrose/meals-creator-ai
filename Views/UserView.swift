@@ -420,9 +420,10 @@ struct UserView: View {
                 
             }
         }.onAppear {
-            Task {
-                await bigModel.fetchAllImages()
-            }
+            //Task {
+                //bigModel.links = await bigModel.fetchDrawRefs()
+                bigModel.fetchAllImages()
+            //}
         }
         
     }

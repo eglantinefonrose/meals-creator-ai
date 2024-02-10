@@ -589,7 +589,7 @@ class BigModel: ObservableObject {
     }
     
     func fetchItemsInfos() {
-        let storageURL = URL(string:   "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/data-items.json?alt=media&token=e88fd1ed-8689-43ed-bafd-98d83e1909c7")!
+        let storageURL = URL(string: "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/data-items.json?alt=media&token=e88fd1ed-8689-43ed-bafd-98d83e1909c7")!
         let task = URLSession.shared.dataTask(with: storageURL) { data, response, error in
             guard let data = data, error == nil else {
                 print("Une erreur est survenue : \(String(describing: error))")
@@ -606,45 +606,7 @@ class BigModel: ObservableObject {
         task.resume()
     }
     
-    /*func fetchImage(url: String, id: Int) async throws -> Image {
-        
-        let storage = Storage.storage()
-        let gcsReference = storage.reference(forURL: url)
-
-        let imageData = try await gcsReference.data(maxSize: 10 * 1024 * 1024)
-
-        guard let uiImage = UIImage(data: imageData) else {
-            throw NSError(domain: "MyApp", code: 1, userInfo: [NSLocalizedDescriptionKey: "Error converting image data to UIImage."])
-        }
-
-        return ImageType(id: id, image: uiImage)
-        
-    }*/
-    
-    /*func fetchImage(url: String, id: Int) -> Image {
-        var image: Image = Image("tumblr_inline_os040rQzAr1qzi27c_540")
-        let storage = Storage.storage()
-        let gsReference = storage.reference(forURL: url)
-
-        gsReference.getData(maxSize: 10 * 1024 * 1024) { data, error in
-            if let error = error {
-                print("Error fetching image: \(error.localizedDescription)")
-                return
-            }
-
-            guard let imageData = data, let uiImage = UIImage(data: imageData) else {
-                print("Error converting image data to UIImage.")
-                return
-            }
-
-            image = Image(uiImage: uiImage)
-            
-        }
-        
-        print("image")
-        return image
-        
-    }*/
+    @Published var links: [String] = []
     
     func fetchImage(url: String) async throws -> Image {
         
@@ -661,74 +623,55 @@ class BigModel: ObservableObject {
         
     }
     
-    func fetchAllImages() async {
+    func fetchAllImages() {
         
-        let links: [String] = [
-            "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item000.png?alt=media&token=939b8295-546e-41d9-ae35-30dd8f5e1587",
-            "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item001.png?alt=media&token=4f62a534-2454-4183-a64e-0b7056ac345d",
-            "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item002.png?alt=media&token=8209e48f-7285-480a-ab4c-eb9bb0018392",
-            "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item003.png?alt=media&token=b01ca1bb-0c4d-4880-96b4-253962a41a1c",
-            "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item004.png?alt=media&token=8b19dad2-6326-44f3-86c3-fba1f86011b2",
-            "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item005.png?alt=media&token=69ba6e45-93e9-46a7-aa41-a6186c9c4a30",
-            "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item006.png?alt=media&token=156c0fb3-4547-4acf-9410-14d4e226f57d",
-            "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item007.png?alt=media&token=ee8c2913-c5be-4bc1-9ad2-6066fda84b3e",
-            "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item008.png?alt=media&token=d33334fa-cfae-46a3-b3dd-71b4bb71f4d2",
-            "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item009.png?alt=media&token=b6768837-a9d1-4fed-a524-5165cd0e685a",
-            "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item010.png?alt=media&token=731a46da-cc8a-4f90-91d9-9c5b02d4cae7",
-            "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item011.png?alt=media&token=d58776ce-b902-4e82-9154-f10b46636b87",
-            "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item012.png?alt=media&token=9f730b58-31f1-4cba-a224-6bd5820b9edb",
-            "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item013.png?alt=media&token=d345d808-ffff-4f35-9303-b3ca64cbfd79",
-            "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item014.png?alt=media&token=0ac1810e-0a8e-4920-bbd0-82f833252435",
-            "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item015.png?alt=media&token=9a518aa1-cbc7-42fc-9f91-bb84c925fd21",
-            "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item016.png?alt=media&token=2daa16d6-b816-439b-b7de-df7c9474a7d7",
-            "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item017.png?alt=media&token=891f907d-7f0d-4677-9c6e-7a9831af54c1"
-        ]
+        do {
         
-        for i in (0...17) {
-                
-                //https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item001.png?alt=media&token=4f62a534-2454-4183-a64e-0b7056ac345d
-                //https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item000.jpg?alt=media&token=f25549a3-80b0-493c-88a5-e5f28effa82a
-                
-                if i == 0 {
-                    Task {
-                        do {
-                            //let image = try await self.fetchImage(url: "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item000.png?alt=media&token=f25549a3-80b0-493c-88a5-e5f28effa82a")
-                            let image = try await self.fetchImage(url: links[i])
-                            self.images.append(ImageType(id: i, image: image))
-                        } catch {
-                            print(error.localizedDescription)
-                        }
-                    }
-                }
-                if i<10 {
-                    Task {
-                        do {
-                            //print("\(i)")
-                            //let image = try await self.fetchImage(url: "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item00\(i).png?alt=media&token=f25549a3-80b0-493c-88a5-e5f28effa82a")
-                            //let image = try await self.fetchImage(url: "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item001.png?alt=media&token=f25549a3-80b0-493c-88a5-e5f28effa82a")
-                            let image = try await self.fetchImage(url: links[i])
-                            self.images.append(ImageType(id: i, image: image))
-                        } catch {
-                            print(error.localizedDescription)
-                        }
-                    }
-                } else {
-                    Task {
-                        do {
-                            //print("\(i)")
-                            //let image = try await self.fetchImage(url: "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item0\(i).png?alt=media&token=f25549a3-80b0-493c-88a5-e5f28effa82a")
-                              //"https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item011.png?alt=media&token=d58776ce-b902-4e82-9154-f10b46636b87"
-                            let image = try await self.fetchImage(url: links[i])
-                            self.images.append(ImageType(id: i, image: image))
-                        } catch {
-                            print(error.localizedDescription)
-                        }
-                    }
-                }
-                
-            }
-        
-        print("done")
+           // creating a path from the main bundle and getting data object from the path
+           if let bundlePath = Bundle.main.path(forResource: "items-draw-ref", ofType: "json"),
+           let jsonData = try String(contentsOfFile: bundlePath).data(using: .utf8) {
+                 
+              // Decoding the Product type from JSON data using JSONDecoder() class.
+              let array = try JSONDecoder().decode([String].self, from: jsonData)
+              print(array)
+               
+               for i in (0...17) {
+                   if i == 0 {
+                       Task {
+                           do {
+                               let image = try await self.fetchImage(url: array[i])
+                               self.images.append(ImageType(id: i, image: image))
+                           } catch {
+                               print(error.localizedDescription)
+                           }
+                       }
+                   }
+                   if i<10 {
+                       Task {
+                           do {
+                               let image = try await self.fetchImage(url: array[i])
+                               self.images.append(ImageType(id: i, image: image))
+                           } catch {
+                               print(error.localizedDescription)
+                           }
+                       }
+                   } else {
+                       Task {
+                           do {
+                               let image = try await self.fetchImage(url: array[i])
+                               self.images.append(ImageType(id: i, image: image))
+                           } catch {
+                               print(error.localizedDescription)
+                           }
+                       }
+                   }
+               }
+               
+           }
+        } catch {
+           print(error)
+            let product: [String] = []
+        }
         
     }
     
@@ -917,96 +860,6 @@ class BigModel: ObservableObject {
         }
         
     }
-        
-    /*struct APIResponse: Decodable {
-        let id: String?
-        let object: String
-        let created: Int
-        let model: String
-        let choices: [Choice]
-        let usage: Usage
-    }
-    
-    struct Choice: Decodable {
-        let index: Int
-        let message: Message
-        let finish_reason: String
-    }
-    
-    struct Message: Codable {
-        let role: Role
-        let content: String
-    }
-    
-    enum Role: String, Codable {
-        case system
-        case user
-        case assistant
-        case function
-    }
-    
-    struct Usage: Decodable {
-        let prompt_tokens: Int
-        let completion_tokens: Int
-        let total_tokens: Int
-    }
-    
-    struct APIRequest: Encodable {
-        let model: Model
-        let messages: [Message]
-    }
-    
-    enum Model: String, Codable {
-        case gpt_3_5_turbo = "gpt-3.5-turbo"
-    }
-    
-    @State private var prompt: String = ""
-    @State private var resultText: String = ""
-    @State private var cancellable: AnyCancellable?
-    @State private var messages: [Message] = []*/
-    
-    /*func submit() {
-        guard let url = URL(string: "https://api.openai.com/v1/chat/completions") else {
-            print("Invalid URL")
-            return
-        }
-     
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-     
-        messages.append(Message(role: .user, content: prompt))
-     
-        do {
-            let payload = APIRequest(model: .gpt_3_5_turbo, messages: messages)
-            let jsonData = try JSONEncoder().encode(payload)
-            request.httpBody = jsonData
-        } catch {
-            print("Error: \(error)")
-        }
-     
-        cancellable = URLSession.shared.dataTaskPublisher(for: request)
-            .tryMap { $0.data }
-            .decode(type: APIResponse.self, decoder: JSONDecoder())
-            .receive(on: DispatchQueue.main)
-            .sink(
-                receiveCompletion: { completion in
-                    switch completion {
-                    case .failure(let error):
-                        self.resultText = "Error: \(error.localizedDescription)"
-                    case .finished:
-                        break
-                    }
-                },
-                receiveValue: { response in
-                    self.resultText = response.choices.first?.message.content ?? "No response"
-                    self.messages.append(Message(role: .assistant, content: self.resultText))
-                    print("messages : \(self.messages)")
-                    self.prompt = ""
-                }
-            )
-    }*/
     
     //
     //
