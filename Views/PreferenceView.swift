@@ -148,11 +148,7 @@ struct PreferenceView: View {
                         
                         var user = bigModel.currentUser
                         
-                        /*if (bigModel.currentView == .cookingToolsScreen) {
-                            user.tools = bigModel.updatedSelectedItemsList(dict: tags, categorie: categorie)
-                        } else {
-                            user.items = bigModel.updatedSelectedItemsList(dict: tags, categorie: categorie)
-                        }*/
+                        //print("\(bigModel.currentItems)")
                         
                         if (bigModel.currentView == .cookingToolsScreen) {
                             user.tools = bigModel.updatedSelectedItemsList2(list: bigModel.currentItems, categorie: categorie)
@@ -161,26 +157,23 @@ struct PreferenceView: View {
                         }
                         
                         bigModel.storeCurrentUserInfoIntoDB(user: user)
+                        bigModel.currentView = .TastesView
+                        bigModel.screenHistory.append(bigModel.categoryToScreenName(categorie: categorie))
                         
-                        //print(bigModel.currentUser.items)
-                        
-                        //if bigModel.screenHistory.last == .TastesView {
-                            bigModel.currentView = .TastesView
-                            bigModel.screenHistory.append(bigModel.categoryToScreenName(categorie: categorie))
-                        /*}
-                        if bigModel.isNewUser {
-                            bigModel.currentView = nextScreenName
-                            bigModel.screenHistory.append(bigModel.categoryToScreenName(categorie: categorie))
-                        }*/
                     }
                     
                 }
             }.edgesIgnoringSafeArea(.all)
         }.onAppear {
-            bigModel.currentItems = []
-            tags = extractTagsPerCategorieAndSeason(tagList: compareLists(list1: bigModel.currentUser.items), categorie: categorie, season: "All")
-            print("tags")
-            print(tags)
+            bigModel.currentItems = bigModel.extractItemsPerCategorie(categorie: categorie)
+            
+            if categorie == "cookingTools" {
+                tags = extractTagsPerCategorieAndSeason(tagList: compareLists(list1: bigModel.currentUser.tools), categorie: categorie, season: "All")
+            } else {
+                tags = extractTagsPerCategorieAndSeason(tagList: compareLists(list1: bigModel.currentUser.items), categorie: categorie, season: "All")
+            }
+            //print("tags")
+            //print(tags)
         }
     } else {
         // Fallback on earlier versions
@@ -212,10 +205,17 @@ struct PreferenceView: View {
         let setList1 = Set(list1.map { $0 })
 
         // Parcourt la liste2 et vérifie si chaque item est présent dans la liste1
-        for item in bigModel.items {
-            resultDictionary[item] = setList1.contains(item)
-        }
-
+        
+        //if categorie == "cookingTools" {
+            for item in bigModel.items {
+                resultDictionary[item] = setList1.contains(item)
+            }
+        //} else {
+            /*for item in bigModel.items {
+                resultDictionary[item] = setList1.contains(item)
+            }*/
+        //}
+        
         return resultDictionary
     }
     

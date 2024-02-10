@@ -261,21 +261,41 @@ class BigModel: ObservableObject {
     }
     
     func extractItemsPerCategorie(categorie: String) -> [Item] {
+        
         var itemList: [Item] = []
         
-        for i in (0...(self.currentUser.items.count)-1) {
-            if (self.currentUser.items.count) >= 1 {
-                if self.currentUser.items[i].category == categorie {
-                    itemList.append(self.currentUser.items[i])
-                } else {
-                    
+        if categorie == "cookingTools" {
+            if self.currentUser.tools != [] {
+                for i in (0...(self.currentUser.tools.count)-1) {
+                    if (self.currentUser.tools.count) >= 1 {
+                        if self.currentUser.tools[i].category == categorie {
+                            itemList.append(self.currentUser.tools[i])
+                        } else {
+                            
+                        }
+                    } else {
+                        
+                    }
                 }
-            } else {
-                
+            }
+        } else {
+            if self.currentUser.items != [] {
+                for i in (0...(self.currentUser.items.count)-1) {
+                    if (self.currentUser.items.count) >= 1 {
+                        if self.currentUser.items[i].category == categorie {
+                            itemList.append(self.currentUser.items[i])
+                        } else {
+                            
+                        }
+                    } else {
+                        
+                    }
+                }
             }
         }
         
         return itemList
+        
     }
     
     func updatedSelectedItemsList(dict: [Item: Bool], categorie: String) -> [Item] {
@@ -315,9 +335,11 @@ class BigModel: ObservableObject {
         
         var newArray: [Item] = []
         
-        for i in 0...(array.count-1) {
-            if (array[i].category != category) {
-                newArray.append(array[i])
+        if array != [] {
+            for i in 0...(array.count-1) {
+                if (array[i].category != category) {
+                    newArray.append(array[i])
+                }
             }
         }
         return newArray
@@ -450,7 +472,7 @@ class BigModel: ObservableObject {
     let auth = Auth.auth()
     @Published var nonce = ""
     let db = Firestore.firestore()
-    @Published var isNewUser: Bool = false
+    //@Published var isNewUser: Bool = false
     
     func authentificateWithApple(credential: ASAuthorizationAppleIDCredential) {
         
@@ -502,7 +524,7 @@ class BigModel: ObservableObject {
                       //self.currentUser = try document.data(as: User.self)
                       self.currentView = .UserView
                       self.screenHistory.append(.signInView)
-                      self.isNewUser = true
+                      //self.isNewUser = true
                       /*do {
                           let newDocRef : DocumentReference = try self.db.collection("Users").addDocument(from: newUser)
                           newDocRef.getDocument { (document, error) in

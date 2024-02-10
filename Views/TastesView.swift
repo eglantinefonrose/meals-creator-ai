@@ -31,7 +31,7 @@ struct TastesView: View {
      return ""
  }*/
     
-    var preferenceList = [PreferenceItem(id: 0, name: "legumes"), PreferenceItem(id: 1, name: "fruits"), PreferenceItem(id: 2, name: "strachyFoods"), PreferenceItem(id: 3, name: "proteins"), PreferenceItem(id: 4, name: "seasonning"), PreferenceItem(id: 5, name: "allergies"), PreferenceItem(id: 6, name: "cookingTools")]
+    var preferenceList = [PreferenceItem(id: 0, name: "legumes"), PreferenceItem(id: 1, name: "fruits"), PreferenceItem(id: 2, name: "strachyFoods"), PreferenceItem(id: 3, name: "proteins"), PreferenceItem(id: 4, name: "seasonning"), PreferenceItem(id: 5, name: "allergies")]
     
     var body: some View {
         
@@ -84,25 +84,9 @@ struct TastesView: View {
                                                                    }
                                                                }
                                                                
-                                                               /*ForEach(bigModel.images) { image in
-                                                                   if (item.id == image.id) {
-                                                                       Image(uiImage: image)
-                                                                           .resizable()
-                                                                           .frame(width: 100, height: 100)
-                                                                   }
-                                                               }*/
                                                            }
                                                        }
                                                        
-                                                       /*Image(uiImage: UIImage(named: "broccoli")!)
-                                                           .resizable()
-                                                           .frame(width: 100, height: 100)
-                                                       
-                                                       Image(uiImage: UIImage(named: "pasta")!)
-                                                           .resizable()
-                                                           .frame(width: 100, height: 100)*/
-                                                       
-                                                      //Image(UIImage(named: "Broccoli Tattoo"))
                                                    }
                                                 }
                                             } else {
@@ -119,6 +103,47 @@ struct TastesView: View {
                                     }
                                     
                                 }
+                                
+                                VStack {
+                                    
+                                    HStack {
+                                        Text("tools")
+                                            .font(.largeTitle)
+                                            .foregroundStyle(Color.navyBlue)
+                                        Spacer()
+                                    }
+                                    
+                                    HStack {
+                                        if bigModel.currentUser.tools.count != 0 {
+                                            ScrollView(.horizontal) {
+                                               HStack {
+                                                   ForEach(bigModel.currentUser.tools) { item in
+                                                           
+                                                           if bigModel.images.count != 0 {
+                                                               if let index = bigModel.images.firstIndex(where: { $0.id == item.id }) {
+                                                                   bigModel.images[index].image
+                                                                       .resizable()
+                                                                       .frame(width: 100, height: 100)
+                                                               }
+                                                           }
+                                                           
+                                                   }
+                                                   
+                                               }
+                                            }
+                                        } else {
+                                            Text("tell-us")
+                                                .foregroundColor(.gray)
+                                        }
+                                        Spacer()
+                                    }
+                                    
+                                    Rectangle().fill(Color.navyBlue).frame(height: 1)
+                                }.onTapGesture {
+                                    bigModel.currentView = .cookingToolsScreen
+                                    bigModel.screenHistory.append(.TastesView)
+                                }
+                                
                             }
                         }
                     }
@@ -137,14 +162,14 @@ struct TastesView: View {
                     
                     //var user = bigModel.currentUser
                     
-                    if (bigModel.screenHistory.last == .LegumeScreen || bigModel.screenHistory.last == .FruitsScreen || bigModel.screenHistory.last == .strachyFoodsScreen || bigModel.screenHistory.last == .proteinsScreen || bigModel.screenHistory.last == .seasonningScreen || bigModel.screenHistory.last == .allergiesScreen || bigModel.screenHistory.last == .cookingToolsScreen) {
+                    //if (bigModel.screenHistory.last == .LegumeScreen || bigModel.screenHistory.last == .FruitsScreen || bigModel.screenHistory.last == .strachyFoodsScreen || bigModel.screenHistory.last == .proteinsScreen || bigModel.screenHistory.last == .seasonningScreen || bigModel.screenHistory.last == .allergiesScreen || bigModel.screenHistory.last == .cookingToolsScreen) {
                         bigModel.currentView = .UserView
                         bigModel.screenHistory.append(.TastesView)
-                    } else {
+                    /*} else {
                         bigModel.currentView = .preferencesSummary
                         bigModel.screenHistory.append(.TastesView)
                         print(bigModel.currentUser.items)
-                    }
+                    }*/
                     
                 }
                 
