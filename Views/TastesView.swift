@@ -66,10 +66,6 @@ struct TastesView: View {
                                             Text(bigModel.categoryToName(categorie: preferenceList.name))
                                                 .font(.largeTitle)
                                                 .foregroundStyle(Color.navyBlue)
-                                                .onTapGesture {
-                                                    bigModel.currentView = categoryNameToNextScreen(categorie: preferenceList)
-                                                    bigModel.screenHistory.append(.TastesView)
-                                                }
                                             Spacer()
                                         }
                                         
@@ -117,6 +113,9 @@ struct TastesView: View {
                                         }
                                         
                                         Rectangle().fill(Color.navyBlue).frame(height: 1)
+                                    }.onTapGesture {
+                                        bigModel.currentView = categoryNameToNextScreen(categorie: preferenceList)
+                                        bigModel.screenHistory.append(.TastesView)
                                     }
                                     
                                 }
@@ -135,7 +134,8 @@ struct TastesView: View {
                     Text("validate")
                         .foregroundColor(.white)
                 }.onTapGesture {
-                    var user = bigModel.currentUser
+                    
+                    //var user = bigModel.currentUser
                     
                     if (bigModel.screenHistory.last == .LegumeScreen || bigModel.screenHistory.last == .FruitsScreen || bigModel.screenHistory.last == .strachyFoodsScreen || bigModel.screenHistory.last == .proteinsScreen || bigModel.screenHistory.last == .seasonningScreen || bigModel.screenHistory.last == .allergiesScreen || bigModel.screenHistory.last == .cookingToolsScreen) {
                         bigModel.currentView = .UserView

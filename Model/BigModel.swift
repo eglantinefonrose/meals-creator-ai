@@ -305,14 +305,22 @@ class BigModel: ObservableObject {
             array = currentUser.items
         }
         
-        if let index = self.currentUser.items.firstIndex(where: { $0.category == categorie }) {
-            array.remove(at: index)
-        } else {
-            
-        }
+        array = removeItemsWithCategorie(array: array, category: categorie)
         
         array = array + list
         return array
+    }
+    
+    func removeItemsWithCategorie(array: [Item], category: String) -> [Item] {
+        
+        var newArray: [Item] = []
+        
+        for i in 0...(array.count-1) {
+            if (array[i].category != category) {
+                newArray.append(array[i])
+            }
+        }
+        return newArray
     }
     
     func generateTags(type: String, season: String) -> [Meal: Bool] {
@@ -633,29 +641,70 @@ class BigModel: ObservableObject {
     
     func fetchAllImages() async {
         
-        for i in (0...18) {
-            
-            do {
+        let links: [String] = [
+            "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item000.png?alt=media&token=939b8295-546e-41d9-ae35-30dd8f5e1587",
+            "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item001.png?alt=media&token=4f62a534-2454-4183-a64e-0b7056ac345d",
+            "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item002.png?alt=media&token=8209e48f-7285-480a-ab4c-eb9bb0018392",
+            "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item003.png?alt=media&token=b01ca1bb-0c4d-4880-96b4-253962a41a1c",
+            "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item004.png?alt=media&token=8b19dad2-6326-44f3-86c3-fba1f86011b2",
+            "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item005.png?alt=media&token=69ba6e45-93e9-46a7-aa41-a6186c9c4a30",
+            "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item006.png?alt=media&token=156c0fb3-4547-4acf-9410-14d4e226f57d",
+            "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item007.png?alt=media&token=ee8c2913-c5be-4bc1-9ad2-6066fda84b3e",
+            "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item008.png?alt=media&token=d33334fa-cfae-46a3-b3dd-71b4bb71f4d2",
+            "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item009.png?alt=media&token=b6768837-a9d1-4fed-a524-5165cd0e685a",
+            "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item010.png?alt=media&token=731a46da-cc8a-4f90-91d9-9c5b02d4cae7",
+            "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item011.png?alt=media&token=d58776ce-b902-4e82-9154-f10b46636b87",
+            "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item012.png?alt=media&token=9f730b58-31f1-4cba-a224-6bd5820b9edb",
+            "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item013.png?alt=media&token=d345d808-ffff-4f35-9303-b3ca64cbfd79",
+            "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item014.png?alt=media&token=0ac1810e-0a8e-4920-bbd0-82f833252435",
+            "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item015.png?alt=media&token=9a518aa1-cbc7-42fc-9f91-bb84c925fd21",
+            "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item016.png?alt=media&token=2daa16d6-b816-439b-b7de-df7c9474a7d7",
+            "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item017.png?alt=media&token=891f907d-7f0d-4677-9c6e-7a9831af54c1"
+        ]
+        
+        for i in (0...17) {
                 
-                //if i == 0 {
-                    let image = try await self.fetchImage(url: "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item000.jpg?alt=media&token=f25549a3-80b0-493c-88a5-e5f28effa82a")
-                    self.images.append(ImageType(id: i, image: image))
-                /*}
+                //https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item001.png?alt=media&token=4f62a534-2454-4183-a64e-0b7056ac345d
+                //https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item000.jpg?alt=media&token=f25549a3-80b0-493c-88a5-e5f28effa82a
+                
+                if i == 0 {
+                    Task {
+                        do {
+                            //let image = try await self.fetchImage(url: "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item000.png?alt=media&token=f25549a3-80b0-493c-88a5-e5f28effa82a")
+                            let image = try await self.fetchImage(url: links[i])
+                            self.images.append(ImageType(id: i, image: image))
+                        } catch {
+                            print(error.localizedDescription)
+                        }
+                    }
+                }
                 if i<10 {
-                    let image = try await self.fetchImage(url: "item00\(i)")
-                    self.images.append(ImageType(id: i, image: image))
+                    Task {
+                        do {
+                            //print("\(i)")
+                            //let image = try await self.fetchImage(url: "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item00\(i).png?alt=media&token=f25549a3-80b0-493c-88a5-e5f28effa82a")
+                            //let image = try await self.fetchImage(url: "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item001.png?alt=media&token=f25549a3-80b0-493c-88a5-e5f28effa82a")
+                            let image = try await self.fetchImage(url: links[i])
+                            self.images.append(ImageType(id: i, image: image))
+                        } catch {
+                            print(error.localizedDescription)
+                        }
+                    }
                 } else {
-                    let image = try await self.fetchImage(url: "item0\(i)")
-                    self.images.append(ImageType(id: i, image: image))
-                }*/
+                    Task {
+                        do {
+                            //print("\(i)")
+                            //let image = try await self.fetchImage(url: "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item0\(i).png?alt=media&token=f25549a3-80b0-493c-88a5-e5f28effa82a")
+                              //"https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/item011.png?alt=media&token=d58776ce-b902-4e82-9154-f10b46636b87"
+                            let image = try await self.fetchImage(url: links[i])
+                            self.images.append(ImageType(id: i, image: image))
+                        } catch {
+                            print(error.localizedDescription)
+                        }
+                    }
+                }
                 
             }
-            
-            catch {
-                print("error \(error.localizedDescription)")
-            }
-            
-        }
         
         print("done")
         
