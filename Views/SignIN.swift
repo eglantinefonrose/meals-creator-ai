@@ -30,9 +30,7 @@ struct SignIN: View {
             VStack {
                 
                 VStack {
-                    
-                    BackModel(color: Color.navyBlue, view: .signInView)
-                    
+                                        
                     HStack {
                         Spacer()
                         VStack(alignment: .trailing, spacing: 0) {

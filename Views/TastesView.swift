@@ -32,6 +32,7 @@ struct TastesView: View {
  }*/
     
     var preferenceList = [PreferenceItem(id: 0, name: "legumes"), PreferenceItem(id: 1, name: "fruits"), PreferenceItem(id: 2, name: "strachyFoods"), PreferenceItem(id: 3, name: "proteins"), PreferenceItem(id: 4, name: "seasonning"), PreferenceItem(id: 5, name: "allergies")]
+    @State var circleSize: CGFloat = UIScreen.main.bounds.height/3
     
     var body: some View {
         
@@ -52,6 +53,7 @@ struct TastesView: View {
                         .font(.system(size: 100))
                     Circle()
                         .foregroundStyle(Color.navyBlue)
+                        .frame(width: circleSize, height: circleSize)
                     
                     VStack(alignment: .leading) {
                         Text("select-preferences")
@@ -80,7 +82,7 @@ struct TastesView: View {
                                                                    if let index = bigModel.images.firstIndex(where: { $0.id == item.id }) {
                                                                        bigModel.images[index].image
                                                                            .resizable()
-                                                                           .frame(width: 100, height: 100)
+                                                                           .frame(width: 50, height: 50)
                                                                    }
                                                                }
                                                                
@@ -123,7 +125,7 @@ struct TastesView: View {
                                                                if let index = bigModel.images.firstIndex(where: { $0.id == item.id }) {
                                                                    bigModel.images[index].image
                                                                        .resizable()
-                                                                       .frame(width: 100, height: 100)
+                                                                       .frame(width: 50, height: 50)
                                                                }
                                                            }
                                                            
@@ -144,8 +146,18 @@ struct TastesView: View {
                                     bigModel.screenHistory.append(.TastesView)
                                 }
                                 
+                            }.background(GeometryReader {
+                                Color.clear.preference(key: ViewOffsetKey.self,
+                                    value: -$0.frame(in: .named("scroll")).origin.y)
+                            })
+                            .onPreferenceChange(ViewOffsetKey.self) { print("offset >> \($0)")
+                                
+                                if ((circleSize-$0) >= 50 && (circleSize-$0) <= UIScreen.main.bounds.height/3) {
+                                    circleSize = circleSize-$0
+                                }
+                                
                             }
-                        }
+                        }.coordinateSpace(name: "scroll")
                     }
                     
                 }.padding(.leading)
