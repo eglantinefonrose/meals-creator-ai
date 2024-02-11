@@ -521,34 +521,8 @@ class BigModel: ObservableObject {
                       print("Apple login error : \(error)")
                     }
                   } else {
-                      //self.currentUser = try document.data(as: User.self)
                       self.currentView = .UserView
                       self.screenHistory.append(.signInView)
-                      //self.isNewUser = true
-                      /*do {
-                          let newDocRef : DocumentReference = try self.db.collection("Users").addDocument(from: newUser)
-                          newDocRef.getDocument { (document, error) in
-                              if let error = error as NSError? {
-                                  print("Error getting document: \(error.localizedDescription)")
-                              }
-                              else {
-                                  if let document = document {
-                                      do {
-                                          self.currentUser = try document.data(as: User.self)
-                                          self.currentView = .UserView
-                                          self.screenHistory.append(.signInView)
-                                          //print("Document data: \(String(describing: document.data()))")
-                                      }
-                                      catch {
-                                        print(error)
-                                      }
-                                  }
-                              }
-                          }
-                      }
-                      catch {
-                          print(error)
-                      }*/
                   }
                 }
             }
@@ -633,7 +607,7 @@ class BigModel: ObservableObject {
                  
               // Decoding the Product type from JSON data using JSONDecoder() class.
               let array = try JSONDecoder().decode([String].self, from: jsonData)
-              print(array)
+              //print(array)
                
                for i in (0...17) {
                    if i == 0 {

@@ -51,9 +51,9 @@ struct TastesView: View {
                         .textCase(.uppercase)
                         .foregroundStyle(Color.navyBlue)
                         .font(.system(size: 100))
-                    Circle()
-                        .foregroundStyle(Color.navyBlue)
-                        .frame(width: circleSize, height: circleSize)
+                    //Circle()
+                        //.foregroundStyle(Color.navyBlue)
+                        //.frame(width: circleSize, height: circleSize)
                     
                     VStack(alignment: .leading) {
                         Text("select-preferences")
@@ -78,12 +78,16 @@ struct TastesView: View {
                                                        ForEach(bigModel.currentUser.items) { item in
                                                            if (item.category == preferenceList.name) {
                                                                
-                                                               if bigModel.images.count != 0 {
-                                                                   if let index = bigModel.images.firstIndex(where: { $0.id == item.id }) {
-                                                                       bigModel.images[index].image
-                                                                           .resizable()
-                                                                           .frame(width: 50, height: 50)
+                                                               if item.category != "allergies" && item.category != "seasonning" {
+                                                                   if bigModel.images.count != 0 {
+                                                                       if let index = bigModel.images.firstIndex(where: { $0.id == item.id }) {
+                                                                           bigModel.images[index].image
+                                                                               .resizable()
+                                                                               .frame(width: 75, height: 75)
+                                                                       }
                                                                    }
+                                                               } else {
+                                                                   Text(item.name)
                                                                }
                                                                
                                                            }
@@ -125,7 +129,7 @@ struct TastesView: View {
                                                                if let index = bigModel.images.firstIndex(where: { $0.id == item.id }) {
                                                                    bigModel.images[index].image
                                                                        .resizable()
-                                                                       .frame(width: 50, height: 50)
+                                                                       .frame(width: 75, height: 75)
                                                                }
                                                            }
                                                            
