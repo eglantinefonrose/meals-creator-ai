@@ -9,7 +9,7 @@ import SwiftUI
 
 struct WelcomeView: View {
     
-    @ObservedObject var bigModel: BigModel = BigModel.shared
+    @ObservedObject var bigModel: BigModel
     
     var body: some View {
         
@@ -76,6 +76,6 @@ struct WelcomeView: View {
 
 struct NewClientView_Previews: PreviewProvider {
     static var previews: some View {
-        WelcomeView()
+        WelcomeView(bigModel: BigModel.mocked)
     }
 }

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SeasonSelection: View {
     
-    @ObservedObject var bigModel: BigModel = BigModel.shared
+    @ObservedObject var bigModel: BigModel
     @State var seasonTags: [String: Bool] = ["Hiver": false, "Printemps": false, "Été": false, "Automne": false]
     
     var body: some View {
@@ -109,5 +109,5 @@ struct SeasonSelection: View {
 }
 
 #Preview {
-    SeasonSelection()
+    SeasonSelection(bigModel: BigModel.mocked)
 }

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct DailyCalendar: View {
     
-    @ObservedObject var bigModel: BigModel = BigModel.shared
+    @ObservedObject var bigModel: BigModel
     let epochTime: TimeInterval = 0
     @State private var swipeDirection: SwipeGestureModifier.SwipeDirection? = nil
     @State var currentEvent: BigModel.Event = BigModel.Event(id: "", timeEpoch: 0, breakfastMeal: BigModel.Meal(id: "", recipe: BigModel.Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))), lunchMeal: BigModel.Meal(id: "", recipe: BigModel.Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))), snackMeal: BigModel.Meal(id: "", recipe: BigModel.Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))), dinnerMeal: BigModel.Meal(id: "", recipe: BigModel.Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))))
@@ -533,6 +533,6 @@ extension View {
 
 
 #Preview {
-    DailyCalendar()
+    DailyCalendar(bigModel: BigModel.mocked)
         .environmentObject(BigModel.shared)
 }

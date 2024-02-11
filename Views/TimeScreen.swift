@@ -11,7 +11,7 @@ struct TimeScreen: View {
     
     @State var time = 0
     @State var timeString = "0"
-    @ObservedObject var bigModel: BigModel = BigModel.shared
+    @ObservedObject var bigModel: BigModel
 
     var body: some View {
         ZStack {
@@ -119,6 +119,6 @@ struct TimeScreen: View {
 
 struct TimeScreen_Previews: PreviewProvider {
     static var previews: some View {
-        TimeScreen()
+        TimeScreen(bigModel: BigModel.mocked)
     }
 }

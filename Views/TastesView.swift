@@ -10,7 +10,7 @@ import SwiftUI
 struct TastesView: View {
     
     //var preferenceList = ["Legumes", "Fruits", "Starchy foods", "Meat", "Seasonning", "Allergies", "Cooking tools"]
-    @ObservedObject var bigModel: BigModel = BigModel.shared
+    @ObservedObject var bigModel: BigModel
     
     /*switch categorie {
      case "legumes":
@@ -232,6 +232,6 @@ extension Color {
 
 struct TastesView_Previews: PreviewProvider {
     static var previews: some View {
-        TastesView()
+        TastesView(bigModel: BigModel.mocked)
     }
 }

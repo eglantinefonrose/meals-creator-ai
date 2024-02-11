@@ -9,7 +9,7 @@ import SwiftUI
 
 struct BlankFile: View {
     
-    @ObservedObject var bigModel: BigModel = BigModel.shared
+    @ObservedObject var bigModel: BigModel
     @State var show: Bool = true
     
     var body: some View {

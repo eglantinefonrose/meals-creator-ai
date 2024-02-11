@@ -12,7 +12,7 @@ import Combine
 
 struct FavoriteMealsScreen: View {
     
-    @ObservedObject var bigModel: BigModel = BigModel.shared
+    @ObservedObject var bigModel: BigModel
     let meals = ["Nouilles sautées", "Omelette", "Rillettes de thon"]
     
     @State var type: String = "All"

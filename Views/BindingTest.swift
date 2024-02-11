@@ -9,7 +9,7 @@ import SwiftUI
 
 struct BindingTest: View {
     
-    @ObservedObject var bigModel: BigModel = BigModel.shared
+    @ObservedObject var bigModel: BigModel
     let meal1: BigModel.Meal = BigModel.Meal(id: "0", recipe: BigModel.Recipe(id: "3045IEKORRE¨DF", recipeName: "Penne alla rabbiata", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: [])))
     @State var tags: [BigModel.Meal: Int] = [BigModel.Meal(id: "0", recipe: BigModel.Recipe(id: "3045IEKORRE¨DF", recipeName: "Penne alla rabbiata", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))) : 0]
     @State var tags2: [String: Bool] = ["a": true, "b": false]
@@ -172,6 +172,6 @@ struct ButtonBinding2: View {
 
 struct BindingTest_Previews: PreviewProvider {
     static var previews: some View {
-        BindingTest()
+        BindingTest(bigModel: BigModel.mocked)
     }
 }

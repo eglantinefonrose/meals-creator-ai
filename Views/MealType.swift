@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MealType: View {
     
-    @ObservedObject var bigModel: BigModel = BigModel.shared
+    @ObservedObject var bigModel: BigModel
     @State var selectedType: String = ""
     @State var seasonTags: [String: Bool] = ["Breakfast": false, "Main course": false, "Dessert": false, "Starter": false]
     
@@ -127,5 +127,5 @@ struct MealType: View {
 }
 
 #Preview {
-    MealType()
+    MealType(bigModel: BigModel.mocked)
 }

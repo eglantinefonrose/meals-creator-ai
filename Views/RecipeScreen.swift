@@ -9,12 +9,13 @@ import SwiftUI
 
 struct RecipeScreen: View {
     
-    @ObservedObject var bigModel: BigModel = BigModel.shared
+    @ObservedObject var bigModel: BigModel
     let columns = [GridItem(.adaptive(minimum: 150))]
     @State var circleSize: CGFloat = UIScreen.main.bounds.height/3
     @State var imageSize: CGFloat = UIScreen.main.bounds.height/4
     @State var fontSize: CGFloat = 50
     @State var selected = false
+    @State var image: Image = Image("", label: Text(""))
     
     var body: some View {
         
@@ -37,7 +38,7 @@ struct RecipeScreen: View {
                                  Circle()
                                      .foregroundColor(.navyBlue)
                                      .frame(width: circleSize, height: circleSize)
-                                 Image("Broccoli Tattoo")
+                                 image
                                      .resizable()
                                      .frame(width: imageSize, height: imageSize)
                              }
@@ -212,7 +213,9 @@ struct RecipeScreen: View {
                 if isMealInList(meal: bigModel.selectedMeal) {
                     selected = true
                 }
-        }
+            }
+        }.onAppear {
+            self.image = findStringContainingSubstring()
         }
      }
     
@@ -224,6 +227,23 @@ struct RecipeScreen: View {
     
     private func isMealInList(meal: BigModel.Meal) -> Bool {
         return bigModel.currentUser.favoriteMeals.contains { $0.recipe.recipeName == meal.recipe.recipeName }
+    }
+    
+    func findStringContainingSubstring() -> Image {
+        
+        let array1: [BigModel.Ingredient] = bigModel.selectedMeal.recipe.ingredients
+        let array2 = bigModel.items
+        
+        for ingredient in array1 {
+            for item in array2 {
+                if (ingredient.name.uppercased()).contains(item.name.uppercased()) {
+                    if let index = bigModel.images.firstIndex(where: { $0.id == item.id }) {
+                        return bigModel.images[index].image
+                    }
+                }
+            }
+        }
+        return Image("", label: Text(""))
     }
     
 }

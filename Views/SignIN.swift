@@ -18,7 +18,7 @@ struct SignIN: View {
     
     @State var username = ""
     @State var password = ""
-    @ObservedObject var bigModel: BigModel = BigModel.shared
+    @ObservedObject var bigModel: BigModel
     
     var body: some View {
         
@@ -188,6 +188,6 @@ class KeyboardHeightHelper: ObservableObject {
 
 struct SignIN_Previews: PreviewProvider {
     static var previews: some View {
-        SignIN()
+        SignIN(bigModel: BigModel.mocked)
     }
 }

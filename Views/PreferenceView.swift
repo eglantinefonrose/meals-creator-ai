@@ -9,7 +9,7 @@ import SwiftUI
 
 struct PreferenceView: View {
     
-    @ObservedObject var bigModel: BigModel = BigModel.shared
+    @ObservedObject var bigModel: BigModel
     let columns = [GridItem(.adaptive(minimum: 150))]
     @State var selectedItems: [BigModel.Item] = []
     @State var selectedTools: [BigModel.Item] = []
@@ -124,7 +124,7 @@ struct PreferenceView: View {
                     LazyVGrid(columns: columns, spacing: 5) {
                         ForEach(searchResults, id: \.self) { k in
                             
-                            TagButton(selected: self.binding(for: k), txt: k.name, item: k)
+                            TagButton(bigModel: bigModel, selected: self.binding(for: k), txt: k.name, item: k)
                             
                         }
                     }
@@ -247,7 +247,7 @@ struct PreferenceView: View {
 
 struct TagButton: View {
     
-    @EnvironmentObject var bigModel: BigModel
+    @ObservedObject var bigModel: BigModel
     @Binding var selected: Bool
     var txt: String
     var item: BigModel.Item
@@ -287,7 +287,7 @@ struct TagButton: View {
 
 struct PreferenceView_Previews: PreviewProvider {
     static var previews: some View {
-        PreferenceView(categorie: "legumes", nextScreenName: .FruitsScreen)
+        PreferenceView(bigModel: BigModel.mocked, categorie: "legumes", nextScreenName: .FruitsScreen)
             .environmentObject(BigModel(shouldInjectMockedData: true))
     }
 }

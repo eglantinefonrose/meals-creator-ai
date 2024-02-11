@@ -12,7 +12,7 @@ struct NumberOfPersonScreen: View {
     
     @State var numberOfPerson = 4
     @State var numberOfPersonString = "0"
-    @ObservedObject var bigModel: BigModel = BigModel.shared
+    @ObservedObject var bigModel: BigModel
 
     var body: some View {
         ZStack {
@@ -206,7 +206,7 @@ struct NumberOfPersonScreen: View {
 
 struct NumberOfPersonScreen_Previews: PreviewProvider {
     static var previews: some View {
-        NumberOfPersonScreen()
+        NumberOfPersonScreen(bigModel: BigModel.mocked)
             .environmentObject(BigModel(shouldInjectMockedData: true))
     }
 }

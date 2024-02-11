@@ -9,7 +9,7 @@ import SwiftUI
 
 struct PreferenceSummary: View {
     
-    @ObservedObject var bigModel: BigModel = BigModel.shared
+    @ObservedObject var bigModel: BigModel
     let columns = [GridItem(.adaptive(minimum: 150))]
     
     var body: some View {
@@ -125,7 +125,7 @@ struct PreferenceSummary: View {
 
 struct PreferenceSummary_Previews: PreviewProvider {
     static var previews: some View {
-        PreferenceSummary()
+        PreferenceSummary(bigModel: BigModel.mocked)
             .environmentObject(BigModel.mocked)
     }
 }

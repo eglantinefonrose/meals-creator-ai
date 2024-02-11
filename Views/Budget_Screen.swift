@@ -11,7 +11,7 @@ struct Budget_Screen: View {
     
     @State var budget = 0
     @State var budgetString = "0"
-    @ObservedObject var bigModel: BigModel = BigModel.shared
+    @ObservedObject var bigModel: BigModel
     
     var body: some View {
         ZStack {
@@ -186,7 +186,7 @@ struct RectangleModel: View {
 
 struct Budget_Screen_Previews: PreviewProvider {
     static var previews: some View {
-        Budget_Screen()
+        Budget_Screen(bigModel: BigModel.mocked)
             .environmentObject(BigModel(shouldInjectMockedData: true))
     }
 }
