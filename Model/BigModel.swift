@@ -172,12 +172,6 @@ class BigModel: ObservableObject {
     //let images: [ImageType] = [ImageType(id: 1, image: UIImage(named: "leek")!), Image(id: 2, image: UIImage(named: "zucchini")!), Image(id: 4, image: UIImage(named: "broccoli")!), Image(id: 8, image: UIImage(named: "pasta")!), ImageType(id: 11, image: UIImage(named: "steak")!)]
     var images: [ImageType] = []
     
-    struct ItemAndQtty: Codable, Identifiable, Hashable {
-        var id: String
-        var item: Item
-        var quantity: Int
-    }
-    
     struct Event: Identifiable, Codable, Equatable {
         var id: String
         var timeEpoch: Double
