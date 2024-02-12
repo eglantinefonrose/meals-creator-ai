@@ -917,7 +917,7 @@ class BigModel: ObservableObject {
             var request = URLRequest(url: self.openAIURL!)
             request.httpMethod = "POST"
             request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.addValue("Bearer \(self.openAIKey)", forHTTPHeaderField: "Authorization")
+            request.addValue("Bearer \(openAIKey)", forHTTPHeaderField: "Authorization")
             let httpBody: [String: Any] = [
                 "prompt" : prompt,
                 "max_tokens" : 2000
@@ -935,6 +935,7 @@ class BigModel: ObservableObject {
             
             do {
                 if let requestData = executeRequest(request: request, withSessionConfig: nil) {
+                    print("Bearer \(openAIKey)")
                     let jsonStr = String(data: requestData, encoding: String.Encoding(rawValue: String.Encoding.utf8.rawValue))!
                     ///
                     //MARK: I know there\"s an error below, but we\"ll fix it later on in the article, so make sure not to change anything

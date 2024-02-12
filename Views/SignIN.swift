@@ -57,7 +57,7 @@ struct SignIN: View {
                         .onTapGesture {
                             //
                             let keychain = Keychain(service: "net.proutechos.openai")
-                            keychain["key"] = "enter-the-key-here-just-for-the-injection-into-the-keychain"
+                            keychain["key.teevity.dev001"] = "enter-your-key-here"
                         }
                     
                     Spacer()
