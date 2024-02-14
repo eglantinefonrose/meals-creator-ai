@@ -40,6 +40,14 @@ struct UserView: View {
                                         .foregroundStyle(.white)
                                         .bold()
                                     Spacer()
+                                    Text("log-out")
+                                        .foregroundStyle(Color.white)
+                                        .bold()
+                                        .onTapGesture {
+                                            bigModel.currentView = .signInView
+                                            bigModel.screenHistory.append(.UserView)
+                                        }
+
                                 }
                                 
                                 ZStack {
@@ -135,12 +143,12 @@ struct UserView: View {
                         VStack(spacing: 0) {
                             
                             VStack() {
-                                HStack {
+                                /*HStack {
                                     Text("pref")
                                         .foregroundStyle(Color.navyBlue)
                                         .font(.title3)
                                     Spacer()
-                                }
+                                }*/
                                 
                                 if (bigModel.currentUser.items.count == 0 && bigModel.currentUser.budget == 0 && bigModel.currentUser.spendedTime == 0 && bigModel.currentUser.favoriteMeals.count == 0) {
                                     
@@ -179,12 +187,11 @@ struct UserView: View {
                                                     Spacer()
                                                     Image(systemName: "arrow.right.circle")
                                                         .foregroundColor(Color.navyBlue)
-                                                        .onTapGesture {
-                                                            bigModel.currentView = .TastesView
-                                                            bigModel.screenHistory.append(.UserView)
-                                                        }
                                                 }
                                                 Rectangle().fill(Color.navyBlue).frame(height: 1)
+                                            }.onTapGesture {
+                                                bigModel.currentView = .TastesView
+                                                bigModel.screenHistory.append(.UserView)
                                             }
                                             
                                             VStack(alignment: .leading) {
@@ -207,76 +214,81 @@ struct UserView: View {
                                                     Spacer()
                                                     Image(systemName: "arrow.right.circle")
                                                         .foregroundColor(Color.navyBlue)
-                                                        .onTapGesture {
-                                                            bigModel.currentView = .cookingToolsScreen
-                                                            bigModel.screenHistory.append(.UserView)
-                                                        }
                                                 }
                                                 Rectangle().fill(Color.navyBlue).frame(height: 1)
+                                            }.onTapGesture {
+                                                bigModel.currentView = .cookingToolsScreen
+                                                bigModel.screenHistory.append(.UserView)
                                             }
                                             
-                                            Text("budget")
-                                                .font(.largeTitle)
-                                                .foregroundStyle(Color.navyBlue)
-                                            
-                                            HStack {
-                                                if bigModel.currentUser.budget != 0 {
-                                                    Text(String(bigModel.currentUser.budget))
-                                                } else {
-                                                    Text("tellus-2")
-                                                        .foregroundColor(.gray)
-                                                }
-                                                Spacer()
-                                                Image(systemName: "arrow.right.circle")
-                                                    .foregroundColor(Color.navyBlue)
-                                                    .onTapGesture {
-                                                        bigModel.currentView = .budgetScreen
-                                                        bigModel.screenHistory.append(.UserView)
+                                            VStack(alignment: .leading) {
+                                                
+                                                Text("budget")
+                                                    .font(.largeTitle)
+                                                    .foregroundStyle(Color.navyBlue)
+                                                
+                                                HStack {
+                                                    if bigModel.currentUser.budget != 0 {
+                                                        Text(String(bigModel.currentUser.budget))
+                                                    } else {
+                                                        Text("tellus-2")
+                                                            .foregroundColor(.gray)
                                                     }
-                                            }
-                                            
-                                            Rectangle().fill(Color.navyBlue).frame(height: 1)
-                                            
-                                            Text("number-of-person")
-                                                .font(.largeTitle)
-                                                .foregroundStyle(Color.navyBlue)
-                                            
-                                            HStack {
-                                                if bigModel.currentUser.numberOfPerson != 0 {
-                                                    Text(String(bigModel.currentUser.numberOfPerson))
-                                                } else {
-                                                    Text("tellus-3")
-                                                        .foregroundColor(.gray)
+                                                    Spacer()
+                                                    Image(systemName: "arrow.right.circle")
+                                                        .foregroundColor(Color.navyBlue)
                                                 }
-                                                Spacer()
-                                                Image(systemName: "arrow.right.circle")
-                                                    .foregroundColor(Color.navyBlue)
-                                                    .onTapGesture {
-                                                        bigModel.currentView = .NumberOfPersonScreen
-                                                        bigModel.screenHistory.append(.UserView)
-                                                    }
+                                            }.onTapGesture {
+                                                bigModel.currentView = .budgetScreen
+                                                bigModel.screenHistory.append(.UserView)
                                             }
                                             
                                             Rectangle().fill(Color.navyBlue).frame(height: 1)
                                             
-                                            Text("spent-time")
-                                                .font(.largeTitle)
-                                                .foregroundStyle(Color.navyBlue)
-                                            
-                                            HStack {
-                                                if bigModel.currentUser.budget != 0 {
-                                                    Text(String(bigModel.currentUser.spendedTime))
-                                                } else {
-                                                    Text("tellus-4")
-                                                        .foregroundColor(.gray)
-                                                }
-                                                Spacer()
-                                                Image(systemName: "arrow.right.circle")
-                                                    .foregroundColor(Color.navyBlue)
-                                                    .onTapGesture {
-                                                        bigModel.currentView = .timeScreen
-                                                        bigModel.screenHistory.append(.UserView)
+                                            VStack(alignment: .leading) {
+                                                
+                                                Text("number-of-person")
+                                                    .font(.largeTitle)
+                                                    .foregroundStyle(Color.navyBlue)
+                                                
+                                                HStack {
+                                                    if bigModel.currentUser.numberOfPerson != 0 {
+                                                        Text(String(bigModel.currentUser.numberOfPerson))
+                                                    } else {
+                                                        Text("tellus-3")
+                                                            .foregroundColor(.gray)
                                                     }
+                                                    Spacer()
+                                                    Image(systemName: "arrow.right.circle")
+                                                        .foregroundColor(Color.navyBlue)
+                                                }
+                                            }.onTapGesture {
+                                                bigModel.currentView = .NumberOfPersonScreen
+                                                bigModel.screenHistory.append(.UserView)
+                                            }
+                                            
+                                            Rectangle().fill(Color.navyBlue).frame(height: 1)
+                                                                                        
+                                            VStack(alignment: .leading) {
+                                                
+                                                Text("spent-time")
+                                                    .font(.largeTitle)
+                                                    .foregroundStyle(Color.navyBlue)
+                                                
+                                                HStack {
+                                                    if bigModel.currentUser.budget != 0 {
+                                                        Text(String(bigModel.currentUser.spendedTime))
+                                                    } else {
+                                                        Text("tellus-4")
+                                                            .foregroundColor(.gray)
+                                                    }
+                                                    Spacer()
+                                                    Image(systemName: "arrow.right.circle")
+                                                        .foregroundColor(Color.navyBlue)
+                                                }
+                                            }.onTapGesture {
+                                                bigModel.currentView = .timeScreen
+                                                bigModel.screenHistory.append(.UserView)
                                             }
                                             
                                             Rectangle().fill(Color.navyBlue).frame(height: 1)
@@ -313,21 +325,20 @@ struct UserView: View {
                                                     
                                                     Image(systemName: "arrow.right.circle")
                                                         .foregroundColor(Color.navyBlue)
-                                                        .onTapGesture {
-                                                            
-                                                            if bigModel.currentUser.items.count != 0 && bigModel.currentUser.tools.count != 0 && bigModel.currentUser.numberOfPerson != 0 && bigModel.currentUser.budget != 0 && bigModel.currentUser.spendedTime != 0 {
-                                                                bigModel.currentView = .mealsPropositionScreen
-                                                                bigModel.screenHistory.append(.UserView)
-                                                                if bigModel.currentUser.proposedMeals.count == 0 {
-                                                                    bigModel.currentView = .SeasonSelectionView
-                                                                }
-                                                            } else {
-                                                                self.areInfosIncomplete = true
-                                                            }
-                                                            
-                                                        }
                                                 }
                                                 Rectangle().fill(Color.navyBlue).frame(height: 1)
+                                            }.onTapGesture {
+                                                
+                                                if bigModel.currentUser.items.count != 0 && bigModel.currentUser.tools.count != 0 && bigModel.currentUser.numberOfPerson != 0 && bigModel.currentUser.budget != 0 && bigModel.currentUser.spendedTime != 0 {
+                                                    bigModel.currentView = .mealsPropositionScreen
+                                                    bigModel.screenHistory.append(.UserView)
+                                                    if bigModel.currentUser.proposedMeals.count == 0 {
+                                                        bigModel.currentView = .SeasonSelectionView
+                                                    }
+                                                } else {
+                                                    self.areInfosIncomplete = true
+                                                }
+                                                
                                             }
                                             
                                             VStack(alignment: .leading) {
@@ -352,45 +363,115 @@ struct UserView: View {
                                                     }
                                                     Image(systemName: "arrow.right.circle")
                                                         .foregroundColor(Color.navyBlue)
-                                                        .onTapGesture {
-                                                            if bigModel.currentUser.items.count != 0 && bigModel.currentUser.budget != 0 && bigModel.currentUser.numberOfPerson != 0 && bigModel.currentUser.spendedTime != 0 {
-                                                                bigModel.currentView = .FavoriteMealsScreen
-                                                            }
-                                                        }
                                                 }
-                                                
+                                            }.onTapGesture {
+                                                if bigModel.currentUser.items.count != 0 && bigModel.currentUser.budget != 0 && bigModel.currentUser.numberOfPerson != 0 && bigModel.currentUser.spendedTime != 0 {
+                                                    bigModel.currentView = .FavoriteMealsScreen
+                                                }
                                             }
                                             
                                             Rectangle().fill(Color.navyBlue).frame(height: 1)
                                             
-                                            Text("your-meal-planner")
-                                                .font(.largeTitle)
-                                                .foregroundStyle(Color.navyBlue)
-                                            
-                                            HStack {
-                                                if bigModel.currentUser.events != [] {
-                                                    Text("click-here-events")
-                                                } else {
-                                                    Text("tellus-5")
-                                                        .foregroundColor(.gray)
-                                                }
-                                                Spacer()
-                                                Image(systemName: "arrow.right.circle")
-                                                    .foregroundColor(Color.navyBlue)
-                                                    .onTapGesture {
-                                                        bigModel.currentView = .DailyCalendar
-                                                        bigModel.screenHistory.append(.UserView)
+                                            VStack(alignment: .leading) {
+                                                
+                                                Text("your-meal-planner")
+                                                    .font(.largeTitle)
+                                                    .foregroundStyle(Color.navyBlue)
+                                                
+                                                HStack {
+                                                    if bigModel.currentUser.events != [] {
+                                                        Text("click-here-events")
+                                                    } else {
+                                                        Text("tellus-5")
+                                                            .foregroundColor(.gray)
                                                     }
+                                                    Spacer()
+                                                    Image(systemName: "arrow.right.circle")
+                                                        .foregroundColor(Color.navyBlue)
+                                                        .onTapGesture {
+                                                            bigModel.currentView = .DailyCalendar
+                                                            bigModel.screenHistory.append(.UserView)
+                                                        }
+                                                }
                                             }
+                                            
+                                            Spacer()
+                                                .frame(height: 20)
                                             
                                         }
                                     }
                                 }
+                            }.padding(.horizontal, 20)
+                            
+                            VStack {
+                                                                
+                                ZStack {
+                                    
+                                    Rectangle()
+                                        .frame(height: 60)
+                                        .foregroundStyle(Color(.white))
+                                    
+                                    HStack {
+                                        
+                                        Spacer()
+                                        Image(systemName: "carrot")
+                                            .foregroundStyle(Color.gray)
+                                            .onTapGesture {
+                                                bigModel.currentView = .TastesView
+                                                bigModel.screenHistory.append(.UserView)
+                                            }
+                                        
+                                        Spacer()
+                                        Image(systemName: "frying.pan")
+                                            .foregroundStyle(Color.gray)
+                                            .onTapGesture {
+                                                bigModel.currentView = .cookingToolsScreen
+                                                bigModel.screenHistory.append(.UserView)
+                                            }
+                                        
+                                        Spacer()
+                                        Image(systemName: "fork.knife")
+                                            .foregroundStyle(Color.gray)
+                                            .onTapGesture {
+                                                if bigModel.currentUser.items.count != 0 && bigModel.currentUser.tools.count != 0 && bigModel.currentUser.numberOfPerson != 0 && bigModel.currentUser.budget != 0 && bigModel.currentUser.spendedTime != 0 {
+                                                    bigModel.currentView = .mealsPropositionScreen
+                                                    bigModel.screenHistory.append(.UserView)
+                                                    if bigModel.currentUser.proposedMeals.count == 0 {
+                                                        bigModel.currentView = .SeasonSelectionView
+                                                    }
+                                                } else {
+                                                    self.areInfosIncomplete = true
+                                                }
+                                            }
+                                        
+                                        Spacer()
+                                        Image(systemName: "heart.fill")
+                                            .foregroundStyle(Color.gray)
+                                            .onTapGesture {
+                                                if bigModel.currentUser.items.count != 0 && bigModel.currentUser.tools.count != 0 && bigModel.currentUser.numberOfPerson != 0 && bigModel.currentUser.budget != 0 && bigModel.currentUser.spendedTime != 0 {
+                                                    bigModel.currentView = .FavoriteMealsScreen
+                                                    bigModel.screenHistory.append(.UserView)
+                                                } else {
+                                                    self.areInfosIncomplete = true
+                                                }
+                                            }
+                                        
+                                        Spacer()
+                                        Image(systemName: "calendar")
+                                            .foregroundStyle(Color.gray)
+                                            .onTapGesture {
+                                                bigModel.currentView = .DailyCalendar
+                                                bigModel.screenHistory.append(.UserView)
+                                            }
+                                        
+                                        Spacer()
+                                    }
+                                    
+                                }
+                                
                             }
                             
-                            
-                            
-                        }.padding(.horizontal, 20)
+                        }
                         
                         
                         
@@ -414,113 +495,7 @@ struct UserView: View {
                             }
                             
                     }
-                    
-                    VStack(spacing: 0) {
-                        
-                        Spacer()
-                        
-                        ZStack {
-                            
-                            Rectangle()
-                                .frame(height: 60)
-                                .foregroundStyle(Color(.white))
-                            
-                            HStack {
-                                
-                                Spacer()
-                                Image(systemName: "carrot")
-                                    .foregroundStyle(Color.gray)
-                                    .onTapGesture {
-                                        bigModel.currentView = .TastesView
-                                        bigModel.screenHistory.append(.UserView)
-                                    }
-                                
-                                Spacer()
-                                Image(systemName: "frying.pan")
-                                    .foregroundStyle(Color.gray)
-                                    .onTapGesture {
-                                        bigModel.currentView = .cookingToolsScreen
-                                        bigModel.screenHistory.append(.UserView)
-                                    }
-                                
-                                /*Spacer()
-                                Image(systemName: "banknote")
-                                    .foregroundStyle(Color.gray)
-                                    .onTapGesture {
-                                        bigModel.currentView = .budgetScreen
-                                        bigModel.screenHistory.append(.UserView)
-                                    }
-                                
-                                Spacer()
-                                Image(systemName: "banknote")
-                                    .foregroundStyle(Color.gray)
-                                    .onTapGesture {
-                                        bigModel.currentView = .budgetScreen
-                                        bigModel.screenHistory.append(.UserView)
-                                    }
-                                
-                                Spacer()
-                                Image(systemName: "clock")
-                                    .foregroundStyle(Color.gray)
-                                    .onTapGesture {
-                                        bigModel.currentView = .timeScreen
-                                        bigModel.screenHistory.append(.UserView)
-                                    }*/
-                                
-                                Spacer()
-                                Image(systemName: "fork.knife")
-                                    .foregroundStyle(Color.gray)
-                                    .onTapGesture {
-                                        if bigModel.currentUser.items.count != 0 && bigModel.currentUser.tools.count != 0 && bigModel.currentUser.numberOfPerson != 0 && bigModel.currentUser.budget != 0 && bigModel.currentUser.spendedTime != 0 {
-                                            bigModel.currentView = .mealsPropositionScreen
-                                            bigModel.screenHistory.append(.UserView)
-                                            if bigModel.currentUser.proposedMeals.count == 0 {
-                                                bigModel.currentView = .SeasonSelectionView
-                                            }
-                                        } else {
-                                            self.areInfosIncomplete = true
-                                        }
-                                    }
-                                
-                                Spacer()
-                                Image(systemName: "heart.fill")
-                                    .foregroundStyle(Color.gray)
-                                    .onTapGesture {
-                                        if bigModel.currentUser.items.count != 0 && bigModel.currentUser.tools.count != 0 && bigModel.currentUser.numberOfPerson != 0 && bigModel.currentUser.budget != 0 && bigModel.currentUser.spendedTime != 0 {
-                                            bigModel.currentView = .FavoriteMealsScreen
-                                            bigModel.screenHistory.append(.UserView)
-                                        } else {
-                                            self.areInfosIncomplete = true
-                                        }
-                                    }
-                                
-                                Spacer()
-                                Image(systemName: "calendar")
-                                    .foregroundStyle(Color.gray)
-                                    .onTapGesture {
-                                        bigModel.currentView = .DailyCalendar
-                                        bigModel.screenHistory.append(.UserView)
-                                    }
-                                
-                                Spacer()
-                            }
-                            
-                        }
-                        
-                        ZStack {
-                            Rectangle()
-                                .frame(height: 60)
-                                .foregroundStyle(Color.navyBlue)
-                            Text("log-out")
-                                .foregroundStyle(Color.white)
-                                .bold()
-                                .onTapGesture {
-                                    bigModel.currentView = .signInView
-                                    bigModel.screenHistory.append(.UserView)
-                                }
-                        }
-                    }.edgesIgnoringSafeArea(.all)
-                    
+                                        
                 }
             }.onAppear {
                 bigModel.fetchAllImages()

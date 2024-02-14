@@ -26,7 +26,7 @@ struct TimeScreen: View {
                     
                     //Spacer()
                     
-                    //VStack(spacing: 75) {
+                    VStack {
                         
                         VStack(alignment: .leading) {
                             Text("spent-time-per-meal")
@@ -36,72 +36,80 @@ struct TimeScreen: View {
                     
                         Spacer()
                            
-                        if time < 5 {
-                            Image("clock000")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 300, height: 300)
-                        }
-                        if time >= 5 && time < 10 {
-                            Image("clock001")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 300, height: 300)
-                        }
-                        if time >= 10 && time < 15 {
-                            Image("clock002")
-                                .resizable()
-                                .frame(width: 300, height: 300)
-                        }
-                        if time >= 15 && time < 20 {
-                            Image("clock003")
-                                .resizable()
-                                .frame(width: 300, height: 300)
-                        }
-                        if time >= 20 && time < 25 {
-                            Image("clock004")
-                                .resizable()
-                                .frame(width: 300, height: 300)
-                        }
-                        if time >= 25 && time < 30 {
-                            Image("clock005")
-                                .resizable()
-                                .frame(width: 300, height: 300)
-                        }
-                        if time >= 30 && time < 35 {
-                            Image("clock006")
-                                .resizable()
-                                .frame(width: 300, height: 300)
-                        }
-                        if time >= 35 && time < 40 {
-                            Image("clock007")
-                                .resizable()
-                                .frame(width: 300, height: 300)
-                        }
-                        if time >= 40 && time < 45 {
-                            Image("clock008")
-                                .resizable()
-                                .frame(width: 300, height: 300)
-                        }
-                        if time >= 45 && time < 50 {
-                            Image("clock009")
-                                .resizable()
-                                .frame(width: 300, height: 300)
-                        }
-                        if time >= 50 && time < 55 {
-                            Image("clock010")
-                                .resizable()
-                                .frame(width: 300, height: 300)
-                        }
-                        if time >= 55 && time < 60 {
-                            Image("clock011")
-                                .resizable()
-                                .frame(width: 300, height: 300)
-                        }
-                        if time >= 60 {
-                            Image("clock012")
-                                .resizable()
-                                .frame(width: 300, height: 300)
+                        ZStack {
+                            
+                            if (time%60) < 5 && (time < 60) {
+                                Image("clock000")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 300, height: 300)
+                            }
+                            if (time%60) >= 5 && (time%60) < 10 {
+                                Image("clock001")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 300, height: 300)
+                            }
+                            if (time%60) >= 10 && (time%60) < 15 {
+                                Image("clock002")
+                                    .resizable()
+                                    .frame(width: 300, height: 300)
+                            }
+                            if (time%60) >= 15 && (time%60) < 20 {
+                                Image("clock003")
+                                    .resizable()
+                                    .frame(width: 300, height: 300)
+                            }
+                            if (time%60) >= 20 && (time%60) < 25 {
+                                Image("clock004")
+                                    .resizable()
+                                    .frame(width: 300, height: 300)
+                            }
+                            if (time%60) >= 25 && (time%60) < 30 {
+                                Image("clock005")
+                                    .resizable()
+                                    .frame(width: 300, height: 300)
+                            }
+                            if (time%60) >= 30 && (time%60) < 35 {
+                                Image("clock006")
+                                    .resizable()
+                                    .frame(width: 300, height: 300)
+                            }
+                            if (time%60) >= 35 && (time%60) < 40 {
+                                Image("clock007")
+                                    .resizable()
+                                    .frame(width: 300, height: 300)
+                            }
+                            if (time%60) >= 40 && (time%60) < 45 {
+                                Image("clock008")
+                                    .resizable()
+                                    .frame(width: 300, height: 300)
+                            }
+                            if (time%60) >= 45 && (time%60) < 50 {
+                                Image("clock009")
+                                    .resizable()
+                                    .frame(width: 300, height: 300)
+                            }
+                            if (time%60) >= 50 && (time%60) < 55 {
+                                Image("clock010")
+                                    .resizable()
+                                    .frame(width: 300, height: 300)
+                            }
+                            if (time%60) >= 55 && (time%60) < 60 {
+                                Image("clock011")
+                                    .resizable()
+                                    .frame(width: 300, height: 300)
+                            }
+                            if (time%60) < 5 && (time >= 60) {
+                                Image("clock012")
+                                    .resizable()
+                                    .frame(width: 300, height: 300)
+                            }
+                            
+                            Text(timeString)
+                                .font(.largeTitle)
+                                .foregroundStyle(.white)
+                            
                         }
                         
                         Spacer()
@@ -147,7 +155,7 @@ struct TimeScreen: View {
                             }.padding(.horizontal, 25)
                         }
                         
-                    //}
+                    }
                     
                 }.padding(20)
                 

@@ -12,7 +12,7 @@ struct RecipeScreen: View {
     @ObservedObject var bigModel: BigModel
     let columns = [GridItem(.adaptive(minimum: 150))]
     @State var circleSize: CGFloat = UIScreen.main.bounds.height/3
-    @State var imageSize: CGFloat = UIScreen.main.bounds.height/4
+    @State var imageSize: CGFloat = UIScreen.main.bounds.height/5
     @State var fontSize: CGFloat = 50
     @State var selected = false
     @State var image: Image = Image("", label: Text(""))
@@ -176,7 +176,7 @@ struct RecipeScreen: View {
                                         circleSize = circleSize-$0
                                     }
                                     
-                                    if ((imageSize-$0) >= 100 && (imageSize-$0) <= UIScreen.main.bounds.height/4) {
+                                    if ((imageSize-$0) >= UIScreen.main.bounds.height/10 && (imageSize-$0) <= UIScreen.main.bounds.height/5) {
                                         imageSize = imageSize-$0
                                         print("[\(imageSize)]")
                                     }
@@ -243,7 +243,7 @@ struct RecipeScreen: View {
                 }
             }
         }
-        return Image("", label: Text(""))
+        return Image("cook-hat", label: Text(""))
     }
     
 }

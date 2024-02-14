@@ -29,9 +29,15 @@ struct SignIN: View {
             
             VStack {
                 
-                VStack {
+                Text("sign-in")
+                    .bold()
+                    .foregroundStyle(Color(.navyBlue))
+                
+                Spacer()
+                
+                //VStack {
                                         
-                    HStack {
+                    /*HStack {
                         Spacer()
                         VStack(alignment: .trailing, spacing: 0) {
                             Text("sign-in")
@@ -39,12 +45,12 @@ struct SignIN: View {
                                 .foregroundStyle(Color.navyBlue)
                                 .font(.system(size: 75))
                         }
-                    }
+                    }*/
                     
-                    Spacer()
+                    //Spacer()
                     
-                    Circle()
-                        .foregroundStyle(Color.navyBlue)
+                    //Circle()
+                        //.foregroundStyle(Color.navyBlue)
                         //
                         // IMPORTANT - Ce code ne sert qu'à insérer la clé OpenAI API dans le keychain du compte Apple
                         //             et ne devrait pas exister, mais on n'a pas trouvé comment mettre la clé dans la keychain
@@ -54,15 +60,20 @@ struct SignIN: View {
                         //             la stocker dans la keychain. Et ensuite on doit l'enlever pour éviter qu'elle se retrouve
                         //             sur Github
                         //
-                        .onTapGesture {
+                        /*.onTapGesture {
                             //
                             let keychain = Keychain(service: "net.proutechos.openai")
                             keychain["key.teevity.dev001"] = "enter-your-key-here"
-                        }
+                        }*/
                     
-                    Spacer()
+                    //Spacer()
                     
                     VStack(alignment: .leading) {
+                        
+                        Image("Sans titre 40")
+                            .resizable()
+                            .scaledToFit()
+                        
                         VStack(alignment: .leading, spacing: 10) {
                             
                             /*Text("Sign in with Apple")
@@ -101,47 +112,65 @@ struct SignIN: View {
                                 .foregroundStyle(Color.navyBlue)
                                 .font(.largeTitle)*/
                             
-                            GoogleSignInButton {
-                                
-                                guard let clientID = FirebaseApp.app()?.options.clientID else { return }
-                                
-                                // Create Google Sign In configuration object.
-                                let config = GIDConfiguration(clientID: clientID)
-                                GIDSignIn.sharedInstance.configuration = config
-                                
-                                // Start the sign in flow!
-                                GIDSignIn.sharedInstance.signIn(withPresenting: getRootViewController()) { result, error in
+                            ZStack {
+                                Rectangle()
+                                    .cornerRadius(60)
+                                    .frame(height: 60)
+                                HStack {
+                                    Image("white-google-logo")
+                                        .resizable()
+                                        .frame(width: 30, height: 30)
+                                    Text("Sign in with Google")
+                                        .foregroundStyle(Color.white)
+                                }
+                            }.overlay(content: {
+                                GoogleSignInButton {
                                     
-                                    guard error == nil else {
-                                        return
-                                    }
-                                                                    
-                                    guard let user = result?.user,
-                                          let idToken = user.idToken?.tokenString
+                                    guard let clientID = FirebaseApp.app()?.options.clientID else { return }
                                     
-                                    else {
-                                        return
-                                    }
+                                    // Create Google Sign In configuration object.
+                                    let config = GIDConfiguration(clientID: clientID)
+                                    GIDSignIn.sharedInstance.configuration = config
                                     
-                                    let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: user.accessToken.tokenString)
-                                    
-                                    Auth.auth().signIn(with: credential) { result, error in
+                                    // Start the sign in flow!
+                                    GIDSignIn.sharedInstance.signIn(withPresenting: getRootViewController()) { result, error in
                                         
                                         guard error == nil else {
                                             return
                                         }
+                                                                        
+                                        guard let user = result?.user,
+                                              let idToken = user.idToken?.tokenString
                                         
-                                        bigModel.googleSignInUserUpdate()
+                                        else {
+                                            return
+                                        }
                                         
+                                        let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: user.accessToken.tokenString)
+                                        
+                                        Auth.auth().signIn(with: credential) { result, error in
+                                            
+                                            guard error == nil else {
+                                                return
+                                            }
+                                            
+                                            bigModel.googleSignInUserUpdate()
+                                            
+                                        }
                                     }
-                                }
-                            }
+                                }.blendMode(.overlay)
+                            })
                         }
+                        
                     }
-                    
-                }.padding(20)
                 
-            }
+                Spacer()
+                
+                Spacer()
+                    
+                //}.padding(20)
+                
+            }.padding(20)
         }
     }
 }
