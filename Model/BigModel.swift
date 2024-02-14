@@ -516,7 +516,7 @@ class BigModel: ObservableObject {
                     }
                   } else {
                       self.currentView = .UserView
-                      self.screenHistory.append(.signInView)
+                      //self.screenHistory.append(.signInView)
                   }
                 }
             }
@@ -657,7 +657,7 @@ class BigModel: ObservableObject {
                         let user = try document.data(as: User.self)
                         self.currentUser = user
                         self.currentView = .UserView
-                        self.screenHistory.append(.signInView)
+                        //self.screenHistory.append(.signInView)
                         print("Document data: \(String(describing: document.data()))")
                     }
                     catch {

@@ -39,6 +39,12 @@ struct UserView: View {
                                     Text("back")
                                         .foregroundStyle(.white)
                                         .bold()
+                                        .onTapGesture {
+                                            bigModel.currentView = bigModel.screenHistory.last ?? .FruitsScreen
+                                            if bigModel.screenHistory.count > 0 {
+                                                self.bigModel.screenHistory.removeLast()
+                                            }
+                                        }
                                     Spacer()
                                     Text("log-out")
                                         .foregroundStyle(Color.white)
