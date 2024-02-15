@@ -24,7 +24,7 @@ struct Budget_Screen: View {
                     
                     BackModel(color: Color.white, view: .budgetScreen)
                     
-                    VStack(spacing: 75) {
+                    VStack(spacing: 40) {
                         
                         VStack(alignment: .leading) {
                             Text("budget-per-week")
@@ -85,50 +85,59 @@ struct Budget_Screen: View {
                                     budget = 100
                                 }
                         }
-                        
-                        ZStack {
-                            Rectangle()
-                                .cornerRadius(30)
-                                .frame(height: 60)
-                                .foregroundStyle(Color.white)
-                            HStack {
-                                Text("-")
-                                    .foregroundStyle(Color.navyBlue)
-                                    .onTapGesture {
-                                        if self.budget-10>0 {
-                                            self.budget -= 10
+                                                
+                        VStack {
+                            /*HStack {
+                                Text("EUR")
+                                    .font(.title3)
+                                    .foregroundStyle(Color.white)
+                                Image(systemName: "chevron.down")
+                                    .foregroundStyle(Color.white)
+                            }*/
+                            ZStack {
+                                Rectangle()
+                                    .cornerRadius(30)
+                                    .frame(height: 60)
+                                    .foregroundStyle(Color.white)
+                                HStack {
+                                    Text("-")
+                                        .foregroundStyle(Color.navyBlue)
+                                        .onTapGesture {
+                                            if self.budget-10>0 {
+                                                self.budget -= 10
+                                            }
                                         }
-                                    }
-                                    .onChange(of: budget) { newValue in
-                                        budgetString = String(budget)
-                                    }
-                                
-                                Spacer()
-                                
-                                TextField("", text: $budgetString)
-                                    .multilineTextAlignment(.center)
-                                    .foregroundStyle(Color.navyBlue)
-                                    .font(.title)
-                                    .keyboardType(.decimalPad)
-                                    .onChange(of: budgetString) { newValue in
-                                        if Int(budgetString) ?? 0 > 0 {
-                                            budget = Int(budgetString) ?? 0
-                                        } else {
-                                            budget = 0
+                                        .onChange(of: budget) { newValue in
+                                            budgetString = String(budget)
                                         }
-                                    }
-                                
-                                Spacer()
-                                
-                                Text("+")
-                                    .foregroundStyle(Color.navyBlue)
-                                    .onTapGesture {
-                                        self.budget += 10
-                                    }
-                                    .onChange(of: budget) { newValue in
-                                        budgetString = String(budget)
-                                    }
-                            }.padding(.horizontal, 25)
+                                    
+                                    Spacer()
+                                    
+                                    TextField("", text: $budgetString)
+                                        .multilineTextAlignment(.center)
+                                        .foregroundStyle(Color.navyBlue)
+                                        .font(.title)
+                                        .keyboardType(.decimalPad)
+                                        .onChange(of: budgetString) { newValue in
+                                            if Int(budgetString) ?? 0 > 0 {
+                                                budget = Int(budgetString) ?? 0
+                                            } else {
+                                                budget = 0
+                                            }
+                                        }
+                                    
+                                    Spacer()
+                                                                    
+                                    Text("+")
+                                        .foregroundStyle(Color.navyBlue)
+                                        .onTapGesture {
+                                            self.budget += 10
+                                        }
+                                        .onChange(of: budget) { newValue in
+                                            budgetString = String(budget)
+                                        }
+                                }.padding(.horizontal, 25)
+                            }
                         }
                         
                     }

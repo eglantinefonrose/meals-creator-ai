@@ -122,7 +122,7 @@ struct DailyCalendar: View {
                                                 Spacer()
                                             }
                                             HStack {
-                                                Text("\(currentEvent.breakfastMeal!.recipe.prepDuration) - \(currentEvent.breakfastMeal!.recipe.price)\(currentEvent.breakfastMeal!.recipe.currency)")
+                                                Text("\(currentEvent.breakfastMeal!.recipe.prepDuration) min - \(currentEvent.breakfastMeal!.recipe.price)\(currentEvent.breakfastMeal!.recipe.currency)")
                                                     .font(.title3)
                                                     .foregroundStyle(Color(.navyBlue))
                                                 Spacer()
@@ -215,7 +215,7 @@ struct DailyCalendar: View {
                                                 Spacer()
                                             }
                                             HStack {
-                                                Text("\(currentEvent.lunchMeal!.recipe.prepDuration) - \(currentEvent.lunchMeal!.recipe.price)\(currentEvent.lunchMeal!.recipe.currency)")
+                                                Text("\(currentEvent.lunchMeal!.recipe.prepDuration) min - \(currentEvent.lunchMeal!.recipe.price)\(currentEvent.lunchMeal!.recipe.currency)")
                                                     .font(.title3)
                                                     .foregroundStyle(Color(.navyBlue))
                                                 Spacer()
@@ -308,7 +308,7 @@ struct DailyCalendar: View {
                                                 Spacer()
                                             }
                                             HStack {
-                                                Text("\(currentEvent.snackMeal!.recipe.prepDuration) - \(currentEvent.snackMeal!.recipe.price)\(currentEvent.snackMeal!.recipe.currency)")
+                                                Text("\(currentEvent.snackMeal!.recipe.prepDuration) min - \(currentEvent.snackMeal!.recipe.price)\(currentEvent.snackMeal!.recipe.currency)")
                                                     .font(.title3)
                                                     .foregroundStyle(Color(.navyBlue))
                                                 Spacer()
@@ -401,7 +401,7 @@ struct DailyCalendar: View {
                                                 Spacer()
                                             }
                                             HStack {
-                                                Text("\(currentEvent.dinnerMeal!.recipe.prepDuration) - \(currentEvent.dinnerMeal!.recipe.price)\(currentEvent.dinnerMeal!.recipe.currency)")
+                                                Text("\(currentEvent.dinnerMeal!.recipe.prepDuration) min - \(currentEvent.dinnerMeal!.recipe.price)\(currentEvent.dinnerMeal!.recipe.currency)")
                                                     .font(.title3)
                                                     .foregroundStyle(Color(.navyBlue))
                                                 Spacer()

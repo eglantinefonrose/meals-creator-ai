@@ -69,14 +69,14 @@ struct UserView: View {
                                     VStack(alignment: .leading) {
                                         
                                         if !isEditModeOn {
-                                            Text(firstName)
+                                            Text(LocalizedStringKey(firstName))
                                                 .font(.largeTitle)
                                                 .foregroundColor(.white)
                                                 .onTapGesture {
                                                     isEditModeOn.toggle()
                                                 }
                                             
-                                            Text(lastName)
+                                            Text(LocalizedStringKey(lastName))
                                                 .font(.largeTitle)
                                                 .foregroundColor(.white)
                                                 .onTapGesture {
@@ -485,15 +485,15 @@ struct UserView: View {
                         .onAppear {
                             
                             if bigModel.currentUser.firstName == "" {
-                                newFirstName = "ur-first-name"
-                                firstName = "enter-ur-first-name"
+                                newFirstName = String(localized: "ur-first-name")
+                                firstName = String(localized: "enter-ur-first-name")
                             } else {
                                 newFirstName = bigModel.currentUser.firstName
                                 firstName = bigModel.currentUser.firstName
                             }
                             
                             if bigModel.currentUser.lastName == "" {
-                                newLastName = "ur-last-name"
+                                newLastName = String(localized: "ur-last-name")
                                 lastName = "enter-ur-last-name"
                             } else {
                                 newLastName = bigModel.currentUser.lastName
