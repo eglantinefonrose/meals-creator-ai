@@ -186,6 +186,10 @@ struct BigRootView: View {
                 SeasonSelection(bigModel: BigModel.shared)
             }
             
+            if bigModel.currentView == .CurrencyScreen {
+                CurrencyScreen(bigModel: BigModel.shared)
+            }
+            
         }
         
         
@@ -215,4 +219,5 @@ enum ViewEnum: String {
     case DailyCalendar
     case MealTypeView
     case SeasonSelectionView
+    case CurrencyScreen
 }

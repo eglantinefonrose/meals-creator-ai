@@ -30,7 +30,7 @@ struct RecipeScreen: View {
                      
                      VStack(spacing: 10) {
                          
-                         BackModel(color: Color.navyBlue, view: .mealsPropositionScreen)
+                         BackModel(color: Color.navyBlue, view: .RecipeScreen)
                          
                          VStack {
                              

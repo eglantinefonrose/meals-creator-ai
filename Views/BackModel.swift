@@ -19,13 +19,14 @@ struct BackModel: View {
                 .foregroundStyle(color)
                 .bold()
                 .onTapGesture {
-                    bigModel.currentView = bigModel.screenHistory.last ?? .FruitsScreen
+                    bigModel.currentView = NextView(view: view)
+                    //bigModel.currentView = .mealsPropositionScreen
                     if bigModel.screenHistory.count > 0 {
                         self.bigModel.screenHistory.removeLast()
                     }
                 }
             Spacer()
-            Image(systemName: "person.circle")
+            Image(systemName: "house")
                 .foregroundStyle(color)
                 .onTapGesture {
                     bigModel.currentView = .UserView
@@ -33,6 +34,83 @@ struct BackModel: View {
                 }
         }
     }
+    
+    func NextView(view: ViewEnum) -> ViewEnum {
+        
+        switch view {
+            
+            case .TastesView:
+                    return .UserView
+            
+            case .preferencesSummary:
+                    return .UserView
+            
+            case .LegumeScreen:
+                return .TastesView
+            
+            case .FruitsScreen:
+                return .TastesView
+            
+            case .strachyFoodsScreen:
+                return .TastesView
+            
+            case .proteinsScreen:
+                return .TastesView
+            
+            case .seasonningScreen:
+                return .TastesView
+            
+            case .allergiesScreen:
+                return .TastesView
+            
+            case .cookingToolsScreen:
+                return .TastesView
+            
+            case .budgetScreen:
+                return .UserView
+            
+            case .timeScreen:
+                return .UserView
+            
+            case .mealsPropositionScreen:
+                return .UserView
+            
+            case .signInView:
+                return .signInView
+            
+            case .welcomeView:
+                return .welcomeView
+            
+            case .UserView:
+                return .UserView
+            
+            case .RecipeScreen:
+                return bigModel.screenHistory.last!
+            
+            case .FavoriteMealsScreen:
+                return bigModel.screenHistory.last!
+            
+            case .BlankFile:
+                return .BlankFile
+            
+            case .NumberOfPersonScreen:
+                return .UserView
+            
+            case .DailyCalendar:
+            return bigModel.screenHistory.last!
+            
+            case .MealTypeView:
+                return .seasonningScreen
+            
+            case .SeasonSelectionView:
+                return .MealTypeView
+            
+            case .CurrencyScreen:
+                return .budgetScreen
+            }
+        
+    }
+    
 }
 
 struct BackModel_Previews: PreviewProvider {

@@ -86,14 +86,16 @@ struct Budget_Screen: View {
                                 }
                         }
                                                 
-                        VStack {
-                            /*HStack {
+                        VStack(spacing: 10) {
+                            
+                            HStack {
                                 Text("EUR")
-                                    .font(.title3)
-                                    .foregroundStyle(Color.white)
+                                    .foregroundStyle(.white)
+                                    .font(.title2)
                                 Image(systemName: "chevron.down")
-                                    .foregroundStyle(Color.white)
-                            }*/
+                                    .foregroundColor(.white)
+                            }
+                            
                             ZStack {
                                 Rectangle()
                                     .cornerRadius(30)

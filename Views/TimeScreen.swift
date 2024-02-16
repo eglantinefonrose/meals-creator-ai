@@ -28,10 +28,14 @@ struct TimeScreen: View {
                     
                     VStack {
                         
-                        VStack(alignment: .leading) {
+                        VStack(alignment: .center) {
                             Text("spent-time-per-meal")
                                 .foregroundStyle(Color.white)
                                 .font(.largeTitle)
+                            Text("in-minutes")
+                                .foregroundStyle(Color.gray)
+                                .font(.title3)
+                                
                         }
                     
                         Spacer()
