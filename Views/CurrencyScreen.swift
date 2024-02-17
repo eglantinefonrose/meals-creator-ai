@@ -64,7 +64,8 @@ struct CurrencyScreen: View {
                                 }.onTapGesture {
                                     var user = bigModel.currentUser
                                     user.currency = item.string
-                                    
+                                    bigModel.storeCurrentUserInfoIntoDB(user: user)
+                                    bigModel.currentView = .budgetScreen
                                 }
                             }
                         }.padding(5)

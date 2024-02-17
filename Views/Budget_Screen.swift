@@ -89,11 +89,13 @@ struct Budget_Screen: View {
                         VStack(spacing: 10) {
                             
                             HStack {
-                                Text("EUR")
+                                Text(bigModel.currentUser.currency == "" ? "EUR" : bigModel.currentUser.currency)
                                     .foregroundStyle(.white)
                                     .font(.title2)
                                 Image(systemName: "chevron.down")
                                     .foregroundColor(.white)
+                            }.onTapGesture {
+                                bigModel.currentView = .CurrencyScreen
                             }
                             
                             ZStack {
@@ -156,6 +158,9 @@ struct Budget_Screen: View {
                     }.onTapGesture {
                         Task {
                             var user = bigModel.currentUser
+                            if user.currency == "" {
+                                user.currency = "EUR"
+                            }
                             user.budget = budget
                             bigModel.storeCurrentUserInfoIntoDB(user: user)
                             
