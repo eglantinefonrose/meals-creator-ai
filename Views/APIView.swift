@@ -60,9 +60,11 @@ func jsonTest(jsonString: String) {
             print(meal)
         } catch {
             print("Erreur lors de la désérialisation JSON :", error)
+            print(jsonString)
         }
     } else {
         print("Erreur lors de la conversion de la chaîne en données JSON")
+        print(jsonString)
     }
 }
 

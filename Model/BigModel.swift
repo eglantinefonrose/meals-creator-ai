@@ -944,7 +944,7 @@ class BigModel: ObservableObject {
                     let responseHandler = OpenAIResponseHandler()
                     
                     //print("jsonStr : [\(jsonStr)]")
-                    let jsonString = (responseHandler.decodeJson(jsonString: jsonStr)!.choices[0].text)
+                    let jsonString = (responseHandler.decodeJson(jsonString: jsonStr)?.choices[0].text) ?? ""
                     
                     return (jsonString)
                     
@@ -999,9 +999,10 @@ class BigModel: ObservableObject {
         print("mealsNameList.count \(mealsNameList.count)")
         print(mealsNameList)
         
-        //for i in 0..<(mealsNameList.count-1) {
+        for i in 0..<(mealsNameList.count-1) {
                         
-            let response = processPrompt(prompt: "Donne moi les informations suivantes pour réaliser la recette de \(mealsNameList[0]) :  - id: l'identifiant de la recette - seasons : saison(s) pour laquelle la recette est adaptée (les valeurs possibles sont \"Summer\", \"Spring\", \"Winter\", \"Autumn\")  - ingredients : liste des ingrédients et quantité nécessaire pour \(currentUser.numberOfPerson) personnes - price : prix indicatif pour l\"ensemble des ingrédients (sans avoir le détail par ingrédient) - prepDuration : durée de préparation - totalDuration : durée totale - type : le type de repas  (les valeurs possibles sont \"main course\", \"breakfast\", \"dessert\", \"starter\") - recipe : description textuelle de la recette. Formate le résultat de la manière suivante : { \"id\":\"\(Int(Date().timeIntervalSince1970))\", \"recipeName\":\"\(mealsNameList[0])\", \"numberOfPersons\":3, \"mealType\":\"\(mealType)\", \"seasons\": [\"saison1\", \"saison2\"], \"ingredients\": [ {\"name\":\"ingrédient1\",  \"quantityWithUnit\":\"x grammes\"}, {\"name\":\"ingrédient2\",  \"quantityWithUnit\":\"y litres\"}], \"price\": \"4.75\", \"currency\": \"euros\", \"prepDuration\": 15, \"totalDuration\": 240, \"recipeDescription\": { \"id\":\"\(Int(Date().timeIntervalSince1970))\", \"introduction\": \"recipe high level description\", \"steps\": [ \"text for step 1\", \"text for step 2\", ] } }")
+            let response = processPrompt(prompt: "Donne moi les informations suivantes pour réaliser la recette de \(mealsNameList[i]) :  - id: l'identifiant de la recette - seasons : saison(s) pour laquelle la recette est adaptée (les valeurs possibles sont \"Summer\", \"Spring\", \"Winter\", \"Autumn\")  - ingredients : liste des ingrédients et quantité nécessaire pour \(currentUser.numberOfPerson) personnes - price : prix indicatif pour l\"ensemble des ingrédients (sans avoir le détail par ingrédient) - prepDuration : durée de préparation - totalDuration : durée totale - type : le type de repas  (les valeurs possibles sont \"main course\", \"breakfast\", \"dessert\", \"starter\") - recipe : description textuelle de la recette. Formate le résultat de la manière suivante : { \"id\":\"\(Int(Date().timeIntervalSince1970))\", \"recipeName\":\"\(mealsNameList[i])\", \"numberOfPersons\":3, \"mealType\":\"\(mealType)\", \"seasons\": [\"saison1\", \"saison2\"], \"ingredients\": [ {\"name\":\"ingrédient1\",  \"quantityWithUnit\":\"x grammes\"}, {\"name\":\"ingrédient2\",  \"quantityWithUnit\":\"y litres\"}], \"price\": \"4.75\", \"currency\": \"euros\", \"prepDuration\": 15, \"totalDuration\": 240, \"recipeDescription\": { \"id\":\"\(Int(Date().timeIntervalSince1970))\", \"introduction\": \"recipe high level description\", \"steps\": [ \"text for step 1\", \"text for step 2\", ] } }")
+            //let response = processPrompt(prompt: "Donne moi les informations suivantes pour réaliser la recette de \(mealsNameList[i]) :  - id: l'identifiant de la recette - seasons : saison(s) pour laquelle la recette est adaptée (les valeurs possibles sont \"Summer\", \"Spring\", \"Winter\", \"Autumn\")  - ingredients : liste des ingrédients et quantité nécessaire pour \(currentUser.numberOfPerson) personnes - price : prix indicatif pour l\"ensemble des ingrédients (sans avoir le détail par ingrédient) - prepDuration : durée de préparation - totalDuration : durée totale - type : le type de repas  (les valeurs possibles sont \"main course\", \"breakfast\", \"dessert\", \"starter\") - recipe : description textuelle de la recette. Formate le résultat de la manière suivante : { \"id\":\"\(Int(Date().timeIntervalSince1970))\", \"recipeName\":\"\(mealsNameList[i])\", \"numberOfPersons\":3, \"mealType\":\"\(mealType)\", \"seasons\": [\"saison1\", \"saison2\"], \"ingredients\": [ {\"name\":\"ingrédient1\",  \"quantityWithUnit\":\"x grammes\"}, {\"name\":\"ingrédient2\",  \"quantityWithUnit\":\"y litres\"}], \"price\": \"4.75\", \"currency\": \"euros\", \"prepDuration\": 15, \"totalDuration\": 240, \"recipeDescription\": { \"id\":\"\(Int(Date().timeIntervalSince1970))\", \"introduction\": \"recipe high level description\", \"steps\": [ \"text for step 1\", \"text for step 2\", ] } }")
         
         //let response = processPrompt(prompt: "Donne moi les informations suivantes pour réaliser la recette de \(mealsNameList[i]) :  - id: l'identifiant de la recette - seasons : saison(s) pour laquelle la recette est adaptée (les valeurs possibles sont \"Summer\", \"Spring\", \"Winter\", \"Autumn\")  - ingredients : liste des ingrédients et quantité nécessaire pour 4 personnes - price : prix indicatif pour l\"ensemble des ingrédients (sans avoir le détail par ingrédient) - prepDuration : durée de préparation - totalDuration : durée totale - type : le type de repas  (les valeurs possibles sont \"main course\", \"breakfast\", \"dessert\", \"starter\") - recipe : description textuelle de la recette. Formate le résultat de la manière suivante : { \"id\":\"\(Int(Date().timeIntervalSince1970))\", \"recipeName\":\"\(mealsNameList[i])\", \"numberOfPersons\":3, \"mealType\":\"\(mealType)\", \"seasons\": [\"saison1\", \"saison2\"], \"ingredients\": [ {\"name\":\"ingrédient1\",  \"quantityWithUnit\":\"x grammes\"}, {\"name\":\"ingrédient2\",  \"quantityWithUnit\":\"y litres\"}], \"price\": \"4.75\", \"currency\": \"euros\", \"prepDuration\": 15, \"totalDuration\": 240, \"recipeDescription\": { \"id\":\"\(Int(Date().timeIntervalSince1970))\", \"introduction\": \"recipe high level description\", \"steps\": [ \"text for step 1\", \"text for step 2\", ] } }")
         
@@ -1012,20 +1013,29 @@ class BigModel: ObservableObject {
             //?? BigModel.Recipe(id: "", recipeName: "gaga", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))))
             print("UUID = \(meal.id)")
             
-            if (meal.recipe.recipeName != "err") && !isDisliked(mealName: meal.recipe.recipeName) && !currentUser.proposedMeals.contains(meal) {
+            if (meal.recipe.recipeName != "err") && !isDisliked(mealName: meal.recipe.recipeName) && existeRepasAvecNom(nomRecherche: meal.recipe.recipeName) {
                  self.currentUserTags[meal] = false
                  self.currentUser.proposedMeals.append(meal)
                  self.storeCurrentUserInfoIntoDB(user: currentUser)
              }
              print(meal.recipe.recipeName)
             
-        //}
+        }
              
         DispatchQueue.main.async {
             self.isLoading = false
         }
         print("done")
         
+    }
+    
+    func existeRepasAvecNom(nomRecherche: String) -> Bool {
+        for repas in currentUser.proposedMeals {
+            if repas.recipe.recipeName == nomRecherche {
+                return true
+            }
+        }
+        return false
     }
     
     
@@ -1307,7 +1317,7 @@ class BigModel: ObservableObject {
     }
     
     init(shouldInjectMockedData: Bool) {
-        self.currentUser = User(id: "ozeifjeiofejfoi", firstName: "Malo", lastName: "Fonrose",
+        self.currentUser = User(id: "ozeifjeiofejfoi", firstName: "", lastName: "",
                                 items: [Item(id: 0, category: "legumes", name: "Poireaux", seasons: ["été"]),
                                         Item(id: 0, category: "fruits", name: "Poireaux", seasons: ["été"]),
                                         Item(id: 0, category: "strachyFoods", name: "Poireaux", seasons: ["été"]),
