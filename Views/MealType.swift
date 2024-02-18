@@ -115,7 +115,7 @@ struct MealType: View {
                             Task {
                                 bigModel.currentView = .mealsPropositionScreen
                                 bigModel.screenHistory.append(.MealTypeView)
-                                await bigModel.createMeals(mealType: selectedType)
+                                try await bigModel.createMeals(mealType: selectedType)
                             }
                         }
                 }
