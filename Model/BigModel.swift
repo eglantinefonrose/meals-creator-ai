@@ -1146,7 +1146,7 @@ class BigModel: ObservableObject {
     func createMealsNameList(mealType: String, completionHandler: @escaping ([String]?, Error?) -> Void) {
                 
         //let apiUrl = URL(string: "http://127.0.0.1:8080/processPrompt/Peux tu me proposer une liste de 5 plats de type \(mealType) d\"\(selectedSeason) pour une personne qui aime \(listToString(list: self.currentUser.items)) et qui a \(listToString(list: self.currentUser.tools)). Cette personne a un budget de \(currentUser.budget), veut y consacrer maximum \(currentUser.spendedTime) et pour \(currentUser.numberOfPerson). Formate le résultat de la manière suivante : \" nomDuRepas1 - nomDuRepas2 - nomDuRepas3 - nomDuRepas4 - nomDuRepas5\"/\(String(describing: getSecretKey()))")!
-        let apiUrl = URL(string: "http://127.0.0.1:8080/process/Dis Bonjour/\(String(describing: getSecretKey()))")!
+        let apiUrl = URL(string: "http://127.0.0.1:8080/processPrompt/Dis Bonjour/\(String(describing: getSecretKey()))")!
 
         var request = URLRequest(url: apiUrl)
         request.httpMethod = "GET"
@@ -1268,6 +1268,8 @@ class BigModel: ObservableObject {
               print("plats : \(mealsNameString)")
           }
         }
+        
+        
             
         DispatchQueue.main.async {
             self.isLoading = false
@@ -1584,14 +1586,14 @@ class BigModel: ObservableObject {
     }
     
     init(shouldInjectMockedData: Bool) {
-        self.currentUser = User(id: "ozeifjeiofejfoi", firstName: "", lastName: "",
-                                items: [Item(id: 0, category: "legumes", name: "Poireaux", seasons: ["été"]),
-                                        Item(id: 0, category: "fruits", name: "Poireaux", seasons: ["été"]),
-                                        Item(id: 0, category: "strachyFoods", name: "Poireaux", seasons: ["été"]),
-                                        Item(id: 0, category: "proteins", name: "Poireaux", seasons: ["été"]),
-                                        Item(id: 0, category: "seasonning", name: "Poireaux", seasons: ["été"]),
-                                        Item(id: 0, category: "allergies", name: "Poireaux", seasons: ["été"])],
-                                tools: [Item(id: 0, category: "cookingTools", name: "Casserolle", seasons: ["été"])],
+        self.currentUser = User(id: "ozeifjeiofejfoi", firstName: "Mlo", lastName: "F",
+                                items: [Item(id: 0, category: "legumes", name: "Carotte", seasons: ["été"]),
+                                        Item(id: 1, category: "legumes", name: "Poireaux", seasons: ["été"]),
+                                        Item(id: 2, category: "legumes", name: "Courgette", seasons: ["été"]),
+                                        Item(id: 3, category: "legumes", name: "Aubergine", seasons: ["été"]),
+                                        Item(id: 4, category: "legumes", name: "Brocolli", seasons: ["été"]),
+                                        Item(id: 5, category: "fruits", name: "Pomme", seasons: ["été"])],
+                                tools: [Item(id: 11, category: "cookingTools", name: "Casserolle", seasons: ["été"])],
                                 budget: 0, currency: "EUR", spendedTime: 0, numberOfPerson: 0,
                                 proposedMeals: [BigModel.Meal(id: "dfkljfrjf", recipe: Recipe(id: "001", recipeName: "Nb", numberOfPersons: 4, mealType: "Main course", seasons: ["Summer", "Spring"], ingredients: [Ingredient(name: "boeuf", quantityWithUnit: "400 grammes")], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(id: "", introduction: "", steps: ["étape1ejifeiofjezffij", "étape1ejifeiofjezffij", "étape1ejifeiofjezffij", "étape1ejifeiofjezffij", "étape1ejifeiofjezffij"]))),
                                                 BigModel.Meal(id: "002222", recipe: Recipe(id: "022", recipeName: "Spaghetti à la bollo", numberOfPersons: 4, mealType: "Dessert", seasons: ["Summer", "Spring"], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(id: "", introduction: "", steps: ["étape1ejifeiofjezffij", "étape1ejifeiofjezffij", "étape1ejifeiofjezffij", "étape1ejifeiofjezffij", "étape1ejifeiofjezffij"]))),

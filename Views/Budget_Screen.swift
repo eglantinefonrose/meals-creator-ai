@@ -96,6 +96,9 @@ struct Budget_Screen: View {
                                     .foregroundColor(.white)
                             }.onTapGesture {
                                 bigModel.currentView = .CurrencyScreen
+                                var user = bigModel.currentUser
+                                user.budget = budget
+                                bigModel.storeCurrentUserInfoIntoDB(user: user)
                             }
                             
                             ZStack {
