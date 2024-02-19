@@ -13,4 +13,4 @@ Now logged in, he enters his name and first name.
 
 He chooses his food preferences and the tools he owns.
 
-![](@Docs/NameScreen)
+![](@Docs/PreferencesScreen)
