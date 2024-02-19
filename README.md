@@ -14,3 +14,7 @@ Now logged in, he enters his name and first name.
 He chooses his food preferences and the tools he owns.
 
 ![](@Docs/PreferencesScreen)
+
+He select informations such his budget, the number of persons he cooks for and the time he spent to cook.
+
+![](@Docs/SpentTimeScreen)
