@@ -17,5 +17,5 @@ He chooses his food preferences and the tools he owns.
 
 He select informations such his budget, the number of persons he cooks for and the time he spent to cook.
 
-![](@Docs/BudgetScreen)
+![](@Docs/BudgetScreen) /
 ![](@Docs/SpentTimeScreen)
