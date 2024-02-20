@@ -10,11 +10,11 @@ import SwiftUI
 struct BindingTest: View {
     
     @ObservedObject var bigModel: BigModel
-    let meal1: BigModel.Meal = BigModel.Meal(id: "0", recipe: BigModel.Recipe(id: "3045IEKORRE¨DF", recipeName: "Penne alla rabbiata", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: [])))
-    @State var tags: [BigModel.Meal: Int] = [BigModel.Meal(id: "0", recipe: BigModel.Recipe(id: "3045IEKORRE¨DF", recipeName: "Penne alla rabbiata", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))) : 0]
+    let meal1: BigModel.Meal = BigModel.Meal(id: "0", recipe: BigModel.Recipe(id: "3045IEKORRE¨DF", recipeName: "Penne alla rabbiata", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: "", currency: "", prepDuration: "", totalDuration: "", recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: [])))
+    @State var tags: [BigModel.Meal: Int] = [BigModel.Meal(id: "0", recipe: BigModel.Recipe(id: "3045IEKORRE¨DF", recipeName: "Penne alla rabbiata", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: "", currency: "", prepDuration: "", totalDuration: "", recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))) : 0]
     @State var tags2: [String: Bool] = ["a": true, "b": false]
-    @State var tags3 : [Meal: Int] = [Meal(id: "fijmgiorjg", recipe: Recipe(id: "fjiovofjr", recipeName: "Pate carbo", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(id: "0", introduction: "", steps: []))): 0,
-                                      Meal(id: "sefijefezjjef", recipe: Recipe(id: "uhluhj", recipeName: "Pate carbo", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(id: "edfihejfeo", introduction: "", steps: []))): 1]
+    //@State var tags3 : [Meal: Int] = [Meal(id: "fijmgiorjg", recipe: Recipe(id: "fjiovofjr", recipeName: "Pate carbo", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: "", totalDuration: "", recipeDescription: RecipeDescription(id: "0", introduction: "", steps: []))): 0,
+                                     // Meal(id: "sefijefezjjef", recipe: Recipe(id: "uhluhj", recipeName: "Pate carbo", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: "", totalDuration: "", recipeDescription: RecipeDescription(id: "edfihejfeo", introduction: "", steps: []))): 1]
     
     var body: some View {
         
