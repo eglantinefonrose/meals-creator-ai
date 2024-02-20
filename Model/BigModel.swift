@@ -729,54 +729,6 @@ class BigModel: ObservableObject {
         }
         task.resume()
         
-        /*do {
-        
-           // creating a path from the main bundle and getting data object from the path
-           if let bundlePath = Bundle.main.path(forResource: "items-draw-ref", ofType: "json"),
-           let jsonData = try String(contentsOfFile: bundlePath).data(using: .utf8) {
-                 
-              // Decoding the Product type from JSON data using JSONDecoder() class.
-              let array = try JSONDecoder().decode([String].self, from: jsonData)
-              print(array)
-               
-               for i in (0...17) {
-                   if i == 0 {
-                       Task {
-                           do {
-                               let image = try await self.fetchImage(url: array[i])
-                               self.images.append(ImageType(id: i, image: image))
-                           } catch {
-                               print(error.localizedDescription)
-                           }
-                       }
-                   }
-                   if i<10 {
-                       Task {
-                           do {
-                               let image = try await self.fetchImage(url: array[i])
-                               self.images.append(ImageType(id: i, image: image))
-                           } catch {
-                               print(error.localizedDescription)
-                           }
-                       }
-                   } else {
-                       Task {
-                           do {
-                               let image = try await self.fetchImage(url: array[i])
-                               self.images.append(ImageType(id: i, image: image))
-                           } catch {
-                               print(error.localizedDescription)
-                           }
-                       }
-                   }
-               }
-               
-           }
-        } catch {
-           print(error)
-            let product: [String] = []
-        }*/
-        
     }
     
     func googleSignInUserUpdate() {
@@ -1078,7 +1030,7 @@ class BigModel: ObservableObject {
                     ///
                     let responseHandler = OpenAIResponseHandler()
                     
-                    //print("jsonStr : [\(jsonStr)]")
+                    print("jsonStr : [\(jsonStr)]")
                     let jsonString = (responseHandler.decodeJson(jsonString: jsonStr)?.choices[0].text) ?? ""
                     
                     return (jsonString)
@@ -1092,61 +1044,13 @@ class BigModel: ObservableObject {
             
         }
     
-    //private var mealsNameList: [String] = []
-    
-    /*func createMealsNameList(mealType: String) {
-        
-        //let response = "http://127.0.0.1:8080/processPrompt/prompt/Peux tu me proposer une liste de 5 plats de type \(mealType) d\"\(selectedSeason) pour une personne qui aime \(listToString(list: self.currentUser.items)) et qui a \(listToString(list: self.currentUser.tools)). Cette personne a un budget de \(currentUser.budget), veut y consacrer maximum \(currentUser.spendedTime) et pour \(currentUser.numberOfPerson). Formate le résultat de la manière suivante : \" nomDuRepas1 - nomDuRepas2 - nomDuRepas3 - nomDuRepas4 - nomDuRepas5\"/\(String(describing: getSecretKey()))"
-        
-        let apiUrl = URL(string: "http://127.0.0.1:8080/processPrompt/prompt/Peux tu me proposer une liste de 5 plats de type \(mealType) d\"\(selectedSeason) pour une personne qui aime \(listToString(list: self.currentUser.items)) et qui a \(listToString(list: self.currentUser.tools)). Cette personne a un budget de \(currentUser.budget), veut y consacrer maximum \(currentUser.spendedTime) et pour \(currentUser.numberOfPerson). Formate le résultat de la manière suivante : \" nomDuRepas1 - nomDuRepas2 - nomDuRepas3 - nomDuRepas4 - nomDuRepas5\"/\(String(describing: getSecretKey()))")!
-
-        // Création de la requête
-        var request = URLRequest(url: apiUrl)
-        request.httpMethod = "GET"
-
-        // Création d'une tâche de session URLSession pour effectuer la requête
-        let task = URLSession.shared.dataTask(with: request) { [self] (data, response, error) in
-            // Vérification des erreurs
-            if let error = error {
-                print("Erreur lors de la requête : \(error.localizedDescription)")
-                return
-            }
-            
-            // Vérification de la réponse HTTP
-            guard let httpResponse = response as? HTTPURLResponse,
-                  (200...299).contains(httpResponse.statusCode) else {
-                print("Réponse invalide du serveur")
-                return
-            }
-            
-            // Vérification des données renvoyées
-            guard let responseData = data,
-                  let responseBody = String(data: responseData, encoding: .utf8) else {
-                print("Aucune donnée reçue ou impossible de la convertir en chaîne de caractères")
-                return
-            }
-            
-            mealsNameList = self.splitStringWithDash(inputString: responseBody)
-            
-            if mealsNameList.count < 5 {
-                mealsNameList = Array(mealsNameList[..<5])
-            }
-            
-            print("Réponse de l'API : \(responseBody)")
-        }
-
-        // Lancement de la tâche
-        task.resume()
-        
-        
-        //Donne moi des meals avec des ID distincts et différents entre eux pour chaque meals.
-        
-    }*/
-    
     func createMealsNameList(mealType: String, completionHandler: @escaping ([String]?, Error?) -> Void) {
                 
-        //let apiUrl = URL(string: "http://127.0.0.1:8080/processPrompt/Peux tu me proposer une liste de 5 plats de type \(mealType) d\"\(selectedSeason) pour une personne qui aime \(listToString(list: self.currentUser.items)) et qui a \(listToString(list: self.currentUser.tools)). Cette personne a un budget de \(currentUser.budget), veut y consacrer maximum \(currentUser.spendedTime) et pour \(currentUser.numberOfPerson). Formate le résultat de la manière suivante : \" nomDuRepas1 - nomDuRepas2 - nomDuRepas3 - nomDuRepas4 - nomDuRepas5\"/\(String(describing: getSecretKey()))")!
-        let apiUrl = URL(string: "http://127.0.0.1:8080/processPrompt/Dis Bonjour/\(String(describing: getSecretKey()))")!
+        let prompt: String = "Peux tu me proposer une liste de 5 plats de type \(mealType) d\"\(selectedSeason) pour une personne qui aime \(listToString(list: self.currentUser.items)) et qui a \(listToString(list: self.currentUser.tools)). Cette personne a un budget de \(currentUser.budget), veut y consacrer maximum \(currentUser.spendedTime) et pour \(currentUser.numberOfPerson). Formate le résultat de la manière suivante : \" nomDuRepas1 - nomDuRepas2 - nomDuRepas3 - nomDuRepas4 - nomDuRepas5\" "
+        
+        
+        //let prompt = "Dis 'Bonjour'"
+        let apiUrl = URL(string: "http://127.0.0.1:8080/process/\(prompt)/\(openAIKey)")!
 
         var request = URLRequest(url: apiUrl)
         request.httpMethod = "GET"
@@ -1171,68 +1075,24 @@ class BigModel: ObservableObject {
                 return
             }
             
+            var mealsNameList: [String] = []
             print("responseBody = \(responseBody)")
-            var mealsNameList: [String]? = self.splitStringWithDash(inputString: responseBody)
+            mealsNameList = self.splitStringWithDash(inputString: responseBody)
 
           // Limiter la liste à 5 éléments
-            if mealsNameList!.count > 5 {
-                mealsNameList = Array(mealsNameList![..<5])
+            if mealsNameList.count > 5 {
+                mealsNameList = Array(mealsNameList[..<5])
           }
 
           // Exécuter le completion handler sur le main thread
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-              completionHandler(mealsNameList!, nil)
+                completionHandler(mealsNameList, nil)
           }
             
         }
 
         task.resume()
     }
-    
-    /*func getAPIString(mealType: String, completionHandler: @escaping ([String]?, Error?) -> Void) async throws {
-
-      //let url = URL(string: "http://127.0.0.1:8080/processPrompt/Peux tu me proposer une liste de 5 plats de type \(mealType) d\"\(selectedSeason) pour une personne qui aime \(listToString(list: self.currentUser.items)) et qui a \(listToString(list: self.currentUser.tools)). Cette personne a un budget de \(currentUser.budget), veut y consacrer maximum \(currentUser.spendedTime) et pour \(currentUser.numberOfPerson). Formate le résultat de la manière suivante : \" nomDuRepas1 - nomDuRepas2 - nomDuRepas3 - nomDuRepas4 - nomDuRepas5\"/\(String(describing: getSecretKey()))")!
-        let url = URL(string: "http://127.0.0.1:8080/processPrompt/Dis 'C'est un test'/\(String(describing: getSecretKey()))")!
-        //let url = URL(string: "http://127.0.0.1:8080/mockedData")!
-        
-      // Définir la requête
-      var request = URLRequest(url: url)
-      request.httpMethod = "GET"
-
-      // Envoyer la requête et récupérer la réponse
-      let (data, response) = try await URLSession.shared.data(for: request)
-
-      // Vérifier le code de statut
-      guard let httpResponse = response as? HTTPURLResponse,
-            httpResponse.statusCode == 200 else {
-        completionHandler([], APIError.invalidStatusCode)
-          print("invalidStatusCode")
-        return
-      }
-
-      // Décoder la réponse JSON en une chaîne de caractères
-      guard let string = String(data: data, encoding: .utf8) else {
-        completionHandler([], APIError.decodingError)
-        print("decoding error")
-        return
-      }
-        
-        let str = "Brandade - Morue panée - Welsch - Marinade - Lommo"
-
-        print("string: \(string)")
-      // Déterminer la liste des noms des plats
-        var mealsNameList: [String]? = self.splitStringWithDash(inputString: string)
-
-      // Limiter la liste à 5 éléments
-        if mealsNameList!.count > 5 {
-            mealsNameList = Array(mealsNameList![..<5])
-      }
-
-      // Exécuter le completion handler sur le main thread
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-          completionHandler(mealsNameList!, nil)
-      }
-    }*/
 
     enum APIError: Error {
         case decodingError
@@ -1253,48 +1113,88 @@ class BigModel: ObservableObject {
     func createMeals(mealType: String) async throws {
         
         DispatchQueue.main.async {
-            self.isLoading = true
-        }
-        
-        var mealsNameString: [String] = []
             
-        createMealsNameList(mealType: mealType) { mealsNameList, error in
+        self.createMealsNameList(mealType: mealType) { mealsNameList, error in
           if let error = error {
             print("Une erreur est survenue : \(error)")
           } else if let meals = mealsNameList {
+              
+              self.isLoading = true
+              var mealsNameString: [String] = []
+              
             // Traiter la liste des noms des plats
               mealsNameString = meals
               print("Nombre de plats : \(mealsNameString.count)")
               print("plats : \(mealsNameString)")
-          }
+              
+              for i in 0..<(mealsNameList!.count-1) {
+                              
+                  let response = self.processPrompt(prompt: "Donne moi les informations suivantes pour réaliser la recette de \(mealsNameList![i]) :  - id: l'identifiant de la recette - seasons : saison(s) pour laquelle la recette est adaptée (les valeurs possibles sont \"Summer\", \"Spring\", \"Winter\", \"Autumn\")  - ingredients : liste des ingrédients et quantité nécessaire pour \(self.currentUser.numberOfPerson) personnes - price : prix indicatif pour l\"ensemble des ingrédients (sans avoir le détail par ingrédient) - prepDuration : durée de préparation - totalDuration : durée totale - type : le type de repas  (les valeurs possibles sont \"main course\", \"breakfast\", \"dessert\", \"starter\") - recipe : description textuelle de la recette. Formate le résultat de la manière suivante : { \"id\":\"\(Int(Date().timeIntervalSince1970))\", \"recipeName\":\"brandade\", \"numberOfPersons\":3, \"mealType\":\"\(mealType)\", \"seasons\": [\"saison1\", \"saison2\"], \"ingredients\": [ {\"name\":\"ingrédient1\",  \"quantityWithUnit\":\"x grammes\"}, {\"name\":\"ingrédient2\",  \"quantityWithUnit\":\"y litres\"}], \"price\": \"4.75\", \"currency\": \"euros\", \"prepDuration\": 15, \"totalDuration\": 240, \"recipeDescription\": { \"id\":\"\(Int(Date().timeIntervalSince1970))\", \"introduction\": \"recipe high level description\", \"steps\": [ \"text for step 1\", \"text for step 2\", ] } }")
+                  
+                  let formattedResponse: String = self.extractTextBetweenBraces(input: response)
+                  print("formattedResponse : { \(formattedResponse) }")
+                  
+                  let meal = BigModel.Meal(id: UUID().uuidString, recipe: self.jsonTest(jsonString: "{ \(formattedResponse) }") )
+                  //?? BigModel.Recipe(id: "", recipeName: "gaga", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))))
+                  print("UUID = \(meal.id)")
+                  
+                  if (meal.recipe.recipeName != "err") && !self.isDisliked(mealName: meal.recipe.recipeName) && self.existeRepasAvecNom(nomRecherche: meal.recipe.recipeName) {
+                       self.currentUserTags[meal] = false
+                       self.currentUser.proposedMeals.append(meal)
+                      self.storeCurrentUserInfoIntoDB(user: self.currentUser)
+                   }
+                   print(meal.recipe.recipeName)
+                  
+              }
+              
+              self.isLoading = false
+              print("done")
+              
+              }
+            }
         }
         
         
+    }
+    
+    func promptCall() {
+        
+        let apiUrl = URL(string: "http://127.0.0.1:8080/process/Dis 'Bonjour'/\(openAIKey)")!
+
+        var request = URLRequest(url: apiUrl)
+        request.httpMethod = "GET"
+
+        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            if let error = error {
+                //completionHandler(nil, error) // Appel de la closure avec une erreur si elle existe
+                return
+            }
             
-        DispatchQueue.main.async {
-            self.isLoading = false
+            guard let httpResponse = response as? HTTPURLResponse,
+                  (200...299).contains(httpResponse.statusCode) else {
+                let error = NSError(domain: "Server", code: -1, userInfo: [NSLocalizedDescriptionKey: "Réponse invalide du serveur"])
+                //completionHandler(nil, error) // Appel de la closure avec une erreur
+                return
+            }
+            
+            guard let responseData = data,
+                  let responseBody = String(data: responseData, encoding: .utf8) else {
+                let error = NSError(domain: "Server", code: -1, userInfo: [NSLocalizedDescriptionKey: "Aucune donnée reçue ou impossible de la convertir en chaîne de caractères"])
+                //completionHandler(nil, error) // Appel de la closure avec une erreur
+                return
+            }
+            
+            print("responseBody = \(responseBody)")
+            
         }
-        print("done")
-            
-        /*for i in 0..<(mealsNameString.count-1) {
-                        
-            let response = self.processPrompt(prompt: "Donne moi les informations suivantes pour réaliser la recette de \(mealsNameString[i]) :  - id: l'identifiant de la recette - seasons : saison(s) pour laquelle la recette est adaptée (les valeurs possibles sont \"Summer\", \"Spring\", \"Winter\", \"Autumn\")  - ingredients : liste des ingrédients et quantité nécessaire pour \(currentUser.numberOfPerson) personnes - price : prix indicatif pour l\"ensemble des ingrédients (sans avoir le détail par ingrédient) - prepDuration : durée de préparation - totalDuration : durée totale - type : le type de repas  (les valeurs possibles sont \"main course\", \"breakfast\", \"dessert\", \"starter\") - recipe : description textuelle de la recette. Formate le résultat de la manière suivante : { \"id\":\"\(Int(Date().timeIntervalSince1970))\", \"recipeName\":\"brandade\", \"numberOfPersons\":3, \"mealType\":\"\(mealType)\", \"seasons\": [\"saison1\", \"saison2\"], \"ingredients\": [ {\"name\":\"ingrédient1\",  \"quantityWithUnit\":\"x grammes\"}, {\"name\":\"ingrédient2\",  \"quantityWithUnit\":\"y litres\"}], \"price\": \"4.75\", \"currency\": \"euros\", \"prepDuration\": 15, \"totalDuration\": 240, \"recipeDescription\": { \"id\":\"\(Int(Date().timeIntervalSince1970))\", \"introduction\": \"recipe high level description\", \"steps\": [ \"text for step 1\", \"text for step 2\", ] } }")
-            
-            let formattedResponse: String = self.extractTextBetweenBraces(input: response)
-            print("formattedResponse : \(formattedResponse)")
-            
-            let meal = BigModel.Meal(id: UUID().uuidString, recipe: self.jsonTest(jsonString: formattedResponse) )
-            //?? BigModel.Recipe(id: "", recipeName: "gaga", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: 0, prepDuration: 0, totalDuration: 0, recipeDescription: RecipeDescription(introduction: "", steps: []))))
-            print("UUID = \(meal.id)")
-            
-            if (meal.recipe.recipeName != "err") && !self.isDisliked(mealName: meal.recipe.recipeName) && self.existeRepasAvecNom(nomRecherche: meal.recipe.recipeName) {
-                 self.currentUserTags[meal] = false
-                 self.currentUser.proposedMeals.append(meal)
-                self.storeCurrentUserInfoIntoDB(user: self.currentUser)
-             }
-             print(meal.recipe.recipeName)
-            
-        }*/
+
+        task.resume()
+        
+        //let response = processPrompt(prompt: "Dis 'Bonjour'")
+        //print(response)
+        
+        let response = processPrompt(prompt: "Dis ' C'est un test '")
+        print(response)
         
     }
     

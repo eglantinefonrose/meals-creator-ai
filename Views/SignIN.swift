@@ -74,7 +74,7 @@ struct SignIN: View {
                             .resizable()
                             .scaledToFit()
                             .onTapGesture {
-                                bigModel.printHello()
+                                bigModel.promptCall()
                             }
                         
                         VStack(alignment: .leading, spacing: 10) {
