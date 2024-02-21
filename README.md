@@ -15,7 +15,12 @@ He chooses his food preferences and the tools he owns.
 
 ![](@Docs/PreferencesScreen)
 
-He select informations such his budget, the number of persons he cooks for and the time he spent to cook.
+He selects informations such his budget, the number of persons he cooks for and the time he spent to cook.
+
+![](@Docs/BudgetScreenHigh) /
+![](@Docs/SpentTimeScreen)
+
+Then he selects the type and the season of the meals he wants to generate meals according his preferences.
 
 ![](@Docs/BudgetScreenHigh) /
 ![](@Docs/SpentTimeScreen)
