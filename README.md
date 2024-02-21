@@ -13,10 +13,11 @@ He chooses his food preferences and the tools he owns.
 
 He selects informations such his budget, the number of persons he cooks for and the time he spent to cook.
 
-![](@Docs/BudgetScreenHigh) /
-![](@Docs/SpentTimeScreen)
+![](@Docs/budgetImage)
+![](@Docs/NumberPeopleImage)
+![](@Docs/spentTimeImage)
 
 Then he selects the type and the season of the meals he wants to generate meals according his preferences.
 
-![](@Docs/BudgetScreenHigh) /
+![](@Docs/type-screen) /
 ![](@Docs/meals-creator.gif)
