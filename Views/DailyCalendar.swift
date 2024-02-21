@@ -193,11 +193,11 @@ struct DailyCalendar: View {
                                     }.onTapGesture {
                                         
                                         if bigModel.isUserTryingAddNewMealToCalendar {
-                                            bigModel.selectedMealType = "Breakfast"
+                                            bigModel.selectedMealType = "Lunch"
                                             bigModel.addMealToCalendar(mealType: bigModel.selectedMealType, meal: bigModel.selectedMeal, dateTime: bigModel.selectedTimeEpoch)
                                             bigModel.isUserTryingAddNewMealToCalendar.toggle()
                                         } else {
-                                            bigModel.selectedMealType = "Breakfast"
+                                            bigModel.selectedMealType = "Lunch"
                                             print(selectedDate.timeIntervalSince1970)
                                             bigModel.currentView = .mealsPropositionScreen
                                             bigModel.screenHistory.append(.DailyCalendar)

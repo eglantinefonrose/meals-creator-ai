@@ -1044,19 +1044,62 @@ class BigModel: ObservableObject {
             
         }
     
+    func createMealsNameListOld(mealType: String) -> [String] {
+        
+        let prompt: String = "Peux tu me proposer une liste de 5 plats de type \(mealType) d\"\(selectedSeason) pour une personne qui aime \(listToString(list: self.currentUser.items)) et qui a \(listToString(list: self.currentUser.tools)). Cette personne a un budget de \(currentUser.budget), veut y consacrer maximum \(currentUser.spendedTime) et pour \(currentUser.numberOfPerson). Formate le résultat de la manière suivante : \" nomDuRepas1 - nomDuRepas2 - nomDuRepas3 - nomDuRepas4 - nomDuRepas5\" "
+        
+        let response = self.processPrompt(prompt: prompt)
+        
+        var mealsNameList: [String] = []
+        print("responseBody = \(response)")
+        mealsNameList = self.splitStringWithDash(inputString: response)
+        return mealsNameList
+        
+    }
+    
     func createMealsNameList(mealType: String, completionHandler: @escaping ([String]?, Error?) -> Void) {
                 
         let prompt: String = "Peux tu me proposer une liste de 5 plats de type \(mealType) d\"\(selectedSeason) pour une personne qui aime \(listToString(list: self.currentUser.items)) et qui a \(listToString(list: self.currentUser.tools)). Cette personne a un budget de \(currentUser.budget), veut y consacrer maximum \(currentUser.spendedTime) et pour \(currentUser.numberOfPerson). Formate le résultat de la manière suivante : \" nomDuRepas1 - nomDuRepas2 - nomDuRepas3 - nomDuRepas4 - nomDuRepas5\" "
         
-        
         //let prompt = "Dis 'Bonjour'"
-        let apiUrl = URL(string: "http://127.0.0.1:8080/process/\(prompt)/\(openAIKey)")!
+        //let apiUrl = URL(string: "http://127.0.0.1:8080/process/\(prompt)/\(openAIKey)")!
+        let apiUrl = URL(string: "http://127.0.0.1:8080/mockedData")!
 
         var request = URLRequest(url: apiUrl)
         request.httpMethod = "GET"
 
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            
             if let error = error {
+                completionHandler(nil, error) // Appel de la closure avec une erreur si elle existe
+                return
+            }
+            
+            guard let httpResponse = response as? HTTPURLResponse,
+                  (200...299).contains(httpResponse.statusCode) else {
+                let error = NSError(domain: "Server", code: -1, userInfo: [NSLocalizedDescriptionKey: "Réponse invalide du serveur"])
+                completionHandler(nil, error) // Appel de la closure avec une erreur
+                return
+            }
+            
+            guard let responseData = data,
+                  let responseBody = String(data: responseData, encoding: .utf8) else {
+                let error = NSError(domain: "Server", code: -1, userInfo: [NSLocalizedDescriptionKey: "Aucune donnée reçue ou impossible de la convertir en chaîne de caractères"])
+                completionHandler(nil, error) // Appel de la closure avec une erreur
+                return
+            }
+            
+            var mealsNameList: [String] = []
+            //print("responseBody = \(responseBody)")
+            mealsNameList = self.splitStringWithDash(inputString: responseBody)
+            print(mealsNameList)
+
+          // Exécuter le completion handler sur le main thread
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                completionHandler(mealsNameList, nil)
+          }
+            
+            /*if let error = error {
                 completionHandler(nil, error) // Appel de la closure avec une erreur si elle existe
                 return
             }
@@ -1087,7 +1130,7 @@ class BigModel: ObservableObject {
           // Exécuter le completion handler sur le main thread
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                 completionHandler(mealsNameList, nil)
-          }
+          }*/
             
         }
 
@@ -1112,132 +1155,163 @@ class BigModel: ObservableObject {
     
     func createMeals(mealType: String) async throws {
         
-        DispatchQueue.main.async {
-            
-        self.createMealsNameList(mealType: mealType) { mealsNameList, error in
-          if let error = error {
-            print("Une erreur est survenue : \(error)")
-          } else if let meals = mealsNameList {
-              
-              self.isLoading = true
-              var mealsNameString: [String] = []
-              
-            // Traiter la liste des noms des plats
-              mealsNameString = meals
-              print("Nombre de plats : \(mealsNameString.count)")
-              print("plats : \(mealsNameString)")
-              
-              for i in 0..<(mealsNameList!.count-1) {
-                              
-                  let response = self.processPrompt(prompt: "Donne moi les informations suivantes pour réaliser la recette de \(mealsNameList![i]) :  - id: l'identifiant de la recette - seasons : saison(s) pour laquelle la recette est adaptée (les valeurs possibles sont \"Summer\", \"Spring\", \"Winter\", \"Autumn\")  - ingredients : liste des ingrédients et quantité nécessaire pour \(self.currentUser.numberOfPerson) personnes - price : prix indicatif pour l\"ensemble des ingrédients (sans avoir le détail par ingrédient) - prepDuration : durée de préparation - totalDuration : durée totale - type : le type de repas  (les valeurs possibles sont \"main course\", \"breakfast\", \"dessert\", \"starter\") - recipe : description textuelle de la recette. Formate le résultat de la manière suivante : { \"id\":\"\(Int(Date().timeIntervalSince1970))\", \"recipeName\":\"brandade\", \"numberOfPersons\":3, \"mealType\":\"\(mealType)\", \"seasons\": [\"saison1\", \"saison2\"], \"ingredients\": [ {\"name\":\"ingrédient1\",  \"quantityWithUnit\":\"x grammes\"}, {\"name\":\"ingrédient2\",  \"quantityWithUnit\":\"y litres\"}], \"price\": \"4.75\", \"currency\": \"euros\", \"prepDuration\": \"15\", \"totalDuration\": \"240\", \"recipeDescription\": { \"id\":\"\(Int(Date().timeIntervalSince1970))\", \"introduction\": \"recipe high level description\", \"steps\": [ \"text for step 1\", \"text for step 2\", ] } }")
-                  
-                  let formattedResponse: String = self.extractTextBetweenBraces(input: response)
-                  print("formattedResponse : { \(formattedResponse) }")
-                  
-                  let meal = BigModel.Meal(id: UUID().uuidString, recipe: self.jsonTest(jsonString: "{ \(formattedResponse) }") )
-                  //?? BigModel.Recipe(id: "", recipeName: "gaga", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: 0, prepDuration: "", totalDuration: "", recipeDescription: RecipeDescription(introduction: "", steps: []))))
-                  print("UUID = \(meal.id)")
-                  
-                  if (meal.recipe.recipeName != "err") && !self.isDisliked(mealName: meal.recipe.recipeName) && self.existeRepasAvecNom(nomRecherche: meal.recipe.recipeName) {
-                       self.currentUserTags[meal] = false
-                       self.currentUser.proposedMeals.append(meal)
-                      self.storeCurrentUserInfoIntoDB(user: self.currentUser)
-                   }
-                   print(meal.recipe.recipeName)
-                  
-              }
-              
-              self.isLoading = false
-              print("done")
-              
-              }
+            DispatchQueue.main.async {
+                self.isLoading = true
             }
+        
+            let mealsNameList = self.createMealsNameListOld(mealType: mealType)
+            
+            for i in 0..<(mealsNameList.count-1) {
+             
+             let response = self.processPrompt(prompt: "Donne moi les informations suivantes pour réaliser la recette de \(mealsNameList[i]) :  - id: l'identifiant de la recette - seasons : saison(s) pour laquelle la recette est adaptée (les valeurs possibles sont \"Summer\", \"Spring\", \"Winter\", \"Autumn\")  - ingredients : liste des ingrédients et quantité nécessaire pour \(self.currentUser.numberOfPerson) personnes - price : prix indicatif pour l\"ensemble des ingrédients (sans avoir le détail par ingrédient) - prepDuration : durée de préparation - totalDuration : durée totale - type : le type de repas  (les valeurs possibles sont \"main course\", \"breakfast\", \"dessert\", \"starter\") - recipe : description textuelle de la recette. Formate le résultat de la manière suivante : { \"id\":\"\(Int(Date().timeIntervalSince1970))\", \"recipeName\":\"brandade\", \"numberOfPersons\":3, \"mealType\":\"\(mealType)\", \"seasons\": [\"saison1\", \"saison2\"], \"ingredients\": [ {\"name\":\"ingrédient1\",  \"quantityWithUnit\":\"x grammes\"}, {\"name\":\"ingrédient2\",  \"quantityWithUnit\":\"y litres\"}], \"price\": \"4.75\", \"currency\": \"euros\", \"prepDuration\": \"15\", \"totalDuration\": \"240\", \"recipeDescription\": { \"id\":\"\(Int(Date().timeIntervalSince1970))\", \"introduction\": \"recipe high level description\", \"steps\": [ \"text for step 1\", \"text for step 2\", ] } }")
+             
+             let formattedResponse: String = self.extractTextBetweenBraces(input: response)
+             print("formattedResponse : { \(formattedResponse) }")
+             
+             let meal = BigModel.Meal(id: UUID().uuidString, recipe: self.jsonTest(jsonString: "{ \(formattedResponse) }") )
+             //?? BigModel.Recipe(id: "", recipeName: "gaga", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: 0, prepDuration: "", totalDuration: "", recipeDescription: RecipeDescription(introduction: "", steps: []))))
+             print("UUID = \(meal.id)")
+             
+             if (meal.recipe.recipeName != "err")/* && !self.isDisliked(mealName: meal.recipe.recipeName) && self.existeRepasAvecNom(nomRecherche: meal.recipe.recipeName)*/ {
+                 self.currentUserTags[meal] = false
+                 self.currentUser.proposedMeals.append(meal)
+                 self.storeCurrentUserInfoIntoDB(user: self.currentUser)
+             }
+             print(meal.recipe.recipeName)
+             
+             }
+            
+            /*self.createMealsNameList(mealType: mealType) { mealsNameList, error in
+                if let error = error {
+                    print("Une erreur est survenue : \(error)")
+                } else if let meals = mealsNameList {
+                    
+                    var mealsNameString: [String] = []
+                    
+                    // Traiter la liste des noms des plats
+                    mealsNameString = meals
+                    print("Nombre de plats : \(mealsNameString.count)")
+                    print("plats : \(mealsNameString)")
+                    
+                    /*for i in 0..<(mealsNameList!.count-1) {
+                     
+                     let response = self.processPrompt(prompt: "Donne moi les informations suivantes pour réaliser la recette de \(mealsNameList![i]) :  - id: l'identifiant de la recette - seasons : saison(s) pour laquelle la recette est adaptée (les valeurs possibles sont \"Summer\", \"Spring\", \"Winter\", \"Autumn\")  - ingredients : liste des ingrédients et quantité nécessaire pour \(self.currentUser.numberOfPerson) personnes - price : prix indicatif pour l\"ensemble des ingrédients (sans avoir le détail par ingrédient) - prepDuration : durée de préparation - totalDuration : durée totale - type : le type de repas  (les valeurs possibles sont \"main course\", \"breakfast\", \"dessert\", \"starter\") - recipe : description textuelle de la recette. Formate le résultat de la manière suivante : { \"id\":\"\(Int(Date().timeIntervalSince1970))\", \"recipeName\":\"brandade\", \"numberOfPersons\":3, \"mealType\":\"\(mealType)\", \"seasons\": [\"saison1\", \"saison2\"], \"ingredients\": [ {\"name\":\"ingrédient1\",  \"quantityWithUnit\":\"x grammes\"}, {\"name\":\"ingrédient2\",  \"quantityWithUnit\":\"y litres\"}], \"price\": \"4.75\", \"currency\": \"euros\", \"prepDuration\": \"15\", \"totalDuration\": \"240\", \"recipeDescription\": { \"id\":\"\(Int(Date().timeIntervalSince1970))\", \"introduction\": \"recipe high level description\", \"steps\": [ \"text for step 1\", \"text for step 2\", ] } }")
+                     
+                     let formattedResponse: String = self.extractTextBetweenBraces(input: response)
+                     print("formattedResponse : { \(formattedResponse) }")
+                     
+                     let meal = BigModel.Meal(id: UUID().uuidString, recipe: self.jsonTest(jsonString: "{ \(formattedResponse) }") )
+                     //?? BigModel.Recipe(id: "", recipeName: "gaga", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: 0, prepDuration: "", totalDuration: "", recipeDescription: RecipeDescription(introduction: "", steps: []))))
+                     print("UUID = \(meal.id)")
+                     
+                     if (meal.recipe.recipeName != "err") && !self.isDisliked(mealName: meal.recipe.recipeName) && self.existeRepasAvecNom(nomRecherche: meal.recipe.recipeName) {
+                     self.currentUserTags[meal] = false
+                     self.currentUser.proposedMeals.append(meal)
+                     self.storeCurrentUserInfoIntoDB(user: self.currentUser)
+                     }
+                     print(meal.recipe.recipeName)
+                     
+                     
+                     
+                     }*/
+                    
+                    print("zzz")
+                    sleep(2)
+                    print("waky waky")
+                    
+                    print("done")
+                    
+                }
+                
+            }*/
+            
+            DispatchQueue.main.async {
+            self.isLoading = false
+            }
+            
+        }
+        
+        func promptCall() {
+            
+            let apiUrl = URL(string: "http://127.0.0.1:8080/process/Dis 'Bonjour'/\(openAIKey)")!
+            
+            var request = URLRequest(url: apiUrl)
+            request.httpMethod = "GET"
+            
+            let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+                if let error = error {
+                    //completionHandler(nil, error) // Appel de la closure avec une erreur si elle existe
+                    return
+                }
+                
+                guard let httpResponse = response as? HTTPURLResponse,
+                      (200...299).contains(httpResponse.statusCode) else {
+                    let error = NSError(domain: "Server", code: -1, userInfo: [NSLocalizedDescriptionKey: "Réponse invalide du serveur"])
+                    //completionHandler(nil, error) // Appel de la closure avec une erreur
+                    return
+                }
+                
+                guard let responseData = data,
+                      let responseBody = String(data: responseData, encoding: .utf8) else {
+                    let error = NSError(domain: "Server", code: -1, userInfo: [NSLocalizedDescriptionKey: "Aucune donnée reçue ou impossible de la convertir en chaîne de caractères"])
+                    //completionHandler(nil, error) // Appel de la closure avec une erreur
+                    return
+                }
+                
+                print("responseBody = \(responseBody)")
+                
+            }
+            
+            task.resume()
+            
+            //let response = processPrompt(prompt: "Dis 'Bonjour'")
+            //print(response)
+            
+            let response = processPrompt(prompt: "Dis ' C'est un test '")
+            print(response)
+            
+        }
+        
+        func existeRepasAvecNom(nomRecherche: String) -> Bool {
+            for repas in currentUser.proposedMeals {
+                if repas.recipe.recipeName == nomRecherche {
+                    return true
+                }
+            }
+            return false
         }
         
         
-    }
-    
-    func promptCall() {
-        
-        let apiUrl = URL(string: "http://127.0.0.1:8080/process/Dis 'Bonjour'/\(openAIKey)")!
-
-        var request = URLRequest(url: apiUrl)
-        request.httpMethod = "GET"
-
-        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-            if let error = error {
-                //completionHandler(nil, error) // Appel de la closure avec une erreur si elle existe
-                return
+        func extractTextBetweenBraces(input: String) -> String {
+            guard let firstOpenBraceRange = input.range(of: "{"),
+                  let lastCloseBraceRange = input.range(of: "}", options: .backwards),
+                  firstOpenBraceRange.upperBound < lastCloseBraceRange.lowerBound else {
+                return ""
             }
             
-            guard let httpResponse = response as? HTTPURLResponse,
-                  (200...299).contains(httpResponse.statusCode) else {
-                let error = NSError(domain: "Server", code: -1, userInfo: [NSLocalizedDescriptionKey: "Réponse invalide du serveur"])
-                //completionHandler(nil, error) // Appel de la closure avec une erreur
-                return
-            }
+            let startIndex = input.index(after: firstOpenBraceRange.lowerBound)
+            let endIndex = input.index(before: lastCloseBraceRange.upperBound)
             
-            guard let responseData = data,
-                  let responseBody = String(data: responseData, encoding: .utf8) else {
-                let error = NSError(domain: "Server", code: -1, userInfo: [NSLocalizedDescriptionKey: "Aucune donnée reçue ou impossible de la convertir en chaîne de caractères"])
-                //completionHandler(nil, error) // Appel de la closure avec une erreur
-                return
+            return String(input[startIndex..<endIndex])
+        }
+        
+        func isDisliked(mealName: String) -> Bool {
+            // Parcourt la liste des repas
+            for repasCourant in currentUser.dislikedMeals {
+                // Vérifie si le nomRecherche correspond à l\"attribut "nom" de l\"objet Repas
+                if repasCourant.recipe.recipeName == mealName {
+                    return true
+                }
             }
-            
-            print("responseBody = \(responseBody)")
-            
-        }
-
-        task.resume()
-        
-        //let response = processPrompt(prompt: "Dis 'Bonjour'")
-        //print(response)
-        
-        let response = processPrompt(prompt: "Dis ' C'est un test '")
-        print(response)
-        
-    }
-    
-    func existeRepasAvecNom(nomRecherche: String) -> Bool {
-        for repas in currentUser.proposedMeals {
-            if repas.recipe.recipeName == nomRecherche {
-                return true
-            }
-        }
-        return false
-    }
-    
-    
-    func extractTextBetweenBraces(input: String) -> String {
-        guard let firstOpenBraceRange = input.range(of: "{"),
-              let lastCloseBraceRange = input.range(of: "}", options: .backwards),
-              firstOpenBraceRange.upperBound < lastCloseBraceRange.lowerBound else {
-            return ""
+            // Aucune correspondance trouvée
+            return false
         }
         
-        let startIndex = input.index(after: firstOpenBraceRange.lowerBound)
-        let endIndex = input.index(before: lastCloseBraceRange.upperBound)
-        
-        return String(input[startIndex..<endIndex])
-    }
-    
-    func isDisliked(mealName: String) -> Bool {
-        // Parcourt la liste des repas
-        for repasCourant in currentUser.dislikedMeals {
-            // Vérifie si le nomRecherche correspond à l\"attribut "nom" de l\"objet Repas
-            if repasCourant.recipe.recipeName == mealName {
-                return true
-            }
-        }
-        // Aucune correspondance trouvée
-        return false
-    }
-    
-    func updateList() async {
-        // Modifiez votre liste ici comme vous le souhaitez
-        print("à")
-        //for i in 0...10 {
-        let meal = Meal(id: "", recipe: Recipe(id: "", recipeName: "Brandade", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: "", totalDuration: "", recipeDescription: RecipeDescription(id: "", introduction: "", steps: [])))
+        func updateList() async {
+            // Modifiez votre liste ici comme vous le souhaitez
+            print("à")
+            //for i in 0...10 {
+            let meal = Meal(id: "", recipe: Recipe(id: "", recipeName: "Brandade", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: "", totalDuration: "", recipeDescription: RecipeDescription(id: "", introduction: "", steps: [])))
             if meal.id != "" {
                 do {
                     try await Task.sleep(nanoseconds: 1000000000)
@@ -1247,268 +1321,268 @@ class BigModel: ObservableObject {
                     
                 }
             }
-        //}
-        print("done")
-    }
-    
-    func jsonTest(jsonString: String) -> Recipe {
-        if let jsonData = jsonString.data(using: .utf8) {
-            do {
+            //}
+            print("done")
+        }
+        
+        func jsonTest(jsonString: String) -> Recipe {
+            if let jsonData = jsonString.data(using: .utf8) {
+                do {
+                    //print("jsonString [\(jsonString)]")
+                    let recipe = try JSONDecoder().decode(Recipe.self, from: jsonData)
+                    return recipe
+                } catch {
+                    //print("jsonString [\(jsonString)]")
+                    print("Erreur lors de la désérialisation JSON :", error)
+                    return BigModel.Recipe(id: "err", recipeName: "err", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: "", totalDuration: "", recipeDescription: RecipeDescription(id: "", introduction: "", steps: []))
+                }
+            } else {
                 //print("jsonString [\(jsonString)]")
-                let recipe = try JSONDecoder().decode(Recipe.self, from: jsonData)
-                return recipe
-            } catch {
-                //print("jsonString [\(jsonString)]")
-                print("Erreur lors de la désérialisation JSON :", error)
+                print("Erreur lors de la conversion de la chaîne en données JSON")
                 return BigModel.Recipe(id: "err", recipeName: "err", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: "", totalDuration: "", recipeDescription: RecipeDescription(id: "", introduction: "", steps: []))
             }
-        } else {
-            //print("jsonString [\(jsonString)]")
-            print("Erreur lors de la conversion de la chaîne en données JSON")
-            return BigModel.Recipe(id: "err", recipeName: "err", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: "", totalDuration: "", recipeDescription: RecipeDescription(id: "", introduction: "", steps: []))
         }
-    }
-    
-    func splitStringWithDash(inputString: String) -> [String] {
-        let separatedStrings = inputString.components(separatedBy: " - ")
-        return separatedStrings
-    }
-    
-    func listToString(list: [Item]) -> String {
-        var itemsString: String = ""
-        for i in 0..<list.count {
+        
+        func splitStringWithDash(inputString: String) -> [String] {
+            let separatedStrings = inputString.components(separatedBy: " - ")
+            return separatedStrings
+        }
+        
+        func listToString(list: [Item]) -> String {
+            var itemsString: String = ""
+            for i in 0..<list.count {
+                
+                if list[i].seasons.contains(selectedSeason) {
+                    itemsString += "\(String(describing: list[i])), "
+                }
+                
+            }
+            return itemsString
+        }
+        
+        func toolsStringList() -> String {
+            var itemsString: String = ""
+            for i in 0...(currentUser.tools.count) {
+                itemsString += "\(String(describing: currentUser.tools[i].name)), "
+            }
+            return itemsString
+        }
+        
+        //
+        //
+        //
+        //MARK:
+        //
+        //
+        //
+        //
+        
+        var selectedTimeEpoch: Double = Date().timeIntervalSince1970
+        var selectedMealType: String = ""
+        
+        func datesAreIdentical(date1: Date, date2: Date) -> Bool {
+            let calendar = Calendar.current
+            let components1 = calendar.dateComponents([.year, .month, .day], from: date1)
+            let components2 = calendar.dateComponents([.year, .month, .day], from: date2)
             
-            if list[i].seasons.contains(selectedSeason) {
-                itemsString += "\(String(describing: list[i])), "
+            return components1.year == components2.year &&
+            components1.month == components2.month &&
+            components1.day == components2.day
+        }
+        
+        let defaultEvent : Event = Event(id: "", timeEpoch: 0, breakfastMeal: BigModel.Meal(id: "", recipe: BigModel.Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: "", totalDuration: "", recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))), lunchMeal: BigModel.Meal(id: "", recipe: BigModel.Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: "", totalDuration: "", recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))), snackMeal: BigModel.Meal(id: "", recipe: BigModel.Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: "", totalDuration: "", recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))), dinnerMeal: BigModel.Meal(id: "", recipe: BigModel.Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: "", totalDuration: "", recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))))
+        
+        func addMealToCalendar(mealType: String, meal: Meal, dateTime: Double) {
+            
+            do {
+                // Update the UserInfo inside the Firebase DB
+                var user = currentUser
+                guard let id = self.auth.currentUser?.uid else { return }
+                
+                if let index = self.currentUser.events.firstIndex(where: { datesAreIdentical(date1: Date(timeIntervalSince1970: dateTime), date2: Date(timeIntervalSince1970: $0.timeEpoch) ) }) {
+                    
+                    if mealType == "Breakfast" {
+                        user.events[index].breakfastMeal = meal
+                        self.currentUser.events[index].breakfastMeal = nil
+                    }
+                    if mealType == "Lunch" {
+                        user.events[index].lunchMeal = meal
+                        self.currentUser.events[index].lunchMeal = nil
+                    }
+                    if mealType == "Snack" {
+                        user.events[index].snackMeal = meal
+                        self.currentUser.events[index].snackMeal = nil
+                    }
+                    if mealType == "Dinner" {
+                        user.events[index].dinnerMeal = meal
+                        self.currentUser.events[index].dinnerMeal = nil
+                    }
+                    
+                } else {
+                    
+                    if mealType == "Breakfast" {
+                        user.events.append(Event(id: "\(dateTime)", timeEpoch: dateTime, breakfastMeal: meal))
+                    }
+                    if mealType == "Lunch" {
+                        user.events.append(Event(id: "\(dateTime)", timeEpoch: dateTime, lunchMeal: meal))
+                    }
+                    if mealType == "Snack" {
+                        user.events.append(Event(id: "\(dateTime)", timeEpoch: dateTime, snackMeal: meal))
+                    }
+                    if mealType == "Dinner" {
+                        user.events.append(Event(id: "\(dateTime)", timeEpoch: dateTime, dinnerMeal: meal))
+                    }
+                    
+                }
+                
+                let _ = try self.db.collection("Users").document(id).setData(from: user) { _ in
+                    
+                    let docRef = self.db.collection("Users").document(id)
+                    let newUser = User(firstName: "", lastName: "", items: [], tools: [], budget: 0, currency: "", spendedTime: 0, numberOfPerson: 0, proposedMeals: [], favoriteMeals: [], dislikedMeals: [], events: [])
+                    
+                    docRef.getDocument { (document, error) in
+                        
+                        if let document = document {
+                            if document.exists {
+                                do {
+                                    self.currentUser.firstName = ""
+                                    let user = try document.data(as: User.self)
+                                    self.currentUser = user
+                                    let tabElement = self.tabEventWithValue(selectedDate: Date(timeIntervalSince1970: dateTime))
+                                    
+                                    //tests pour savoir si le model a bien été updaté
+                                    
+                                    if mealType == "Breakfast" {
+                                        if tabElement.breakfastMeal != nil {
+                                            print("🧛🏼‍♀️")
+                                            self.currentView = .DailyCalendar
+                                        }
+                                    }
+                                    if mealType == "Lunch" {
+                                        if tabElement.lunchMeal != nil {
+                                            print("🧛🏼‍♀️")
+                                            self.currentView = .DailyCalendar
+                                        }
+                                    }
+                                    if mealType == "Snack" {
+                                        if tabElement.snackMeal != nil {
+                                            print("🧛🏼‍♀️")
+                                            self.currentView = .DailyCalendar
+                                        }
+                                    }
+                                    if mealType == "Dinner" {
+                                        if tabElement.dinnerMeal != nil {
+                                            print("🧛🏼‍♀️")
+                                            self.currentView = .DailyCalendar
+                                        }
+                                    }
+                                    
+                                    //print("Document data: \(String(describing: document.data()))")
+                                    
+                                }
+                                catch {
+                                    print(error.localizedDescription)
+                                }
+                            } else {
+                                do {
+                                    let _ = try self.db.collection("Users").document(id).setData(from: newUser)
+                                } catch {
+                                    
+                                }
+                            }
+                        }
+                    }
+                    
+                }
+                // Refresh the BigModel from the DB
+                
+                print("done")
+            } catch {
+                print("ERR001[updateCurrentUserInfoInDB]=\(error)")
             }
             
         }
-        return itemsString
-    }
-    
-    func toolsStringList() -> String {
-        var itemsString: String = ""
-        for i in 0...(currentUser.tools.count) {
-            itemsString += "\(String(describing: currentUser.tools[i].name)), "
+        
+        @Published var isUserTryingAddNewMealToCalendar: Bool = false
+        
+        func tabEventWithValue(selectedDate: Date) -> BigModel.Event {
+            
+            if let index = self.currentUser.events.firstIndex(where: {
+                
+                datesAreIdentical(date1: Date(timeIntervalSince1970: self.selectedTimeEpoch), date2: Date(timeIntervalSince1970: $0.timeEpoch) )
+                
+            }) {
+                return currentUser.events[index]
+            } else {
+                return BigModel.Event(id: "", timeEpoch: 0, breakfastMeal: BigModel.Meal(id: "", recipe: BigModel.Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: "", totalDuration: "", recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))), lunchMeal: BigModel.Meal(id: "", recipe: BigModel.Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: "", totalDuration: "", recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))), snackMeal: BigModel.Meal(id: "", recipe: BigModel.Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: "", totalDuration: "", recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))), dinnerMeal: BigModel.Meal(id: "", recipe: BigModel.Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: "", totalDuration: "", recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))))
+            }
+            
         }
-        return itemsString
-    }
-    
-    //
-    //
-    //
-    //MARK:
-    //
-    //
-    //
-    //
-    
-    var selectedTimeEpoch: Double = Date().timeIntervalSince1970
-    var selectedMealType: String = ""
-    
-    func datesAreIdentical(date1: Date, date2: Date) -> Bool {
-        let calendar = Calendar.current
-        let components1 = calendar.dateComponents([.year, .month, .day], from: date1)
-        let components2 = calendar.dateComponents([.year, .month, .day], from: date2)
         
-        return components1.year == components2.year &&
-               components1.month == components2.month &&
-               components1.day == components2.day
-    }
-    
-    let defaultEvent : Event = Event(id: "", timeEpoch: 0, breakfastMeal: BigModel.Meal(id: "", recipe: BigModel.Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: "", totalDuration: "", recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))), lunchMeal: BigModel.Meal(id: "", recipe: BigModel.Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: "", totalDuration: "", recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))), snackMeal: BigModel.Meal(id: "", recipe: BigModel.Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: "", totalDuration: "", recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))), dinnerMeal: BigModel.Meal(id: "", recipe: BigModel.Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: "", totalDuration: "", recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))))
-    
-    func addMealToCalendar(mealType: String, meal: Meal, dateTime: Double) {
         
-        do {
-            // Update the UserInfo inside the Firebase DB
-            var user = currentUser
-            guard let id = self.auth.currentUser?.uid else { return }
-                                
-            if let index = self.currentUser.events.firstIndex(where: { datesAreIdentical(date1: Date(timeIntervalSince1970: dateTime), date2: Date(timeIntervalSince1970: $0.timeEpoch) ) }) {
-                            
+        func removeMealFromEvent(mealType: String) {
+            
+            var user: User = currentUser
+            
+            if let index = self.currentUser.events.firstIndex(where: { datesAreIdentical(date1: Date(timeIntervalSince1970: self.selectedTimeEpoch), date2: Date(timeIntervalSince1970: $0.timeEpoch) ) }) {
+                
                 if mealType == "Breakfast" {
-                    user.events[index].breakfastMeal = meal
-                    self.currentUser.events[index].breakfastMeal = nil
+                    user.events[index].breakfastMeal = nil
                 }
                 if mealType == "Lunch" {
-                    user.events[index].lunchMeal = meal
-                    self.currentUser.events[index].lunchMeal = nil
+                    user.events[index].lunchMeal = nil
                 }
                 if mealType == "Snack" {
-                    user.events[index].snackMeal = meal
-                    self.currentUser.events[index].snackMeal = nil
+                    user.events[index].snackMeal = nil
                 }
                 if mealType == "Dinner" {
-                    user.events[index].dinnerMeal = meal
-                    self.currentUser.events[index].dinnerMeal = nil
+                    user.events[index].dinnerMeal = nil
                 }
                 
             } else {
                 
-                if mealType == "Breakfast" {
-                    user.events.append(Event(id: "\(dateTime)", timeEpoch: dateTime, breakfastMeal: meal))
-                }
-                if mealType == "Lunch" {
-                    user.events.append(Event(id: "\(dateTime)", timeEpoch: dateTime, lunchMeal: meal))
-                }
-                if mealType == "Snack" {
-                    user.events.append(Event(id: "\(dateTime)", timeEpoch: dateTime, snackMeal: meal))
-                }
-                if mealType == "Dinner" {
-                    user.events.append(Event(id: "\(dateTime)", timeEpoch: dateTime, dinnerMeal: meal))
-                }
                 
             }
             
-            let _ = try self.db.collection("Users").document(id).setData(from: user) { _ in
-                
-                let docRef = self.db.collection("Users").document(id)
-                let newUser = User(firstName: "", lastName: "", items: [], tools: [], budget: 0, currency: "", spendedTime: 0, numberOfPerson: 0, proposedMeals: [], favoriteMeals: [], dislikedMeals: [], events: [])
-                
-                docRef.getDocument { (document, error) in
-                    
-                    if let document = document {
-                        if document.exists {
-                            do {
-                                self.currentUser.firstName = ""
-                                let user = try document.data(as: User.self)
-                                self.currentUser = user
-                                let tabElement = self.tabEventWithValue(selectedDate: Date(timeIntervalSince1970: dateTime))
-                                
-                                //tests pour savoir si le model a bien été updaté
-                                
-                                if mealType == "Breakfast" {
-                                    if tabElement.breakfastMeal != nil {
-                                        print("🧛🏼‍♀️")
-                                        self.currentView = .DailyCalendar
-                                    }
-                                }
-                                if mealType == "Lunch" {
-                                    if tabElement.lunchMeal != nil {
-                                        print("🧛🏼‍♀️")
-                                        self.currentView = .DailyCalendar
-                                    }
-                                }
-                                if mealType == "Snack" {
-                                    if tabElement.snackMeal != nil {
-                                        print("🧛🏼‍♀️")
-                                        self.currentView = .DailyCalendar
-                                    }
-                                }
-                                if mealType == "Dinner" {
-                                    if tabElement.dinnerMeal != nil {
-                                        print("🧛🏼‍♀️")
-                                        self.currentView = .DailyCalendar
-                                    }
-                                }
-                                
-                                //print("Document data: \(String(describing: document.data()))")
-                                
-                            }
-                            catch {
-                                print(error.localizedDescription)
-                            }
-                        } else {
-                            do {
-                                let _ = try self.db.collection("Users").document(id).setData(from: newUser)
-                            } catch {
-                                
-                            }
-                        }
-                    }
-                }
-                
-            }
-            // Refresh the BigModel from the DB
-            
-            print("done")
-        } catch {
-            print("ERR001[updateCurrentUserInfoInDB]=\(error)")
-        }
-        
-    }
-    
-    @Published var isUserTryingAddNewMealToCalendar: Bool = false
-    
-    func tabEventWithValue(selectedDate: Date) -> BigModel.Event {
-        
-        if let index = self.currentUser.events.firstIndex(where: {
-            
-            datesAreIdentical(date1: Date(timeIntervalSince1970: self.selectedTimeEpoch), date2: Date(timeIntervalSince1970: $0.timeEpoch) )
-            
-        }) {
-            return currentUser.events[index]
-        } else {
-            return BigModel.Event(id: "", timeEpoch: 0, breakfastMeal: BigModel.Meal(id: "", recipe: BigModel.Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: "", totalDuration: "", recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))), lunchMeal: BigModel.Meal(id: "", recipe: BigModel.Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: "", totalDuration: "", recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))), snackMeal: BigModel.Meal(id: "", recipe: BigModel.Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: "", totalDuration: "", recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))), dinnerMeal: BigModel.Meal(id: "", recipe: BigModel.Recipe(id: "", recipeName: "", numberOfPersons: 0, mealType: "", seasons: [], ingredients: [], price: "", currency: "", prepDuration: "", totalDuration: "", recipeDescription: BigModel.RecipeDescription(id: "", introduction: "", steps: []))))
-        }
-        
-   }
-    
-    
-    func removeMealFromEvent(mealType: String) {
-        
-        var user: User = currentUser
-                
-        if let index = self.currentUser.events.firstIndex(where: { datesAreIdentical(date1: Date(timeIntervalSince1970: self.selectedTimeEpoch), date2: Date(timeIntervalSince1970: $0.timeEpoch) ) }) {
-                        
-            if mealType == "Breakfast" {
-                user.events[index].breakfastMeal = nil
-            }
-            if mealType == "Lunch" {
-                user.events[index].lunchMeal = nil
-            }
-            if mealType == "Snack" {
-                user.events[index].snackMeal = nil
-            }
-            if mealType == "Dinner" {
-                user.events[index].dinnerMeal = nil
-            }
-            
-        } else {
-            
+            self.storeCurrentUserInfoIntoDB(user: user)
             
         }
         
-        self.storeCurrentUserInfoIntoDB(user: user)
         
-    }
-    
-    
-    //
-    //
-    //
-    //
-    //
-    
-    init() {
-        self.fetchItemsInfos()
-    }
-    
-    init(shouldInjectMockedData: Bool) {
-        self.currentUser = User(id: "ozeifjeiofejfoi", firstName: "Mlo", lastName: "F",
-                                items: [Item(id: 0, category: "legumes", name: "Carotte", seasons: ["été"]),
-                                        Item(id: 1, category: "legumes", name: "Poireaux", seasons: ["été"]),
-                                        Item(id: 2, category: "legumes", name: "Courgette", seasons: ["été"]),
-                                        Item(id: 3, category: "legumes", name: "Aubergine", seasons: ["été"]),
-                                        Item(id: 4, category: "legumes", name: "Brocolli", seasons: ["été"]),
-                                        Item(id: 5, category: "fruits", name: "Pomme", seasons: ["été"])],
-                                tools: [Item(id: 11, category: "cookingTools", name: "Casserolle", seasons: ["été"])],
-                                budget: 0, currency: "EUR", spendedTime: 0, numberOfPerson: 0,
-                                proposedMeals: [BigModel.Meal(id: "dfkljfrjf", recipe: Recipe(id: "001", recipeName: "Nb", numberOfPersons: 4, mealType: "Main course", seasons: ["Summer", "Spring"], ingredients: [Ingredient(name: "boeuf", quantityWithUnit: "400 grammes")], price: "", currency: "", prepDuration: "", totalDuration: "", recipeDescription: RecipeDescription(id: "", introduction: "", steps: ["étape1ejifeiofjezffij", "étape1ejifeiofjezffij", "étape1ejifeiofjezffij", "étape1ejifeiofjezffij", "étape1ejifeiofjezffij"]))),
-                                                BigModel.Meal(id: "002222", recipe: Recipe(id: "022", recipeName: "Spaghetti à la bollo", numberOfPersons: 4, mealType: "Dessert", seasons: ["Summer", "Spring"], ingredients: [], price: "", currency: "", prepDuration: "", totalDuration: "", recipeDescription: RecipeDescription(id: "", introduction: "", steps: ["étape1ejifeiofjezffij", "étape1ejifeiofjezffij", "étape1ejifeiofjezffij", "étape1ejifeiofjezffij", "étape1ejifeiofjezffij"]))),
-                                                BigModel.Meal(id: "05394939459", recipe: Recipe(id: "033333", recipeName: "Tartiflette", numberOfPersons: 4, mealType: "Dessert", seasons: ["Summer", "Spring"], ingredients: [], price: "", currency: "", prepDuration: "", totalDuration: "", recipeDescription: RecipeDescription(id: "", introduction: "", steps: ["étape1ejifeiofjezffij", "étape1ejifeiofjezffij", "étape1ejifeiofjezffij", "étape1ejifeiofjezffij", "étape1ejifeiofjezffij"]))),
-                                                BigModel.Meal(id: "59T845958", recipe: Recipe(id: "UR339", recipeName: "Wok", numberOfPersons: 4, mealType: "Main course", seasons: ["Summer", "Spring"], ingredients: [], price: "", currency: "", prepDuration: "", totalDuration: "", recipeDescription: RecipeDescription(id: "", introduction: "", steps: ["étape1ejifeiofjezffij", "étape1ejifeiofjezffij", "étape1ejifeiofjezffij", "étape1ejifeiofjezffij", "étape1ejifeiofjezffij"]))),
-                                                BigModel.Meal(id: "DFORUER9UE", recipe: Recipe(id: "04859TIRF", recipeName: "Brocolli", numberOfPersons: 4, mealType: "Starter", seasons: ["Summer", "Spring"], ingredients: [], price: "", currency: "", prepDuration: "", totalDuration: "", recipeDescription: RecipeDescription(id: "", introduction: "", steps: ["étape1ejifeiofjezffij", "étape1ejifeiofjezffij", "étape1ejifeiofjezffij", "étape1ejifeiofjezffij", "étape1ejifeiofjezffij"]))),
-                                                BigModel.Meal(id: "IEFJEPFIO", recipe: Recipe(id: "SDOFUEF94", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Breakfast", seasons: ["Summer", "Spring"], ingredients: [Ingredient(name: "poisson", quantityWithUnit: "4 têtes"), Ingredient(name: "poisson", quantityWithUnit: "4 têtes"), Ingredient(name: "poisson", quantityWithUnit: "4 têtes"), Ingredient(name: "poisson", quantityWithUnit: "4 têtes"), Ingredient(name: "poisson", quantityWithUnit: "4 têtes"), Ingredient(name: "poisson", quantityWithUnit: "4 têtes")], price: "", currency: "", prepDuration: "", totalDuration: "", recipeDescription: RecipeDescription(id: "", introduction: "", steps: ["étape1ejifeiofjezffij", "étape1ejifeiofjezffij", "étape1ejifeiofjezffij", "étape1ejifeiofjezffij", "étape1ejifeiofjezffij"])))] ,
-                                
-                                favoriteMeals: [BigModel.Meal(id: "dfkljfrjf", recipe: Recipe(id: "340958IOKRFD", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: "", currency: "", prepDuration: "", totalDuration: "", recipeDescription: RecipeDescription(id: "", introduction: "", steps: []))),
-                                                BigModel.Meal(id: "dfkljfrjf", recipe: Recipe(id: "EURF40ET0", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: "", currency: "", prepDuration: "", totalDuration: "", recipeDescription: RecipeDescription(id: "", introduction: "", steps: []))),
-                                                BigModel.Meal(id: "dfkljfrjf", recipe: Recipe(id: "UEFE04RT4EJOR¨F", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: "", currency: "", prepDuration: "", totalDuration: "", recipeDescription: RecipeDescription(id: "", introduction: "", steps: []))) ],
-                                
-                                dislikedMeals: [], events: [])
-        self.currentView = .UserView
-    }
+        //
+        //
+        //
+        //
+        //
+        
+        init() {
+            self.fetchItemsInfos()
+        }
+        
+        init(shouldInjectMockedData: Bool) {
+            self.currentUser = User(id: "ozeifjeiofejfoi", firstName: "Mlo", lastName: "F",
+                                    items: [Item(id: 0, category: "legumes", name: "Carotte", seasons: ["été"]),
+                                            Item(id: 1, category: "legumes", name: "Poireaux", seasons: ["été"]),
+                                            Item(id: 2, category: "legumes", name: "Courgette", seasons: ["été"]),
+                                            Item(id: 3, category: "legumes", name: "Aubergine", seasons: ["été"]),
+                                            Item(id: 4, category: "legumes", name: "Brocolli", seasons: ["été"]),
+                                            Item(id: 5, category: "fruits", name: "Pomme", seasons: ["été"])],
+                                    tools: [Item(id: 11, category: "cookingTools", name: "Casserolle", seasons: ["été"])],
+                                    budget: 0, currency: "EUR", spendedTime: 0, numberOfPerson: 0,
+                                    proposedMeals: [BigModel.Meal(id: "dfkljfrjf", recipe: Recipe(id: "001", recipeName: "Nb", numberOfPersons: 4, mealType: "Main course", seasons: ["Summer", "Spring"], ingredients: [Ingredient(name: "boeuf", quantityWithUnit: "400 grammes")], price: "", currency: "", prepDuration: "", totalDuration: "", recipeDescription: RecipeDescription(id: "", introduction: "", steps: ["étape1ejifeiofjezffij", "étape1ejifeiofjezffij", "étape1ejifeiofjezffij", "étape1ejifeiofjezffij", "étape1ejifeiofjezffij"]))),
+                                                    BigModel.Meal(id: "002222", recipe: Recipe(id: "022", recipeName: "Spaghetti à la bollo", numberOfPersons: 4, mealType: "Dessert", seasons: ["Summer", "Spring"], ingredients: [], price: "", currency: "", prepDuration: "", totalDuration: "", recipeDescription: RecipeDescription(id: "", introduction: "", steps: ["étape1ejifeiofjezffij", "étape1ejifeiofjezffij", "étape1ejifeiofjezffij", "étape1ejifeiofjezffij", "étape1ejifeiofjezffij"]))),
+                                                    BigModel.Meal(id: "05394939459", recipe: Recipe(id: "033333", recipeName: "Tartiflette", numberOfPersons: 4, mealType: "Dessert", seasons: ["Summer", "Spring"], ingredients: [], price: "", currency: "", prepDuration: "", totalDuration: "", recipeDescription: RecipeDescription(id: "", introduction: "", steps: ["étape1ejifeiofjezffij", "étape1ejifeiofjezffij", "étape1ejifeiofjezffij", "étape1ejifeiofjezffij", "étape1ejifeiofjezffij"]))),
+                                                    BigModel.Meal(id: "59T845958", recipe: Recipe(id: "UR339", recipeName: "Wok", numberOfPersons: 4, mealType: "Main course", seasons: ["Summer", "Spring"], ingredients: [], price: "", currency: "", prepDuration: "", totalDuration: "", recipeDescription: RecipeDescription(id: "", introduction: "", steps: ["étape1ejifeiofjezffij", "étape1ejifeiofjezffij", "étape1ejifeiofjezffij", "étape1ejifeiofjezffij", "étape1ejifeiofjezffij"]))),
+                                                    BigModel.Meal(id: "DFORUER9UE", recipe: Recipe(id: "04859TIRF", recipeName: "Brocolli", numberOfPersons: 4, mealType: "Starter", seasons: ["Summer", "Spring"], ingredients: [], price: "", currency: "", prepDuration: "", totalDuration: "", recipeDescription: RecipeDescription(id: "", introduction: "", steps: ["étape1ejifeiofjezffij", "étape1ejifeiofjezffij", "étape1ejifeiofjezffij", "étape1ejifeiofjezffij", "étape1ejifeiofjezffij"]))),
+                                                    BigModel.Meal(id: "IEFJEPFIO", recipe: Recipe(id: "SDOFUEF94", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Breakfast", seasons: ["Summer", "Spring"], ingredients: [Ingredient(name: "poisson", quantityWithUnit: "4 têtes"), Ingredient(name: "poisson", quantityWithUnit: "4 têtes"), Ingredient(name: "poisson", quantityWithUnit: "4 têtes"), Ingredient(name: "poisson", quantityWithUnit: "4 têtes"), Ingredient(name: "poisson", quantityWithUnit: "4 têtes"), Ingredient(name: "poisson", quantityWithUnit: "4 têtes")], price: "", currency: "", prepDuration: "", totalDuration: "", recipeDescription: RecipeDescription(id: "", introduction: "", steps: ["étape1ejifeiofjezffij", "étape1ejifeiofjezffij", "étape1ejifeiofjezffij", "étape1ejifeiofjezffij", "étape1ejifeiofjezffij"])))] ,
+                                    
+                                    favoriteMeals: [BigModel.Meal(id: "dfkljfrjf", recipe: Recipe(id: "340958IOKRFD", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: "", currency: "", prepDuration: "", totalDuration: "", recipeDescription: RecipeDescription(id: "", introduction: "", steps: []))),
+                                                    BigModel.Meal(id: "dfkljfrjf", recipe: Recipe(id: "EURF40ET0", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: "", currency: "", prepDuration: "", totalDuration: "", recipeDescription: RecipeDescription(id: "", introduction: "", steps: []))),
+                                                    BigModel.Meal(id: "dfkljfrjf", recipe: Recipe(id: "UEFE04RT4EJOR¨F", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: "", currency: "", prepDuration: "", totalDuration: "", recipeDescription: RecipeDescription(id: "", introduction: "", steps: []))) ],
+                                    
+                                    dislikedMeals: [], events: [])
+            self.currentView = .UserView
+        }
     
 }
 
