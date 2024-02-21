@@ -238,7 +238,12 @@ struct RecipeScreen: View {
             for item in array2 {
                 if (ingredient.name.uppercased()).contains(item.name.uppercased()) {
                     if let index = bigModel.images.firstIndex(where: { $0.id == item.id }) {
-                        return bigModel.images[index].image
+                        
+                        if item.category != "seasonning" && item.category != "allergies" {
+                            print(item.name)
+                            return bigModel.images[index].image
+                        }
+                        
                     }
                 }
             }
