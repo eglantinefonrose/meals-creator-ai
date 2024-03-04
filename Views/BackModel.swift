@@ -39,76 +39,83 @@ struct BackModel: View {
         
         switch view {
             
-            case .TastesView:
-                    return .UserView
+        case .TastesView:
+            return .UserView
             
-            case .preferencesSummary:
-                    return .UserView
+        case .preferencesSummary:
+            return .UserView
             
-            case .LegumeScreen:
-                return .TastesView
+        case .LegumeScreen:
+            return .TastesView
             
-            case .FruitsScreen:
-                return .TastesView
+        case .FruitsScreen:
+            return .TastesView
             
-            case .strachyFoodsScreen:
-                return .TastesView
+        case .strachyFoodsScreen:
+            return .TastesView
             
-            case .proteinsScreen:
-                return .TastesView
+        case .proteinsScreen:
+            return .TastesView
             
-            case .seasonningScreen:
-                return .TastesView
+        case .seasonningScreen:
+            return .TastesView
             
-            case .allergiesScreen:
-                return .TastesView
+        case .allergiesScreen:
+            return .TastesView
             
-            case .cookingToolsScreen:
-                return .TastesView
+        case .cookingToolsScreen:
+            return .TastesView
             
-            case .budgetScreen:
-                return .UserView
+        case .budgetScreen:
+            return .UserView
             
-            case .timeScreen:
-                return .UserView
+        case .timeScreen:
+            return .UserView
             
-            case .mealsPropositionScreen:
-                return .UserView
+        case .mealsPropositionScreen:
+            return .UserView
             
-            case .signInView:
-                return .signInView
+        case .signInView:
+            return .signInView
             
-            case .welcomeView:
-                return .welcomeView
+        case .welcomeView:
+            return .welcomeView
             
-            case .UserView:
-                return .UserView
+        case .UserView:
+            return .UserView
             
-            case .RecipeScreen:
-                return bigModel.screenHistory.last!
-            
-            case .FavoriteMealsScreen:
-                return bigModel.screenHistory.last!
-            
-            case .BlankFile:
-                return .BlankFile
-            
-            case .NumberOfPersonScreen:
-                return .UserView
-            
-            case .DailyCalendar:
+        case .RecipeScreen:
             return bigModel.screenHistory.last!
             
-            case .MealTypeView:
-                return .seasonningScreen
+        case .FavoriteMealsScreen:
+            return bigModel.screenHistory.last!
             
-            case .SeasonSelectionView:
-                return .MealTypeView
+        case .BlankFile:
+            return .BlankFile
             
-            case .CurrencyScreen:
-                return .budgetScreen
-            }
-        
+        case .NumberOfPersonScreen:
+            return .UserView
+            
+        case .DailyCalendar:
+            return bigModel.screenHistory.last!
+            
+        case .MealTypeView:
+            return .seasonningScreen
+            
+        case .SeasonSelectionView:
+            return .MealTypeView
+            
+        case .CurrencyScreen:
+            return .budgetScreen
+            
+            
+        case .InformationsScreen:
+            return .UserView
+            
+        case .OpenAIKeyScreen:
+            return .UserView
+            
+        }
     }
     
 }

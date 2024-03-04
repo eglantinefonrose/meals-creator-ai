@@ -38,7 +38,12 @@ struct UserView: View {
                                 VStack(spacing: 30) {
                                     
                                     HStack {
+                                        
+                                        Image(systemName: "gear")
+                                            .foregroundStyle(Color.white)
+                                        
                                         Spacer()
+                                        
                                         Text("log-out")
                                             .foregroundStyle(Color.white)
                                             .bold()

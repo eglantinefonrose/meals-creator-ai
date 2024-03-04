@@ -51,9 +51,9 @@ struct BigRootView: View {
             
             VStack {
                 
-                if bigModel.currentView == .welcomeView {
+                /*if bigModel.currentView == .welcomeView {
                     WelcomeView(bigModel: BigModel.mocked)
-                }
+                }*/
                 if bigModel.currentView == .signInView {
                     SignIN(bigModel: BigModel.mocked)
                 }
@@ -88,6 +88,9 @@ struct BigRootView: View {
                 }
                 if bigModel.currentView == .DailyCalendar {
                     DailyCalendar(bigModel: BigModel.mocked)
+                }
+                if bigModel.currentView == .InformationsScreen {
+                    InformationsScreen(bigModel: BigModel.mocked)
                 }
                 
             }
@@ -137,9 +140,6 @@ struct BigRootView: View {
             
             VStack {
                 
-                if bigModel.currentView == .welcomeView {
-                    WelcomeView(bigModel: BigModel.shared)
-                }
                 if bigModel.currentView == .signInView {
                     SignIN(bigModel: BigModel.shared)
                 }
@@ -175,6 +175,9 @@ struct BigRootView: View {
                 if bigModel.currentView == .DailyCalendar {
                     DailyCalendar(bigModel: BigModel.shared)
                 }
+                if bigModel.currentView == .InformationsScreen {
+                    InformationsScreen(bigModel: BigModel.shared)
+                }
                 
             }
             
@@ -188,6 +191,10 @@ struct BigRootView: View {
             
             if bigModel.currentView == .CurrencyScreen {
                 CurrencyScreen(bigModel: BigModel.shared)
+            }
+            
+            if bigModel.currentView == .OpenAIKeyScreen {
+                OpenAIKeyScreen(bigModel: BigModel.shared)
             }
             
         }
@@ -220,4 +227,6 @@ enum ViewEnum: String {
     case MealTypeView
     case SeasonSelectionView
     case CurrencyScreen
+    case InformationsScreen
+    case OpenAIKeyScreen
 }

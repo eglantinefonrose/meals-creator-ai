@@ -28,7 +28,6 @@ struct DailyCalendar: View {
                     
                     BackModel(color: Color.navyBlue, view: .DailyCalendar)
                     
-                    
                     HStack(spacing: 30) {
                         
                         ForEach(-2...2, id: \.self) { dayDelay in
