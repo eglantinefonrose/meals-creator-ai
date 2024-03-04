@@ -1002,22 +1002,22 @@ class BigModel: ObservableObject {
     
     //("createMeal", ":key", "nbPersons", ":numberOfPerson", "mealType", ":mealType", "tastes", ":tastes", "tools", ":tools", "existingRecipes", ":existingRecipes")
     
-    func createMeal(mealType: String, mealsNumber: Int) {
+    func createMeals(mealType: String, mealsNumber: Int) {
         
         let apiUrl = URL(string: "http://127.0.0.1:8080/createMeal/\(openAIKey)/nbPersons/\(self.currentUser.numberOfPerson)/mealType/\(mealType)/ingredients/\(listToString(list: self.currentUser.items))/tools/\(toolsStringList())/existingRecipes/\(existingRecipes())")!
         
         var request = URLRequest(url: apiUrl)
         request.httpMethod = "GET"
         
-        DispatchQueue.main.async {
-            self.isLoading = true
-        }
-
         //for _ in (0..<mealsNumber) {
             
-            //if (currentUser.credits > 0) {
+            if (currentUser.credits > 0) {
                 
                 let task = URLSession.shared.dataTask(with: request) { [self] (data, response, error) in
+                    
+                    DispatchQueue.main.async {
+                        self.isLoading = true
+                    }
                     
                     guard let responseData = data,
                           let responseBody = String(data: responseData, encoding: .utf8) else {
@@ -1030,25 +1030,27 @@ class BigModel: ObservableObject {
                     
                     var meal = BigModel.Meal(id: UUID().uuidString, recipe: self.jsonTest(jsonString: "{ \(formattedResponse) }"))
                     meal.recipe.recipeName = capitalizeFirstLetter(input: meal.recipe.recipeName)
-                    //print("listToString : \(listToString(list: self.currentUser.items))")
                     print("UUID = \(meal.id)")
                     
                     self.currentUserTags[meal] = false
-                    self.currentUser.proposedMeals.append(meal)
-                    self.storeCurrentUserInfoIntoDB(user: self.currentUser)
-                    self.currentUser.credits-=1
+                    
+                    if meal.recipe.recipeName != "Err" {
+                        self.currentUser.proposedMeals.append(meal)
+                        self.currentUser.credits-=1
+                        self.storeCurrentUserInfoIntoDB(user: self.currentUser)
+                    }
+                    
+                    DispatchQueue.main.async {
+                        self.isLoading = false
+                    }
                     
                 }
                 
                 task.resume()
                 
-            //}
+            }
             
         //}
-        
-        DispatchQueue.main.async {
-            self.isLoading = false
-        }
         
     }
     
