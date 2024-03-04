@@ -976,7 +976,7 @@ class BigModel: ObservableObject {
     //
     //
     //
-    //MARK: MEALS GENERATION
+    //MARK: Meals Generation
     //
     //
     //
@@ -1200,16 +1200,9 @@ class BigModel: ObservableObject {
     
     func createMeals2(mealType: String) {
         
-        //let apiUrl = URL(string: "http://127.0.0.1:8080/createMealsNameList/\(mealType)/\(selectedSeason)/\(listToString(list: self.currentUser.items))/\(listToString(list: self.currentUser.tools))/\(currentUser.budget)/\(currentUser.spendedTime)/\(currentUser.numberOfPerson)/\(openAIKey)")!
+        //let apiUrl = URL(string: "http://127.0.0.1:8080/createMockedMealsNameList")!
+        let apiUrl = URL(string: "http://127.0.0.1:8080/mockedRecipe")!
         
-        //let apiUrl = URL(string: "http://127.0.0.1:8080/process/Dis bonjour/\(openAIKey)")!
-        
-        //let apiUrl = URL(string: "http://127.0.0.1:8080/mockedData")!
-        
-        let apiUrl = URL(string: "http://127.0.0.1:8080/createMockedMealsNameList")!
-        
-        //let apiUrl = URL(string: "http://127.0.0.1:8080/mockedData")!
-
         var request = URLRequest(url: apiUrl)
         request.httpMethod = "GET"
 
@@ -1231,7 +1224,7 @@ class BigModel: ObservableObject {
             
             for i in 0..<mealsNameList.count {
                 
-                let mockedResponse = "{ \"id\": \"1708593018\", \"recipeName\": \"\(mealsNameList[i])\", \"numberOfPersons\": 5, \"mealType\": \"Main course\", \"seasons\": [\"Autumn\", \"Winter\"], \"ingredients\": [ { \"name\": \"salt cod\", \"quantityWithUnit\": \"500 grams\" }, { \"name\": \"russet potatoes\", \"quantityWithUnit\": \"450 grams\" }, { \"name\": \"olive oil\", \"quantityWithUnit\": \"1 cup\" }, { \"name\": \"garlic cloves\", \"quantityWithUnit\": \"6 cloves\" }, { \"name\": \"milk\", \"quantityWithUnit\": \"1 cup\" }, { \"name\": \"black pepper\", \"quantityWithUnit\": \"to taste\" }, { \"name\": \"parsley leaves\", \"quantityWithUnit\": \"for garnish\" } ], \"price\": \"10\", \"currency\": \"euros\", \"prepDuration\": \"30\", \"totalDuration\": \"120\", \"recipeDescription\": { \"id\": \"1708593018\", \"introduction\": \"Brandade est un plat provençal traditionnel à base de morue salée, de purée de pommes de terre, d'ail et d'huile d'olive. Il est parfait pour un repas automnal ou hivernal chaleureux.\", \"steps\": [ \"Trempez la morue salée dans de l'eau froide pendant 24 heures, en changeant l'eau toutes les 6-8 heures.\", \"Faites bouillir les pommes de terre jusqu'à ce qu'elles soient tendres à la fourchette, puis égouttez-les et pelez-les.\", \"Égouttez la morue et rincez-la à l'eau froide. Retirez les arêtes et la peau, puis cassez-la en petits morceaux.\", \"Dans une grande casserole, faites revenir l'ail dans l'huile d'olive jusqu'à ce qu'il soit légèrement doré.\", \"Ajoutez la morue et faites-la revenir pendant 5 minutes, en remuant de temps en temps.\", \"Ajoutez les pommes de terre et écrasez-les à l'aide d'un presse-purée jusqu'à consistance lisse.\", \"Ajoutez progressivement le lait tout en remuant, jusqu'à ce que le mélange atteigne une consistance crémeuse.\", \"Assaisonnez de poivre noir selon votre goût.\", \"Servez chaud, garni de feuilles de persil.\" ] } } "
+                let mockedResponse = "{ \"id\": \"1708593018\", \"recipeName\": \"\(mealsNameList[i])\", \"numberOfPersons\": 5, \"mealType\": \"Main course\", \"seasons\": [\"Autumn\", \"Winter\"], \"ingredients\": [ { \"name\": \"salt cod\", \"quantityWithUnit\": \"500 grams\" }, { \"name\": \"russet potatoes\", \"quantityWithUnit\": \"450 grams\" }, { \"name\": \"olive oil\", \"quantityWithUnit\": \"1 cup\" }, { \"name\": \"garlic cloves\", \"quantityWithUnit\": \"6 cloves\" }, { \"name\": \"milk\", \"quantityWithUnit\": \"1 cup\" }, { \"name\": \"black pepper\", \"quantityWithUnit\": \"to taste\" }, { \"name\": \"parsley leaves\", \"quantityWithUnit\": \"for garnish\" } ], \"price\": \"10\", \"currency\": \"euros\", \"prepDuration\": \"30\", \"totalDuration\": \"120\", \"recipeDescription\": { \"id\": \"1708593018\", \"introduction\": \"Brandade est un plat provençal traditionnel à base de morue salée, de purée de pommes de terre, d'ail et d'huile d'olive. Il est parfait pour un repas automnal ou hivernal chaleureux.\", \"steps\": [ \"Trempez la morue salée dans de l'eau froide pendant 24 heures, en changeant l'eau toutes les 6-8 heures.\", \"Faites bouillir les pommes de terre jusqu'à ce qu'elles soient tendres à la fourchette, puis égouttez-les et pelez-les.\", \"Égouttez la morue et rincez-la à l'eau froide. Retirez les arêtes et la peau, puis cassez-la en petits morceaux.\", \"Dans une grande casserole, faites revenir l'ail dans l'huile d'olive jusqu'à ce qu'il soit légèrement doré.\", \"Ajoutez la morue et faites-la revenir pendant 5 minutes, en remuant de temps en temps.\", \"Ajoutez les pommes de terre et écrasez-les à l'aide d'un presse-purée jusqu'à consistance lisse.\", \"Ajoutez progressivement le lait tout en remuant, jusqu'à ce que le mélange atteigne une consistance crémeuse.\", \"Assaisonnez de poivre noir selon votre goût.\", \"Servez chaud, garni de feuilles de persil.\" ] } }"
                 
                 //let response = self.processPrompt(prompt: "Donne moi les informations suivantes pour réaliser la recette de \(mealsNameList![i]) :  - id: l'identifiant de la recette - seasons : saison(s) pour laquelle la recette est adaptée (les valeurs possibles sont \"Summer\", \"Spring\", \"Winter\", \"Autumn\")  - ingredients : liste des ingrédients et quantité nécessaire pour \(self.currentUser.numberOfPerson) personnes - price : prix indicatif pour l\"ensemble des ingrédients (sans avoir le détail par ingrédient) - prepDuration : durée de préparation - totalDuration : durée totale - type : le type de repas  (les valeurs possibles sont \"main course\", \"breakfast\", \"dessert\", \"starter\") - recipe : description textuelle de la recette. Formate le résultat de la manière suivante : { \"id\":\"\(Int(Date().timeIntervalSince1970))\", \"recipeName\":\"brandade\", \"numberOfPersons\":3, \"mealType\":\"\(mealType)\", \"seasons\": [\"saison1\", \"saison2\"], \"ingredients\": [ {\"name\":\"ingrédient1\",  \"quantityWithUnit\":\"x grammes\"}, {\"name\":\"ingrédient2\",  \"quantityWithUnit\":\"y litres\"}], \"price\": \"4.75\", \"currency\": \"euros\", \"prepDuration\": \"15\", \"totalDuration\": \"240\", \"recipeDescription\": { \"id\":\"\(Int(Date().timeIntervalSince1970))\", \"introduction\": \"recipe high level description\", \"steps\": [ \"text for step 1\", \"text for step 2\", ] } }")
                 
@@ -1262,6 +1255,59 @@ class BigModel: ObservableObject {
 
         task.resume()
         
+    }
+    
+    
+    //createMeal", ":key", ":numberOfPerson", ":mealType", ":tastes"
+    func createMeal(mealType: String) {
+        
+        let apiUrl = URL(string: "http://127.0.0.1:8080/createMeal/\(openAIKey)/\(self.currentUser.numberOfPerson)/\(mealType)/\(listToString(list: self.currentUser.items))")!
+        //let apiUrl = URL(string: "http://127.0.0.1:8080/mockedRecipe")!
+        
+        var request = URLRequest(url: apiUrl)
+        request.httpMethod = "GET"
+
+        let task = URLSession.shared.dataTask(with: request) { [self] (data, response, error) in
+            
+            DispatchQueue.main.async {
+                self.isLoading = true
+            }
+            
+            guard let responseData = data,
+                  let responseBody = String(data: responseData, encoding: .utf8) else {
+                return
+            }
+            
+            print(responseBody)
+           let formattedResponse: String = self.extractTextBetweenBraces(input: responseBody)
+            print("formattedResponse : { \(formattedResponse) }")
+            
+            var meal = BigModel.Meal(id: UUID().uuidString, recipe: self.jsonTest(jsonString: "{ \(formattedResponse) }") )
+            meal.recipe.recipeName = capitalizeFirstLetter(input: meal.recipe.recipeName)
+            print("listToString : \(listToString(list: self.currentUser.items))")
+            print("UUID = \(meal.id)")
+            
+            self.currentUserTags[meal] = false
+            self.currentUser.proposedMeals.append(meal)
+            self.storeCurrentUserInfoIntoDB(user: self.currentUser)
+            self.currentUser.credits-=1
+            print(meal.recipe.recipeName)
+            
+            DispatchQueue.main.async {
+                self.isLoading = false
+            }
+            
+        }
+
+        task.resume()
+        
+    }
+    
+    func capitalizeFirstLetter(input: String) -> String {
+        guard let firstChar = input.first else {
+            return input // Si la chaîne est vide, renvoie la même chaîne
+        }
+        return input.replacingCharacters(in: ..<input.index(after: input.startIndex), with: String(firstChar).capitalized)
     }
     
 
@@ -1357,47 +1403,6 @@ class BigModel: ObservableObject {
                 }
                 
             }
-            
-        }
-        
-        func promptCall() {
-            
-            let apiUrl = URL(string: "http://127.0.0.1:8080/process/Dis 'Bonjour'/\(openAIKey)")!
-            
-            var request = URLRequest(url: apiUrl)
-            request.httpMethod = "GET"
-            
-            let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-                if let error = error {
-                    //completionHandler(nil, error) // Appel de la closure avec une erreur si elle existe
-                    return
-                }
-                
-                guard let httpResponse = response as? HTTPURLResponse,
-                      (200...299).contains(httpResponse.statusCode) else {
-                    let error = NSError(domain: "Server", code: -1, userInfo: [NSLocalizedDescriptionKey: "Réponse invalide du serveur"])
-                    //completionHandler(nil, error) // Appel de la closure avec une erreur
-                    return
-                }
-                
-                guard let responseData = data,
-                      let responseBody = String(data: responseData, encoding: .utf8) else {
-                    let error = NSError(domain: "Server", code: -1, userInfo: [NSLocalizedDescriptionKey: "Aucune donnée reçue ou impossible de la convertir en chaîne de caractères"])
-                    //completionHandler(nil, error) // Appel de la closure avec une erreur
-                    return
-                }
-                
-                print("responseBody = \(responseBody)")
-                
-            }
-            
-            task.resume()
-            
-            //let response = processPrompt(prompt: "Dis 'Bonjour'")
-            //print(response)
-            
-            let response = processPrompt(prompt: "Dis ' C'est un test '")
-            print(response)
             
         }
         

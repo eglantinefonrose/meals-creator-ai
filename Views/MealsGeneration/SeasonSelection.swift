@@ -38,6 +38,7 @@ struct SeasonSelection: View {
                             seasonTags["Printemps"] = false
                             seasonTags["Été"] = false
                             seasonTags["Automne"] = false
+                            bigModel.selectedSeason = "hiver"
                         }
                         
                         ZStack {
@@ -52,6 +53,7 @@ struct SeasonSelection: View {
                             seasonTags["Printemps"] = true
                             seasonTags["Été"] = false
                             seasonTags["Automne"] = false
+                            bigModel.selectedSeason = "printemps"
                         }
                     }
                     
@@ -68,6 +70,7 @@ struct SeasonSelection: View {
                             seasonTags["Printemps"] = false
                             seasonTags["Été"] = true
                             seasonTags["Automne"] = false
+                            bigModel.selectedSeason = "été"
                         }
                         
                         ZStack {
@@ -82,6 +85,7 @@ struct SeasonSelection: View {
                             seasonTags["Printemps"] = false
                             seasonTags["Été"] = false
                             seasonTags["Automne"] = true
+                            bigModel.selectedSeason = "automne"
                         }
                         
                     }

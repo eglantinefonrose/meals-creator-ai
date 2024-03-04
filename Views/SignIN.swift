@@ -73,9 +73,6 @@ struct SignIN: View {
                         Image("Sans titre 40")
                             .resizable()
                             .scaledToFit()
-                            .onTapGesture {
-                                bigModel.promptCall()
-                            }
                         
                         VStack(alignment: .leading, spacing: 10) {
                             
