@@ -41,6 +41,9 @@ struct UserView: View {
                                         
                                         Image(systemName: "gear")
                                             .foregroundStyle(Color.white)
+                                            .onTapGesture {
+                                                bigModel.currentView = .InformationsScreen
+                                            }
                                         
                                         Spacer()
                                         
@@ -111,28 +114,6 @@ struct UserView: View {
                                                         self.focused1 = true
                                                     }
                                                 }
-                                                
-                                                /*TextField("", text: $newFirstName)
-                                                    .multilineTextAlignment(.leading)
-                                                    .font(.largeTitle)
-                                                    .foregroundColor(.white)
-                                                    .focused($focused1, equals: true)
-                                                    .onAppear {
-                                                        DispatchQueue.main.asyncAfter(deadline: .now()) {
-                                                            self.focused1 = true
-                                                        }
-                                                    }*/
-                                                
-                                                /*TextField("", text: $newLastName)
-                                                    .multilineTextAlignment(.leading)
-                                                    .font(.largeTitle)
-                                                    .foregroundColor(.white)
-                                                    .focused($focused2, equals: true)
-                                                    .onAppear {
-                                                        DispatchQueue.main.asyncAfter(deadline: .now()) {
-                                                            self.focused2 = true
-                                                        }
-                                                    }*/
                                             }
                                             
                                         }
@@ -157,6 +138,7 @@ struct UserView: View {
                                                             var user = bigModel.currentUser
                                                             user.firstName = newFirstName
                                                             user.lastName = newLastName
+                                                            user.credits = 10
                                                             bigModel.storeCurrentUserInfoIntoDB(user: user)
                                                             firstName = newFirstName
                                                             lastName = newLastName
@@ -176,12 +158,6 @@ struct UserView: View {
                             VStack(spacing: 0) {
                                 
                                 VStack() {
-                                    /*HStack {
-                                     Text("pref")
-                                     .foregroundStyle(Color.navyBlue)
-                                     .font(.title3)
-                                     Spacer()
-                                     }*/
                                     
                                     if (bigModel.currentUser.items.count == 0 && bigModel.currentUser.budget == 0 && bigModel.currentUser.spendedTime == 0 && bigModel.currentUser.favoriteMeals.count == 0) {
                                         
@@ -501,11 +477,8 @@ struct UserView: View {
                                         }
                                         
                                     }
-                                    
                                 }
-                                
                             }
-                            
                             
                             
                         }.edgesIgnoringSafeArea(.bottom)

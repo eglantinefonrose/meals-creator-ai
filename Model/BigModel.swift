@@ -838,18 +838,20 @@ class BigModel: ObservableObject {
             let mealsList = removeMealFromList(mealsList: currentUser.proposedMeals)
             let favoriteMealsList = removeMealFromList(mealsList: currentUser.favoriteMeals)
             
-            for i in (0...((user.events.count)-1)) {
-                if user.events[i].breakfastMeal == dislikedMeal {
-                    user.events[i].breakfastMeal = nil
-                }
-                if user.events[i].lunchMeal == dislikedMeal {
-                    user.events[i].lunchMeal = nil
-                }
-                if user.events[i].snackMeal == dislikedMeal {
-                    user.events[i].snackMeal = nil
-                }
-                if user.events[i].dinnerMeal == dislikedMeal {
-                    user.events[i].dinnerMeal = nil
+            if user.events.count != 0 {
+                for i in (0...((user.events.count)-1)) {
+                    if user.events[i].breakfastMeal == dislikedMeal {
+                        user.events[i].breakfastMeal = nil
+                    }
+                    if user.events[i].lunchMeal == dislikedMeal {
+                        user.events[i].lunchMeal = nil
+                    }
+                    if user.events[i].snackMeal == dislikedMeal {
+                        user.events[i].snackMeal = nil
+                    }
+                    if user.events[i].dinnerMeal == dislikedMeal {
+                        user.events[i].dinnerMeal = nil
+                    }
                 }
             }
             
@@ -908,18 +910,20 @@ class BigModel: ObservableObject {
         
         if let index = mealsList.firstIndex(where: { $0.id == meal.id }) {
             
-            for i in (0...((user.events.count)-1)) {
-                if user.events[i].breakfastMeal == dislikedMeal {
-                    user.events[i].breakfastMeal = nil
-                }
-                if user.events[i].lunchMeal == dislikedMeal {
-                    user.events[i].lunchMeal = nil
-                }
-                if user.events[i].snackMeal == dislikedMeal {
-                    user.events[i].snackMeal = nil
-                }
-                if user.events[i].dinnerMeal == dislikedMeal {
-                    user.events[i].dinnerMeal = nil
+            if user.events.count != 0 {
+                for i in (0...((user.events.count)-1)) {
+                    if user.events[i].breakfastMeal == dislikedMeal {
+                        user.events[i].breakfastMeal = nil
+                    }
+                    if user.events[i].lunchMeal == dislikedMeal {
+                        user.events[i].lunchMeal = nil
+                    }
+                    if user.events[i].snackMeal == dislikedMeal {
+                        user.events[i].snackMeal = nil
+                    }
+                    if user.events[i].dinnerMeal == dislikedMeal {
+                        user.events[i].dinnerMeal = nil
+                    }
                 }
             }
             
@@ -1202,11 +1206,7 @@ class BigModel: ObservableObject {
         
         //let apiUrl = URL(string: "http://127.0.0.1:8080/mockedData")!
         
-        let apiUrl = URL(string: "http://127.0.0.1:8080/createMealsNameList/\(openAIKey)")!
-        
-        DispatchQueue.main.async {
-            self.isLoading = true
-        //}
+        let apiUrl = URL(string: "http://127.0.0.1:8080/createMockedMealsNameList")!
         
         //let apiUrl = URL(string: "http://127.0.0.1:8080/mockedData")!
 
@@ -1215,6 +1215,10 @@ class BigModel: ObservableObject {
 
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
             
+            DispatchQueue.main.async {
+                self.isLoading = true
+            }
+            
             guard let responseData = data,
                   let responseBody = String(data: responseData, encoding: .utf8) else {
                 return
@@ -1222,8 +1226,10 @@ class BigModel: ObservableObject {
             
             var mealsNameList: [String] = []
             mealsNameList = self.splitStringWithDash(inputString: responseBody)
+            print(mealsNameList)
+            print(mealsNameList.count)
             
-            for i in 0..<(mealsNameList.count-1) {
+            for i in 0..<mealsNameList.count {
                 
                 let mockedResponse = "{ \"id\": \"1708593018\", \"recipeName\": \"\(mealsNameList[i])\", \"numberOfPersons\": 5, \"mealType\": \"Main course\", \"seasons\": [\"Autumn\", \"Winter\"], \"ingredients\": [ { \"name\": \"salt cod\", \"quantityWithUnit\": \"500 grams\" }, { \"name\": \"russet potatoes\", \"quantityWithUnit\": \"450 grams\" }, { \"name\": \"olive oil\", \"quantityWithUnit\": \"1 cup\" }, { \"name\": \"garlic cloves\", \"quantityWithUnit\": \"6 cloves\" }, { \"name\": \"milk\", \"quantityWithUnit\": \"1 cup\" }, { \"name\": \"black pepper\", \"quantityWithUnit\": \"to taste\" }, { \"name\": \"parsley leaves\", \"quantityWithUnit\": \"for garnish\" } ], \"price\": \"10\", \"currency\": \"euros\", \"prepDuration\": \"30\", \"totalDuration\": \"120\", \"recipeDescription\": { \"id\": \"1708593018\", \"introduction\": \"Brandade est un plat provençal traditionnel à base de morue salée, de purée de pommes de terre, d'ail et d'huile d'olive. Il est parfait pour un repas automnal ou hivernal chaleureux.\", \"steps\": [ \"Trempez la morue salée dans de l'eau froide pendant 24 heures, en changeant l'eau toutes les 6-8 heures.\", \"Faites bouillir les pommes de terre jusqu'à ce qu'elles soient tendres à la fourchette, puis égouttez-les et pelez-les.\", \"Égouttez la morue et rincez-la à l'eau froide. Retirez les arêtes et la peau, puis cassez-la en petits morceaux.\", \"Dans une grande casserole, faites revenir l'ail dans l'huile d'olive jusqu'à ce qu'il soit légèrement doré.\", \"Ajoutez la morue et faites-la revenir pendant 5 minutes, en remuant de temps en temps.\", \"Ajoutez les pommes de terre et écrasez-les à l'aide d'un presse-purée jusqu'à consistance lisse.\", \"Ajoutez progressivement le lait tout en remuant, jusqu'à ce que le mélange atteigne une consistance crémeuse.\", \"Assaisonnez de poivre noir selon votre goût.\", \"Servez chaud, garni de feuilles de persil.\" ] } } "
                 
@@ -1244,19 +1250,17 @@ class BigModel: ObservableObject {
                 //}
                 print(meal.recipe.recipeName)
                 
-                print("zzz")
-                sleep(2)
-                print("waky waky")
+                sleep(5)
                 
+            }
+            
+            DispatchQueue.main.async {
+                self.isLoading = false
             }
             
         }
 
         task.resume()
-        
-        //DispatchQueue.main.async {
-            self.isLoading = true
-        }
         
     }
     

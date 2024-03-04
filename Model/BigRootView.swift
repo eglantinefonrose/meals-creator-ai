@@ -90,7 +90,7 @@ struct BigRootView: View {
                     DailyCalendar(bigModel: BigModel.mocked)
                 }
                 if bigModel.currentView == .InformationsScreen {
-                    InformationsScreen(bigModel: BigModel.mocked)
+                    CreditsInformationsScreen(bigModel: BigModel.mocked)
                 }
                 
             }
@@ -176,7 +176,7 @@ struct BigRootView: View {
                     DailyCalendar(bigModel: BigModel.shared)
                 }
                 if bigModel.currentView == .InformationsScreen {
-                    InformationsScreen(bigModel: BigModel.shared)
+                    CreditsInformationsScreen(bigModel: BigModel.shared)
                 }
                 
             }

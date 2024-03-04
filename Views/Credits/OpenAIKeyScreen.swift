@@ -53,7 +53,6 @@ struct OpenAIKeyScreen: View {
                         
                         Text("By connecting your OpenAI account to your MiamAI account, you can use your OpenAI tokens instead of MiamAI credits to generate yummy meals recipes.")
                             .multilineTextAlignment(.center)
-                            //.italic()
                         
                     }
                     

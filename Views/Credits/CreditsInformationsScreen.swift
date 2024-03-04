@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct InformationsScreen: View {
+struct CreditsInformationsScreen: View {
     
     @ObservedObject var bigModel: BigModel
     
@@ -21,7 +21,7 @@ struct InformationsScreen: View {
             VStack {
                 BackModel(color: Color.navyBlue, view: .UserView)
                 
-                //Text("Informations")
+                //Text("Credits informatiions")
                     //.font(.largeTitle)
                     //.foregroundStyle(Color.navyBlue)
                 
@@ -31,9 +31,15 @@ struct InformationsScreen: View {
                         .foregroundStyle(Color.navyBlue)
                     VStack {
                         VStack {
-                            Text("+ Add credits")
-                                .font(.title2)
-                                .foregroundStyle(.white)
+                            
+                            HStack {
+                                Image(systemName: "plus.circle.fill")
+                                    .foregroundStyle(.white)
+                                Text("Add credits")
+                                    .font(.title2)
+                                    .foregroundStyle(.white)
+                            }
+                            
                             Text("a credit allows you to generate one meal")
                                 .foregroundStyle(Color.gray)
                                 .font(.footnote)
@@ -82,5 +88,5 @@ struct InformationsScreen: View {
 }
 
 #Preview {
-    InformationsScreen(bigModel: BigModel.shared)
+    CreditsInformationsScreen(bigModel: BigModel.shared)
 }
