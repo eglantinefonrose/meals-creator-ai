@@ -554,38 +554,6 @@ class BigModel: ObservableObject {
     //
     //
     
-    func fetchUserInfoFromDB() {
-        
-        guard let id = self.auth.currentUser?.uid else { return }
-        let docRef = self.db.collection("Users").document(id)
-        let newUser = User(id: id, firstName: "", lastName: "", items: [], tools: [], budget: 0, currency: "", spendedTime: 0, numberOfPerson: 0, proposedMeals: [], favoriteMeals: [], dislikedMeals: [], events: [], credits: 0)
-        
-        docRef.getDocument { (document, error) in
-            
-            if let document = document {
-                if document.exists {
-                    do {
-                        self.currentUser.firstName = ""
-                        let user = try document.data(as: User.self)
-                        self.currentUser = user
-                        
-                       // print("Document data: \(String(describing: document.data()))")
-                    }
-                    catch {
-                        print(error.localizedDescription)
-                    }
-                } else {
-                    do {
-                        let _ = try self.db.collection("Users").document(id).setData(from: newUser)
-                    } catch {
-                        
-                    }
-                }
-            }
-        }
-        
-    }
-    
     func fetchItemsInfos() {
         let storageURL = URL(string: "https://firebasestorage.googleapis.com/v0/b/shop-planner-7533c.appspot.com/o/data-items.json?alt=media&token=e88fd1ed-8689-43ed-bafd-98d83e1909c7")!
         let task = URLSession.shared.dataTask(with: storageURL) { data, response, error in
@@ -693,7 +661,7 @@ class BigModel: ObservableObject {
         fatalError(
           "Unable to generate nonce. SecRandomCopyBytes failed with OSStatus \(errorCode)"
         )
-      }
+    }
 
       let charset: [Character] =
         Array("0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._")
@@ -804,6 +772,43 @@ class BigModel: ObservableObject {
         }
     }
     
+    //
+    //
+    //
+    // MARK: Infos fetching
+    //
+    //
+    //
+    
+    
+    func fetchUserInfoFromDB() {
+        
+        guard let id = self.auth.currentUser?.uid else { return }
+        let docRef = self.db.collection("Users").document(id)
+        let newUser = User(id: id, firstName: "", lastName: "", items: [], tools: [], budget: 0, currency: "", spendedTime: 0, numberOfPerson: 0, proposedMeals: [], favoriteMeals: [], dislikedMeals: [], events: [], credits: 0)
+        
+        docRef.getDocument { (document, error) in
+            
+            if let document = document {
+                if document.exists {
+                    do {
+                        let user = try document.data(as: User.self)
+                        self.currentUser = user
+                    }
+                    catch {
+                        print(error.localizedDescription)
+                    }
+                } else {
+                    do {
+                        let _ = try self.db.collection("Users").document(id).setData(from: newUser)
+                    } catch {
+                        
+                    }
+                }
+            }
+        }
+        
+    }
     
     //
     //
@@ -1000,18 +1005,19 @@ class BigModel: ObservableObject {
         keychain["key.openai.miamAI"] = secretKey
     }
     
-    //("createMeal", ":key", "nbPersons", ":numberOfPerson", "mealType", ":mealType", "tastes", ":tastes", "tools", ":tools", "existingRecipes", ":existingRecipes")
     
     func createMeals(mealType: String, mealsNumber: Int) {
         
-        let apiUrl = URL(string: "http://127.0.0.1:8080/createMeal/\(openAIKey)/nbPersons/\(self.currentUser.numberOfPerson)/mealType/\(mealType)/ingredients/\(listToString(list: self.currentUser.items))/tools/\(toolsStringList())/existingRecipes/\(existingRecipes())")!
+        let apiUrl = URL(string: "http://127.0.0.1:8080/createMeal/\(openAIKey)/currentUserID/\(String(describing: currentUser.id))/nbPersons/\(self.currentUser.numberOfPerson)/mealType/starter/ingredients/carottes/tools/poele")!
+        //let apiUrl = URL(string: "http://127.0.0.1:8080/fernoTest")!
+        //let apiUrl = URL(string: "http://127.0.0.1:8080/fetchProjet")!
         
         var request = URLRequest(url: apiUrl)
         request.httpMethod = "GET"
         
         //for _ in (0..<mealsNumber) {
-            
-            if (currentUser.credits > 0) {
+        
+            //if (currentUser.credits > 0) {
                 
                 let task = URLSession.shared.dataTask(with: request) { [self] (data, response, error) in
                     
@@ -1024,7 +1030,7 @@ class BigModel: ObservableObject {
                         return
                     }
                     
-                    print(responseBody)
+                    print("responseBody = \(responseBody)")
                     let formattedResponse: String = self.extractTextBetweenBraces(input: responseBody)
                     print("formattedResponse : { \(formattedResponse) }")
                     
@@ -1038,6 +1044,8 @@ class BigModel: ObservableObject {
                         self.currentUser.proposedMeals.append(meal)
                         self.currentUser.credits-=1
                         self.storeCurrentUserInfoIntoDB(user: self.currentUser)
+                    } else {
+                        print("Error")
                     }
                     
                     DispatchQueue.main.async {
@@ -1048,10 +1056,8 @@ class BigModel: ObservableObject {
                 
                 task.resume()
                 
-            }
-            
+            //}
         //}
-        
     }
     
     
@@ -1407,15 +1413,3 @@ class BigModel: ObservableObject {
     
 }
 
-extension View {
-    func getRootViewController () -> UIViewController {
-        
-        guard let screen = UIApplication.shared.connectedScenes.first as? UIWindowScene else {
-            return .init()
-        }
-        guard let root = screen.windows.first?.rootViewController else {
-            return .init()
-        }
-        return root
-    }
-}

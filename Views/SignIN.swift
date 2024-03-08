@@ -73,6 +73,9 @@ struct SignIN: View {
                         Image("Sans titre 40")
                             .resizable()
                             .scaledToFit()
+                            .onTapGesture {
+                                bigModel.createMeals(mealType: "", mealsNumber: 0)
+                            }
                         
                         VStack(alignment: .leading, spacing: 10) {
                             
@@ -185,6 +188,19 @@ extension View {
             placeholder().opacity(shouldShow ? 1 : 0)
             self
         }
+    }
+}
+
+extension View {
+    func getRootViewController () -> UIViewController {
+        
+        guard let screen = UIApplication.shared.connectedScenes.first as? UIWindowScene else {
+            return .init()
+        }
+        guard let root = screen.windows.first?.rootViewController else {
+            return .init()
+        }
+        return root
     }
 }
 
