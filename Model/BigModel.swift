@@ -1009,8 +1009,7 @@ class BigModel: ObservableObject {
     func createMeals(mealType: String, mealsNumber: Int) {
         
         let apiUrl = URL(string: "http://127.0.0.1:8080/createMeal/\(openAIKey)/currentUserID/\(String(describing: currentUser.id))/nbPersons/\(self.currentUser.numberOfPerson)/mealType/starter/ingredients/carottes/tools/poele")!
-        //let apiUrl = URL(string: "http://127.0.0.1:8080/fernoTest")!
-        //let apiUrl = URL(string: "http://127.0.0.1:8080/fetchProjet")!
+        //let apiUrl = URL(string: "http://127.0.0.1:8080/mockedRecipe")!
         
         var request = URLRequest(url: apiUrl)
         request.httpMethod = "GET"
@@ -1030,23 +1029,16 @@ class BigModel: ObservableObject {
                         return
                     }
                     
-                    print("responseBody = \(responseBody)")
-                    let formattedResponse: String = self.extractTextBetweenBraces(input: responseBody)
-                    print("formattedResponse : { \(formattedResponse) }")
-                    
-                    var meal = BigModel.Meal(id: UUID().uuidString, recipe: self.jsonTest(jsonString: "{ \(formattedResponse) }"))
-                    meal.recipe.recipeName = capitalizeFirstLetter(input: meal.recipe.recipeName)
-                    print("UUID = \(meal.id)")
-                    
-                    self.currentUserTags[meal] = false
-                    
-                    if meal.recipe.recipeName != "Err" {
+                    DispatchQueue.main.async {
+                        let recipe = self.jsonTest(jsonString: responseBody)
+                        let meal: Meal = Meal(id: UUID().uuidString, recipe: recipe)
+                        self.currentUserTags[meal] = false
                         self.currentUser.proposedMeals.append(meal)
-                        self.currentUser.credits-=1
                         self.storeCurrentUserInfoIntoDB(user: self.currentUser)
-                    } else {
-                        print("Error")
+                        self.currentUser.credits-=1
                     }
+                    
+                    //self.storeCurrentUserInfoIntoDB(user: self.currentUser)
                     
                     DispatchQueue.main.async {
                         self.isLoading = false
@@ -1143,6 +1135,7 @@ class BigModel: ObservableObject {
             do {
                 //print("jsonString [\(jsonString)]")
                 let recipe = try JSONDecoder().decode(Recipe.self, from: jsonData)
+                print(recipe.recipeName)
                 return recipe
             } catch {
                 //print("jsonString [\(jsonString)]")
