@@ -1006,13 +1006,15 @@ class BigModel: ObservableObject {
     }
     
     
-    func createMeals(mealType: String, mealsNumber: Int) {
+    func createMeal(mealType: String) {
         
-        let apiUrl = URL(string: "http://127.0.0.1:8080/createMeal/\(openAIKey)/currentUserID/\(String(describing: currentUser.id))/nbPersons/\(self.currentUser.numberOfPerson)/mealType/starter/ingredients/carottes/tools/poele")!
-        //let apiUrl = URL(string: "http://127.0.0.1:8080/mockedRecipe")!
+        //let apiUrl = URL(string: "http://127.0.0.1:8080/createMeal/\(openAIKey)/currentUserID/\(String(describing: currentUser.id))/nbPersons/\(self.currentUser.numberOfPerson)/mealType/starter/ingredients/carottes/tools/poele")!
+        let apiUrl = URL(string: "http://127.0.0.1:8080/mockedRecipe")!
         
         var request = URLRequest(url: apiUrl)
         request.httpMethod = "GET"
+        
+        self.isLoading = true
         
         //for _ in (0..<mealsNumber) {
         
@@ -1021,36 +1023,41 @@ class BigModel: ObservableObject {
                 let task = URLSession.shared.dataTask(with: request) { [self] (data, response, error) in
                     
                     DispatchQueue.main.async {
-                        self.isLoading = true
-                    }
+                        
+                    //}
                     
                     guard let responseData = data,
                           let responseBody = String(data: responseData, encoding: .utf8) else {
                         return
                     }
                     
-                    DispatchQueue.main.async {
+                    //DispatchQueue.main.async {
                         let recipe = self.jsonTest(jsonString: responseBody)
-                        let meal: Meal = Meal(id: UUID().uuidString, recipe: recipe)
-                        self.currentUserTags[meal] = false
-                        self.currentUser.proposedMeals.append(meal)
-                        self.storeCurrentUserInfoIntoDB(user: self.currentUser)
-                        self.currentUser.credits-=1
-                    }
+                        
+                        if recipe.id != "" {
+                            sleep(5)
+                            let meal: Meal = Meal(id: UUID().uuidString, recipe: recipe)
+                            self.currentUserTags[meal] = false
+                            self.currentUser.proposedMeals.append(meal)
+                            self.storeCurrentUserInfoIntoDB(user: self.currentUser)
+                            self.currentUser.credits-=1
+                        }
+                        
+                    //}
                     
-                    //self.storeCurrentUserInfoIntoDB(user: self.currentUser)
+                    self.storeCurrentUserInfoIntoDB(user: self.currentUser)
                     
-                    DispatchQueue.main.async {
-                        self.isLoading = false
+                    self.isLoading = false
+                    //DispatchQueue.main.async {
                     }
                     
                 }
                 
                 task.resume()
-                
             //}
         //}
     }
+    
     
     
     func capitalizeFirstLetter(input: String) -> String {

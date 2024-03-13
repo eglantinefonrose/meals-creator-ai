@@ -74,7 +74,7 @@ struct SignIN: View {
                             .resizable()
                             .scaledToFit()
                             .onTapGesture {
-                                bigModel.createMeals(mealType: "", mealsNumber: 0)
+                                bigModel.createMeal(mealType: "")
                             }
                         
                         VStack(alignment: .leading, spacing: 10) {
