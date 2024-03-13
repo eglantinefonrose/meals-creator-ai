@@ -37,24 +37,34 @@ struct UserView: View {
                             VStack {
                                 VStack(spacing: 30) {
                                     
-                                    HStack {
+                                    ZStack {
                                         
-                                        Image(systemName: "gear")
-                                            .foregroundStyle(Color.white)
-                                            .onTapGesture {
-                                                bigModel.currentView = .InformationsScreen
+                                        if !bigModel.currentUser.isUsingPersonnalKey {
+                                            HStack {
+                                                Text("\(bigModel.currentUser.credits) credits")
+                                                    .foregroundStyle(Color.white)
                                             }
+                                        }
                                         
-                                        Spacer()
-                                        
-                                        Text("log-out")
-                                            .foregroundStyle(Color.white)
-                                            .bold()
-                                            .onTapGesture {
-                                                bigModel.currentView = .signInView
-                                                bigModel.screenHistory.append(.UserView)
-                                            }
-                                        
+                                        HStack {
+                                            
+                                            Image(systemName: "gear")
+                                                .foregroundStyle(Color.white)
+                                                .onTapGesture {
+                                                    bigModel.currentView = .InformationsScreen
+                                                }
+                                            
+                                            Spacer()
+                                            
+                                            Text("log-out")
+                                                .foregroundStyle(Color.white)
+                                                .bold()
+                                                .onTapGesture {
+                                                    bigModel.currentView = .signInView
+                                                    bigModel.screenHistory.append(.UserView)
+                                                }
+                                            
+                                        }
                                     }
                                     
                                     ZStack {

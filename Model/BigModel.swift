@@ -41,6 +41,7 @@ class BigModel: ObservableObject {
         var dislikedMeals: [Meal]
         var events: [Event]
         var credits: Int
+        var isUsingPersonnalKey: Bool
     }
     
     struct OpenAIResponseHandler {
@@ -216,7 +217,7 @@ class BigModel: ObservableObject {
         var dinnerMeal: Meal?
     }
     
-    @Published var currentUser: User = User(id: "", firstName: "", lastName: "", items: [], tools: [], budget: 0, currency: "", spendedTime: 0, numberOfPerson: 0, proposedMeals: [], favoriteMeals: [], dislikedMeals: [], events: [], credits: 0)
+    @Published var currentUser: User = User(id: "", firstName: "", lastName: "", items: [], tools: [], budget: 0, currency: "", spendedTime: 0, numberOfPerson: 0, proposedMeals: [], favoriteMeals: [], dislikedMeals: [], events: [], credits: 0, isUsingPersonnalKey: false)
     
     /*let items = [Item(id: 0, category: "legumes", name: "Carotte", seasons: ["été"]), Item(id: 1, category: "legumes", name: "Poireaux", seasons: ["automne", "été"]),Item(id: 2, category: "legumes", name: "Courgette", seasons: ["automne", "hiver"]),Item(id: 3, category: "legumes", name: "Aubergine", seasons: ["hiver"]),Item(id: 4, category: "legumes", name: "Brocolli", seasons: ["printemps"]),
                  Item(id: 5, category: "fruits", name: "Pomme", seasons: ["printemps"]), Item(id: 6, category: "fruits", name: "Poire", seasons: ["automne"]),
@@ -709,7 +710,7 @@ class BigModel: ObservableObject {
             print("Logged In Success")
             
             guard let id = self.auth.currentUser?.uid else { return }
-            self.currentUser = User(firstName: "", lastName: "", items: [], tools: [], budget: 0, currency: "", spendedTime: 0, numberOfPerson: 0, proposedMeals: [], favoriteMeals: [], dislikedMeals: [], events: [], credits: 0)
+            self.currentUser = User(firstName: "", lastName: "", items: [], tools: [], budget: 0, currency: "", spendedTime: 0, numberOfPerson: 0, proposedMeals: [], favoriteMeals: [], dislikedMeals: [], events: [], credits: 0, isUsingPersonnalKey: false)
                         
             let docRef = self.db.collection("Users").document(id)
 
@@ -745,7 +746,7 @@ class BigModel: ObservableObject {
         
         guard let id = self.auth.currentUser?.uid else { return }
         let docRef = self.db.collection("Users").document(id)
-        let newUser = User(id: id, firstName: "", lastName: "", items: [], tools: [], budget: 0, currency: "", spendedTime: 0, numberOfPerson: 0, proposedMeals: [], favoriteMeals: [], dislikedMeals: [], events: [], credits: 0)
+        let newUser = User(id: id, firstName: "", lastName: "", items: [], tools: [], budget: 0, currency: "", spendedTime: 0, numberOfPerson: 0, proposedMeals: [], favoriteMeals: [], dislikedMeals: [], events: [], credits: 0, isUsingPersonnalKey: false)
         
         docRef.getDocument { (document, error) in
             
@@ -785,7 +786,7 @@ class BigModel: ObservableObject {
         
         guard let id = self.auth.currentUser?.uid else { return }
         let docRef = self.db.collection("Users").document(id)
-        let newUser = User(id: id, firstName: "", lastName: "", items: [], tools: [], budget: 0, currency: "", spendedTime: 0, numberOfPerson: 0, proposedMeals: [], favoriteMeals: [], dislikedMeals: [], events: [], credits: 0)
+        let newUser = User(id: id, firstName: "", lastName: "", items: [], tools: [], budget: 0, currency: "", spendedTime: 0, numberOfPerson: 0, proposedMeals: [], favoriteMeals: [], dislikedMeals: [], events: [], credits: 0, isUsingPersonnalKey: false)
         
         docRef.getDocument { (document, error) in
             
@@ -867,7 +868,7 @@ class BigModel: ObservableObject {
             let _ = try self.db.collection("Users").document(id).setData(from: user) { _ in
                 
                 let docRef = self.db.collection("Users").document(id)
-                let newUser = User(firstName: "", lastName: "", items: [], tools: [], budget: 0, currency: "", spendedTime: 0, numberOfPerson: 0, proposedMeals: [], favoriteMeals: [], dislikedMeals: [], events: [], credits: 0)
+                let newUser = User(firstName: "", lastName: "", items: [], tools: [], budget: 0, currency: "", spendedTime: 0, numberOfPerson: 0, proposedMeals: [], favoriteMeals: [], dislikedMeals: [], events: [], credits: 0, isUsingPersonnalKey: false)
                 
                 docRef.getDocument { (document, error) in
                     
@@ -965,7 +966,7 @@ class BigModel: ObservableObject {
         
         guard let id = self.auth.currentUser?.uid else { return }
         let docRef = self.db.collection("Users").document(id)
-        let user = User(id: id, firstName: firstName, lastName: lastName, items: self.currentUser.items, tools: self.currentUser.tools, budget: self.currentUser.budget, currency: self.currentUser.currency, spendedTime: self.currentUser.spendedTime, numberOfPerson: 0, proposedMeals: self.currentUser.proposedMeals, favoriteMeals: self.currentUser.favoriteMeals, dislikedMeals: self.currentUser.dislikedMeals, events: self.currentUser.events, credits: 0)
+        let user = User(id: id, firstName: firstName, lastName: lastName, items: self.currentUser.items, tools: self.currentUser.tools, budget: self.currentUser.budget, currency: self.currentUser.currency, spendedTime: self.currentUser.spendedTime, numberOfPerson: 0, proposedMeals: self.currentUser.proposedMeals, favoriteMeals: self.currentUser.favoriteMeals, dislikedMeals: self.currentUser.dislikedMeals, events: self.currentUser.events, credits: 0, isUsingPersonnalKey: false)
         
         docRef.getDocument { (document, error) in
             do {
@@ -1008,54 +1009,50 @@ class BigModel: ObservableObject {
     
     func createMeal(mealType: String) {
         
-        //let apiUrl = URL(string: "http://127.0.0.1:8080/createMeal/\(openAIKey)/currentUserID/\(String(describing: currentUser.id))/nbPersons/\(self.currentUser.numberOfPerson)/mealType/starter/ingredients/carottes/tools/poele")!
-        let apiUrl = URL(string: "http://127.0.0.1:8080/mockedRecipe")!
+        let apiUrl = URL(string: "http://127.0.0.1:8080/createMeal/currentUserID/\(String(describing: currentUser.id))/nbPersons/\(self.currentUser.numberOfPerson)/mealType/starter/ingredients/carottes/tools/poele")!
         
-        var request = URLRequest(url: apiUrl)
+        let apiUrlWithPersonnalKey = URL(string: "http://127.0.0.1:8080/createMeal/\(openAIKey)/currentUserID/\(String(describing: currentUser.id))/nbPersons/\(self.currentUser.numberOfPerson)/mealType/starter/ingredients/carottes/tools/poele")!
+        
+        var request = URLRequest(url: self.currentUser.isUsingPersonnalKey ? apiUrlWithPersonnalKey : apiUrl)
         request.httpMethod = "GET"
         
         self.isLoading = true
         
-        //for _ in (0..<mealsNumber) {
-        
-            //if (currentUser.credits > 0) {
-                
-                let task = URLSession.shared.dataTask(with: request) { [self] (data, response, error) in
-                    
-                    DispatchQueue.main.async {
-                        
-                    //}
-                    
+        if (currentUser.credits > 0) {
+            
+            let task = URLSession.shared.dataTask(with: request) { [self] (data, response, error) in
+
+                DispatchQueue.main.async {
+
                     guard let responseData = data,
-                          let responseBody = String(data: responseData, encoding: .utf8) else {
-                        return
+                    let responseBody = String(data: responseData, encoding: .utf8) else {
+                    return
                     }
-                    
-                    //DispatchQueue.main.async {
-                        let recipe = self.jsonTest(jsonString: responseBody)
+
+                    let recipe = self.jsonTest(jsonString: responseBody)
+
+                    if recipe.id != "" {
+                        let meal: Meal = Meal(id: UUID().uuidString, recipe: recipe)
+                        self.currentUserTags[meal] = false
+                        self.currentUser.proposedMeals.append(meal)
+                        self.storeCurrentUserInfoIntoDB(user: self.currentUser)
                         
-                        if recipe.id != "" {
-                            sleep(5)
-                            let meal: Meal = Meal(id: UUID().uuidString, recipe: recipe)
-                            self.currentUserTags[meal] = false
-                            self.currentUser.proposedMeals.append(meal)
-                            self.storeCurrentUserInfoIntoDB(user: self.currentUser)
+                        if !self.currentUser.isUsingPersonnalKey {
                             self.currentUser.credits-=1
                         }
                         
-                    //}
-                    
-                    self.storeCurrentUserInfoIntoDB(user: self.currentUser)
-                    
-                    self.isLoading = false
-                    //DispatchQueue.main.async {
                     }
-                    
+
+                    self.storeCurrentUserInfoIntoDB(user: self.currentUser)
+
+                    self.isLoading = false
                 }
                 
-                task.resume()
-            //}
-        //}
+            }
+            
+            task.resume()
+        }
+        
     }
     
     
@@ -1265,7 +1262,7 @@ class BigModel: ObservableObject {
                 let _ = try self.db.collection("Users").document(id).setData(from: user) { _ in
                     
                     let docRef = self.db.collection("Users").document(id)
-                    let newUser = User(firstName: "", lastName: "", items: [], tools: [], budget: 0, currency: "", spendedTime: 0, numberOfPerson: 0, proposedMeals: [], favoriteMeals: [], dislikedMeals: [], events: [], credits: 0)
+                    let newUser = User(firstName: "", lastName: "", items: [], tools: [], budget: 0, currency: "", spendedTime: 0, numberOfPerson: 0, proposedMeals: [], favoriteMeals: [], dislikedMeals: [], events: [], credits: 0, isUsingPersonnalKey: false)
                     
                     docRef.getDocument { (document, error) in
                         
@@ -1407,7 +1404,7 @@ class BigModel: ObservableObject {
                                                     BigModel.Meal(id: "dfkljfrjf", recipe: Recipe(id: "EURF40ET0", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: "", currency: "", prepDuration: "", totalDuration: "", recipeDescription: RecipeDescription(id: "", introduction: "", steps: []))),
                                                     BigModel.Meal(id: "dfkljfrjf", recipe: Recipe(id: "UEFE04RT4EJOR¨F", recipeName: "Spaghetti à la carbo", numberOfPersons: 4, mealType: "Dîner", seasons: ["été", "printemps"], ingredients: [], price: "", currency: "", prepDuration: "", totalDuration: "", recipeDescription: RecipeDescription(id: "", introduction: "", steps: []))) ],
                                     
-                                    dislikedMeals: [], events: [], credits: 0)
+                                    dislikedMeals: [], events: [], credits: 0, isUsingPersonnalKey: false)
             self.currentView = .UserView
         }
     

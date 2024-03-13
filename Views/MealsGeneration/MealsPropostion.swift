@@ -36,7 +36,22 @@ struct MealsPropostion: View {
                 
                 VStack(spacing: 10) {
                     
-                    BackModel(color: Color.navyBlue, view: .mealsPropositionScreen)
+                    ZStack {
+                        
+                        
+                        if !bigModel.currentUser.isUsingPersonnalKey {
+                            HStack {
+                                Text("\(bigModel.currentUser.credits) credits")
+                                    .foregroundStyle(Color.navyBlue)
+                                    .onTapGesture {
+                                        bigModel.screenHistory.append(.mealsPropositionScreen)
+                                        bigModel.currentView = .InformationsScreen
+                                    }
+                            }
+                        }
+                        
+                        BackModel(color: Color.navyBlue, view: .mealsPropositionScreen)
+                    }
                     
                     Text("meals")
                         .foregroundStyle(Color.navyBlue)
@@ -123,11 +138,16 @@ struct MealsPropostion: View {
                 ZStack {
                     Rectangle()
                         .frame(height: 60)
-                        .foregroundStyle(Color.navyBlue)
-                    Text("generate-new-meals")
+                        .foregroundStyle(bigModel.currentUser.credits != 0 ? Color.navyBlue : Color.gray)
+                    Text(bigModel.currentUser.credits != 0 ? "generate-new-meals" : "buy-credits")
                         .foregroundStyle(Color.white)
                 }.onTapGesture {
-                    bigModel.currentView = .SeasonSelectionView
+                    if bigModel.currentUser.credits != 0 {
+                        bigModel.currentView = .SeasonSelectionView
+                    } else {
+                        bigModel.currentView = .InformationsScreen
+                    }
+                    
                 }
             }.edgesIgnoringSafeArea(.bottom)
             .onAppear {

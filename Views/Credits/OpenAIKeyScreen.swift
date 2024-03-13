@@ -64,13 +64,14 @@ struct OpenAIKeyScreen: View {
                     Rectangle()
                         .foregroundStyle(openAIKey == "" ? Color(.lightGray) : Color.gray)
                         .frame(height: 60)
-                    Text("Save password")
+                    Text("Save key")
                         .foregroundStyle(openAIKey == "" ? Color.gray : Color.white)
                         .fontWeight(.medium)
                         .onTapGesture {
                             if openAIKey != "" {
                                 bigModel.setSecretKey(secretKey: openAIKey)
                             }
+                            bigModel.currentUser.isUsingPersonnalKey = true
                         }
                 }
                 
