@@ -78,6 +78,9 @@ struct CreditsInformationsScreen: View {
                             Spacer()
                         }
                     }.padding(20)
+                    .onTapGesture {
+                        bigModel.currentView = .OpenAIKeyScreen
+                    }
                     
                 }
                 

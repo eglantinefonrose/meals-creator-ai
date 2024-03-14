@@ -1009,9 +1009,9 @@ class BigModel: ObservableObject {
     
     func createMeal(mealType: String) {
         
-        let apiUrl = URL(string: "http://127.0.0.1:8080/createMeal/currentUserID/\(String(describing: currentUser.id))/nbPersons/\(self.currentUser.numberOfPerson)/mealType/starter/ingredients/carottes/tools/poele")!
+        let apiUrl = URL(string: "http://127.0.0.1:8080/createMeal/currentUserID/\(String(describing: currentUser.id))/nbPersons/\(self.currentUser.numberOfPerson)/mealType/\(mealType)/ingredients/\(listToString(list: currentUser.items))/tools/\(listToString(list: currentUser.tools))")!
         
-        let apiUrlWithPersonnalKey = URL(string: "http://127.0.0.1:8080/createMeal/\(openAIKey)/currentUserID/\(String(describing: currentUser.id))/nbPersons/\(self.currentUser.numberOfPerson)/mealType/starter/ingredients/carottes/tools/poele")!
+        let apiUrlWithPersonnalKey = URL(string: "http://127.0.0.1:8080/createMeal/\(openAIKey)/currentUserID/\(String(describing: currentUser.id))/nbPersons/\(self.currentUser.numberOfPerson)/mealType/\(mealType)/ingredients/\(listToString(list: currentUser.items))/tools/\(listToString(list: currentUser.tools))")!
         
         var request = URLRequest(url: self.currentUser.isUsingPersonnalKey ? apiUrlWithPersonnalKey : apiUrl)
         request.httpMethod = "GET"

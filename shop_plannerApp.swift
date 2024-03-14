@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Firebase
+import LocalAuthentication
 
 @main
 struct shop_plannerApp: App {
@@ -26,5 +27,5 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         FirebaseApp.configure()
         return true
     }
-    
+        
 }

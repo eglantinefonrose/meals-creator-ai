@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import KeychainAccess
+import LocalAuthentication
 
 struct OpenAIKeyScreen: View {
     
@@ -60,6 +62,12 @@ struct OpenAIKeyScreen: View {
                     
                 }.padding(.horizontal, 20)
                 
+                Text("Get current password")
+                    .foregroundStyle(Color.blue)
+                    .onTapGesture {
+                        authenticate()
+                    }
+                
                 ZStack {
                     Rectangle()
                         .foregroundStyle(openAIKey == "" ? Color(.lightGray) : Color.gray)
@@ -67,12 +75,6 @@ struct OpenAIKeyScreen: View {
                     Text("Save key")
                         .foregroundStyle(openAIKey == "" ? Color.gray : Color.white)
                         .fontWeight(.medium)
-                        .onTapGesture {
-                            if openAIKey != "" {
-                                bigModel.setSecretKey(secretKey: openAIKey)
-                            }
-                            bigModel.currentUser.isUsingPersonnalKey = true
-                        }
                 }
                 
             }
@@ -81,6 +83,29 @@ struct OpenAIKeyScreen: View {
         }
         
     }
+    
+    func authenticate() {
+        let context = LAContext()
+        var error: NSError?
+
+        // check whether biometric authentication is possible
+        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+            // it's possible, so go ahead and use it
+            let reason = "We need to unlock your data."
+
+            context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) { success, authenticationError in
+                // authentication has now completed
+                if success {
+                    openAIKey  = bigModel.openAIKey
+                } else {
+                    print("wrong face")
+                }
+            }
+        } else {
+            // no biometrics
+        }
+    }
+    
 }
 
 struct SecureInputView: View {
@@ -101,7 +126,7 @@ struct SecureInputView: View {
                     if isSecured {
                         SecureField(title, text: $text)
                     } else {
-                        TextField(title, text: $text)
+                        TextField(title, text: $text, axis: .vertical)
                     }
                 }.padding(.trailing, 32)
             }
