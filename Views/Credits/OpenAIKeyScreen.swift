@@ -62,12 +62,6 @@ struct OpenAIKeyScreen: View {
                     
                 }.padding(.horizontal, 20)
                 
-                Text("Get current password")
-                    .foregroundStyle(Color.blue)
-                    .onTapGesture {
-                        authenticate()
-                    }
-                
                 ZStack {
                     Rectangle()
                         .foregroundStyle(openAIKey == "" ? Color(.lightGray) : Color.gray)
@@ -75,35 +69,19 @@ struct OpenAIKeyScreen: View {
                     Text("Save key")
                         .foregroundStyle(openAIKey == "" ? Color.gray : Color.white)
                         .fontWeight(.medium)
+                }.onTapGesture {
+                    bigModel.setSecretKey(secretKey: openAIKey)
                 }
                 
             }
             .padding(.top, 20)
             .edgesIgnoringSafeArea(.bottom)
-        }
-        
-    }
-    
-    func authenticate() {
-        let context = LAContext()
-        var error: NSError?
-
-        // check whether biometric authentication is possible
-        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
-            // it's possible, so go ahead and use it
-            let reason = "We need to unlock your data."
-
-            context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) { success, authenticationError in
-                // authentication has now completed
-                if success {
-                    openAIKey  = bigModel.openAIKey
-                } else {
-                    print("wrong face")
-                }
+        }.onAppear(perform: {
+            if bigModel.currentUser.isUsingPersonnalKey {
+                openAIKey  = bigModel.openAIKey
             }
-        } else {
-            // no biometrics
-        }
+        })
+        
     }
     
 }
@@ -131,7 +109,27 @@ struct SecureInputView: View {
                 }.padding(.trailing, 32)
             }
             Button(action: {
-                isSecured.toggle()
+                
+                let context = LAContext()
+                var error: NSError?
+
+                // check whether biometric authentication is possible
+                if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+                    // it's possible, so go ahead and use it
+                    let reason = "We need to unlock your data."
+
+                    context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) { success, authenticationError in
+                        // authentication has now completed
+                        if success {
+                            isSecured.toggle()
+                        } else {
+                            print("wrong face")
+                        }
+                    }
+                } else {
+                    // no biometrics
+                }
+                
             }) {
                 Image(systemName: self.isSecured ? "eye.slash" : "eye")
                     .accentColor(.gray)

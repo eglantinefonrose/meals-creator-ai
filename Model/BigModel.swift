@@ -727,6 +727,11 @@ class BigModel: ObservableObject {
                         self.currentUser = try document.data(as: User.self)
                         self.currentView = .UserView
                         self.screenHistory.append(.signInView)
+                        
+                        if self.currentUser.isUsingPersonnalKey {
+                            self.openAIKey = self.getSecretKey()!
+                        }
+                        
                         //print("Document data: \(String(describing: document.data()))")
                     }
                     catch {
@@ -997,9 +1002,7 @@ class BigModel: ObservableObject {
     }
     
     let openAIURL = URL(string: "https://api.openai.com/v1/engines/gpt-3.5-turbo-instruct/completions")
-    var openAIKey: String {
-        return getSecretKey() ?? "GrosMinetnil"
-    }
+    var openAIKey: String = ""
     
     func setSecretKey(secretKey: String) {
         let keychain = Keychain(service: "com.miamAI.openai")
