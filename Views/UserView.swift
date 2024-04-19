@@ -71,7 +71,7 @@ struct UserView: View {
                                         Circle()
                                             .frame(width: 150)
                                             .foregroundColor(.gray)
-                                        Text("\(String(bigModel.currentUser.firstName.prefix(1) ))\(String(bigModel.currentUser.lastName.prefix(1) ))")
+                                        Text("\(String(bigModel.currentUser.firstName.prefix(1)))\(String(bigModel.currentUser.lastName.prefix(1) ))")
                                             .font(.title)
                                             .bold()
                                             .foregroundColor(.white)

@@ -14,7 +14,7 @@ import GoogleSignIn
 import GoogleSignInSwift
 import KeychainAccess
 
-struct SignIN: View {
+struct SignInView: View {
     
     @State var username = ""
     @State var password = ""
@@ -31,7 +31,7 @@ struct SignIN: View {
                 
                 Text("sign-in")
                     .bold()
-                    .foregroundStyle(Color(.navyBlue))
+                    .foregroundStyle(Color.blue)
                 
                 Spacer()
                 
@@ -42,7 +42,7 @@ struct SignIN: View {
                         VStack(alignment: .trailing, spacing: 0) {
                             Text("sign-in")
                                 .textCase(.uppercase)
-                                .foregroundStyle(Color.navyBlue)
+                                .foregroundStyle(Color.blue)
                                 .font(.system(size: 75))
                         }
                     }*/
@@ -50,7 +50,7 @@ struct SignIN: View {
                     //Spacer()
                     
                     //Circle()
-                        //.foregroundStyle(Color.navyBlue)
+                        //.foregroundStyle(Color.blue)
                         //
                         // IMPORTANT - Ce code ne sert qu'à insérer la clé OpenAI API dans le keychain du compte Apple
                         //             et ne devrait pas exister, mais on n'a pas trouvé comment mettre la clé dans la keychain
@@ -74,13 +74,14 @@ struct SignIN: View {
                             .resizable()
                             .scaledToFit()
                             .onTapGesture {
-                                bigModel.createMeal(mealType: "")
+                                //print("key")
+                                print(bigModel.getSecretKey())
                             }
                         
                         VStack(alignment: .leading, spacing: 10) {
                             
                             /*Text("Sign in with Apple")
-                                .foregroundStyle(Color.navyBlue)
+                                .foregroundStyle(Color.blue)
                                 .font(.largeTitle)*/
                             
                             SignInWithAppleButton { (request) in
@@ -106,13 +107,13 @@ struct SignIN: View {
                             }.clipShape(Capsule())
                             .frame(height: 60)
 
-                            //Rectangle().fill(Color.navyBlue).frame(height: 1)
+                            //Rectangle().fill(Color.blue).frame(height: 1)
                         }
                         
                         VStack(alignment: .leading, spacing: 10) {
                             
                             /*Text("Sign in with Google")
-                                .foregroundStyle(Color.navyBlue)
+                                .foregroundStyle(Color.blue)
                                 .font(.largeTitle)*/
                             
                             ZStack {
@@ -233,6 +234,6 @@ class KeyboardHeightHelper: ObservableObject {
 
 struct SignIN_Previews: PreviewProvider {
     static var previews: some View {
-        SignIN(bigModel: BigModel.mocked)
+        SignInView(bigModel: BigModel.mocked)
     }
 }

@@ -997,6 +997,7 @@ class BigModel: ObservableObject {
     func getSecretKey() -> String?  {
         let keychain = Keychain(service: "net.proutechos.openai")
         let entry = keychain["key.teevity.dev001"]
+        print("key : \(String(describing: entry))")
         
         return entry
     }

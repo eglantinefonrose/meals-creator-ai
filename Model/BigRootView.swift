@@ -55,7 +55,7 @@ struct BigRootView: View {
                     WelcomeView(bigModel: BigModel.mocked)
                 }*/
                 if bigModel.currentView == .signInView {
-                    SignIN(bigModel: BigModel.mocked)
+                    SignInView(bigModel: BigModel.mocked)
                 }
                 if bigModel.currentView == .UserView {
                     UserView(bigModel: BigModel.mocked)
@@ -141,7 +141,7 @@ struct BigRootView: View {
             VStack {
                 
                 if bigModel.currentView == .signInView {
-                    SignIN(bigModel: BigModel.shared)
+                    SignInView(bigModel: BigModel.shared)
                 }
                 if bigModel.currentView == .UserView {
                     UserView(bigModel: BigModel.shared)
