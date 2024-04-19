@@ -26,7 +26,7 @@ struct DailyCalendar: View {
                 
                 VStack(spacing: 20) {
                     
-                    BackModel(color: Color.navyBlue, view: .DailyCalendar)
+                    BackModel(color: Color.blue, view: .DailyCalendar)
                     
                     HStack(spacing: 30) {
                         
@@ -34,7 +34,7 @@ struct DailyCalendar: View {
                             ZStack {
                                 if dayDelay == 0 {
                                     Circle()
-                                        .foregroundColor(.navyBlue)
+                                        .foregroundColor(.blue)
                                         .frame(width: 75, height: 75)
                                 }
                                 VStack {
@@ -42,11 +42,11 @@ struct DailyCalendar: View {
                                     
                                     Text("\(getDateNumber(date: Calendar.current.date(byAdding: .day, value: dayDelay, to: self.selectedDate)!))")
                                         .font(.title)
-                                        .foregroundColor(dayDelay == 0 ? .white : .navyBlue)
+                                        .foregroundColor(dayDelay == 0 ? .white : .blue)
                                     Text("\(getDateMonth(date: Calendar.current.date(byAdding: .day, value: dayDelay, to: self.selectedDate)!))")
                                         .font(.headline)
                                         .textCase(.lowercase)
-                                        .foregroundColor(dayDelay == 0 ? .white : .navyBlue)
+                                        .foregroundColor(dayDelay == 0 ? .white : .blue)
                                 }
                             }.onTapGesture {
                                 withAnimation(.interactiveSpring) { // Ajout de l'animation lors du clic
@@ -78,7 +78,7 @@ struct DailyCalendar: View {
                             HStack {
                                 Text("breakfast")
                                     .font(.title3)
-                                    .foregroundStyle(Color(.navyBlue))
+                                    .foregroundStyle(Color.white)
                                 Spacer()
                             }
                             
@@ -92,10 +92,10 @@ struct DailyCalendar: View {
                                     VStack {
                                         Text("+")
                                             .font(.largeTitle)
-                                            .foregroundStyle(Color(.navyBlue))
+                                            .foregroundStyle(Color(.blue))
                                         Text(bigModel.isUserTryingAddNewMealToCalendar ? "click-to-add" : bigModel.isUserTryingAddNewMealToCalendar ? "click-to-add" : "add-a-meal")
                                             .font(.title)
-                                            .foregroundStyle(Color(.navyBlue))
+                                            .foregroundStyle(Color(.blue))
                                     }.onTapGesture {
                                         
                                         if bigModel.isUserTryingAddNewMealToCalendar {
@@ -117,16 +117,16 @@ struct DailyCalendar: View {
                                             HStack {
                                                 Text(currentEvent.breakfastMeal!.recipe.recipeName)
                                                     .font(.largeTitle)
-                                                    .foregroundStyle(Color(.navyBlue))
+                                                    .foregroundStyle(Color(.blue))
                                                 Spacer()
                                             }
                                             HStack {
                                                 Text("\(currentEvent.breakfastMeal!.recipe.prepDuration) min - \(currentEvent.breakfastMeal!.recipe.price)\(currentEvent.breakfastMeal!.recipe.currency)")
                                                     .font(.title3)
-                                                    .foregroundStyle(Color(.navyBlue))
+                                                    .foregroundStyle(Color(.blue))
                                                 Spacer()
                                                 Image(systemName: "trash")
-                                                    .foregroundStyle(Color(.navyBlue))
+                                                    .foregroundStyle(Color(.blue))
                                                     .onTapGesture {
                                                         bigModel.removeMealFromEvent(mealType: "Breakfast")
                                                     }
@@ -142,10 +142,10 @@ struct DailyCalendar: View {
                                         VStack {
                                             Text("+")
                                                 .font(.largeTitle)
-                                                .foregroundStyle(Color(.navyBlue))
+                                                .foregroundStyle(Color(.blue))
                                             Text(bigModel.isUserTryingAddNewMealToCalendar ? "click-to-add" : "add-a-meal")
                                                 .font(.title)
-                                                .foregroundStyle(Color(.navyBlue))
+                                                .foregroundStyle(Color(.blue))
                                         }.onTapGesture {
                                             
                                             if bigModel.screenHistory.last == .RecipeScreen {
@@ -171,7 +171,7 @@ struct DailyCalendar: View {
                             HStack {
                                 Text("lunch")
                                     .font(.title3)
-                                    .foregroundStyle(Color(.navyBlue))
+                                    .foregroundStyle(Color(.blue))
                                 Spacer()
                             }
                             
@@ -185,10 +185,10 @@ struct DailyCalendar: View {
                                     VStack {
                                         Text("+")
                                             .font(.largeTitle)
-                                            .foregroundStyle(Color(.navyBlue))
+                                            .foregroundStyle(Color(.blue))
                                         Text(bigModel.isUserTryingAddNewMealToCalendar ? "click-to-add" : bigModel.isUserTryingAddNewMealToCalendar ? "click-to-add" : "add-a-meal")
                                             .font(.title)
-                                            .foregroundStyle(Color(.navyBlue))
+                                            .foregroundStyle(Color(.blue))
                                     }.onTapGesture {
                                         
                                         if bigModel.isUserTryingAddNewMealToCalendar {
@@ -210,16 +210,16 @@ struct DailyCalendar: View {
                                             HStack {
                                                 Text(currentEvent.lunchMeal!.recipe.recipeName)
                                                     .font(.largeTitle)
-                                                    .foregroundStyle(Color(.navyBlue))
+                                                    .foregroundStyle(Color(.blue))
                                                 Spacer()
                                             }
                                             HStack {
                                                 Text("\(currentEvent.lunchMeal!.recipe.prepDuration) min - \(currentEvent.lunchMeal!.recipe.price)\(currentEvent.lunchMeal!.recipe.currency)")
                                                     .font(.title3)
-                                                    .foregroundStyle(Color(.navyBlue))
+                                                    .foregroundStyle(Color(.blue))
                                                 Spacer()
                                                 Image(systemName: "trash")
-                                                    .foregroundStyle(Color(.navyBlue))
+                                                    .foregroundStyle(Color(.blue))
                                                     .onTapGesture {
                                                         bigModel.removeMealFromEvent(mealType: "Lunch")
                                                     }
@@ -235,10 +235,10 @@ struct DailyCalendar: View {
                                         VStack {
                                             Text("+")
                                                 .font(.largeTitle)
-                                                .foregroundStyle(Color(.navyBlue))
+                                                .foregroundStyle(Color(.blue))
                                             Text(bigModel.isUserTryingAddNewMealToCalendar ? "click-to-add" : "add-a-meal")
                                                 .font(.title)
-                                                .foregroundStyle(Color(.navyBlue))
+                                                .foregroundStyle(Color(.blue))
                                         }.onTapGesture {
                                             
                                             if bigModel.screenHistory.last == .RecipeScreen {
@@ -264,7 +264,7 @@ struct DailyCalendar: View {
                             HStack {
                                 Text("snack")
                                     .font(.title3)
-                                    .foregroundStyle(Color(.navyBlue))
+                                    .foregroundStyle(Color(.blue))
                                 Spacer()
                             }
                             
@@ -278,10 +278,10 @@ struct DailyCalendar: View {
                                     VStack {
                                         Text("+")
                                             .font(.largeTitle)
-                                            .foregroundStyle(Color(.navyBlue))
+                                            .foregroundStyle(Color(.blue))
                                         Text(bigModel.isUserTryingAddNewMealToCalendar ? "click-to-add" : "add-a-meal")
                                             .font(.title)
-                                            .foregroundStyle(Color(.navyBlue))
+                                            .foregroundStyle(Color(.blue))
                                     }.onTapGesture {
                                         
                                         if bigModel.isUserTryingAddNewMealToCalendar {
@@ -303,16 +303,16 @@ struct DailyCalendar: View {
                                             HStack {
                                                 Text(currentEvent.snackMeal!.recipe.recipeName)
                                                     .font(.largeTitle)
-                                                    .foregroundStyle(Color(.navyBlue))
+                                                    .foregroundStyle(Color(.blue))
                                                 Spacer()
                                             }
                                             HStack {
                                                 Text("\(currentEvent.snackMeal!.recipe.prepDuration) min - \(currentEvent.snackMeal!.recipe.price)\(currentEvent.snackMeal!.recipe.currency)")
                                                     .font(.title3)
-                                                    .foregroundStyle(Color(.navyBlue))
+                                                    .foregroundStyle(Color(.blue))
                                                 Spacer()
                                                 Image(systemName: "trash")
-                                                    .foregroundStyle(Color(.navyBlue))
+                                                    .foregroundStyle(Color(.blue))
                                                     .onTapGesture {
                                                         bigModel.removeMealFromEvent(mealType: "Snack")
                                                     }
@@ -328,10 +328,10 @@ struct DailyCalendar: View {
                                         VStack {
                                             Text("+")
                                                 .font(.largeTitle)
-                                                .foregroundStyle(Color(.navyBlue))
+                                                .foregroundStyle(Color(.blue))
                                             Text(bigModel.isUserTryingAddNewMealToCalendar ? "click-to-add" : "add-a-meal")
                                                 .font(.title)
-                                                .foregroundStyle(Color(.navyBlue))
+                                                .foregroundStyle(Color(.blue))
                                         }.onTapGesture {
                                             
                                             if bigModel.screenHistory.last == .RecipeScreen {
@@ -357,7 +357,7 @@ struct DailyCalendar: View {
                             HStack {
                                 Text("dinner")
                                     .font(.title3)
-                                    .foregroundStyle(Color(.navyBlue))
+                                    .foregroundStyle(Color(.blue))
                                 Spacer()
                             }
                             
@@ -371,10 +371,10 @@ struct DailyCalendar: View {
                                     VStack {
                                         Text("+")
                                             .font(.largeTitle)
-                                            .foregroundStyle(Color(.navyBlue))
+                                            .foregroundStyle(Color(.blue))
                                         Text(bigModel.isUserTryingAddNewMealToCalendar ? "click-to-add" : "add-a-meal")
                                             .font(.title)
-                                            .foregroundStyle(Color(.navyBlue))
+                                            .foregroundStyle(Color(.blue))
                                     }.onTapGesture {
                                         
                                         if bigModel.isUserTryingAddNewMealToCalendar {
@@ -396,16 +396,16 @@ struct DailyCalendar: View {
                                             HStack {
                                                 Text(currentEvent.dinnerMeal!.recipe.recipeName)
                                                     .font(.largeTitle)
-                                                    .foregroundStyle(Color(.navyBlue))
+                                                    .foregroundStyle(Color(.blue))
                                                 Spacer()
                                             }
                                             HStack {
                                                 Text("\(currentEvent.dinnerMeal!.recipe.prepDuration) min - \(currentEvent.dinnerMeal!.recipe.price)\(currentEvent.dinnerMeal!.recipe.currency)")
                                                     .font(.title3)
-                                                    .foregroundStyle(Color(.navyBlue))
+                                                    .foregroundStyle(Color(.blue))
                                                 Spacer()
                                                 Image(systemName: "trash")
-                                                    .foregroundStyle(Color(.navyBlue))
+                                                    .foregroundStyle(Color(.blue))
                                                     .onTapGesture {
                                                         bigModel.removeMealFromEvent(mealType: "Dinner")
                                                     }
@@ -421,10 +421,10 @@ struct DailyCalendar: View {
                                         VStack {
                                             Text("+")
                                                 .font(.largeTitle)
-                                                .foregroundStyle(Color(.navyBlue))
+                                                .foregroundStyle(Color(.blue))
                                             Text(bigModel.isUserTryingAddNewMealToCalendar ? "click-to-add" : "add-a-meal")
                                                 .font(.title)
-                                                .foregroundStyle(Color(.navyBlue))
+                                                .foregroundStyle(Color(.blue))
                                         }.onTapGesture {
                                             
                                             if bigModel.screenHistory.last == .RecipeScreen {

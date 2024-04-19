@@ -122,7 +122,7 @@ struct NumberOfPersonScreen: View {
                                 .foregroundStyle(Color.white)
                             HStack {
                                 Text("-")
-                                    .foregroundStyle(Color.navyBlue)
+                                    .foregroundStyle(Color.blue)
                                     .onTapGesture {
                                         if self.numberOfPerson - 10 > 0 {
                                             self.numberOfPerson -= 10
@@ -136,7 +136,7 @@ struct NumberOfPersonScreen: View {
                                 
                                 TextField("", text: $numberOfPersonString)
                                     .multilineTextAlignment(.center)
-                                    .foregroundStyle(Color.navyBlue)
+                                    .foregroundStyle(Color.blue)
                                     .font(.title)
                                     .keyboardType(.decimalPad)
                                     .onChange(of: numberOfPersonString) { newValue in
@@ -146,7 +146,7 @@ struct NumberOfPersonScreen: View {
                                 Spacer()
                                 
                                 Text("+")
-                                    .foregroundStyle(Color.navyBlue)
+                                    .foregroundStyle(Color.blue)
                                     .onTapGesture {
                                         self.numberOfPerson += 1
                                     }
@@ -166,7 +166,7 @@ struct NumberOfPersonScreen: View {
                             .frame(height: 60)
                             .foregroundStyle(Color.white)
                         Text("validate")
-                            .foregroundStyle(Color.navyBlue)
+                            .foregroundStyle(Color.blue)
                     }.onTapGesture {
                         Task {
                             var user = bigModel.currentUser

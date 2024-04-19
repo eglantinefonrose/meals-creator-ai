@@ -45,19 +45,19 @@ struct TastesView: View {
                 
                 VStack(spacing: 10) {
                     
-                    BackModel(color: Color.navyBlue, view: .TastesView)
+                    BackModel(color: Color.blue, view: .TastesView)
                     
                     Text("tastes")
                         .textCase(.uppercase)
-                        .foregroundStyle(Color.navyBlue)
+                        .foregroundStyle(Color.blue)
                         .font(.system(size: 100))
                     //Circle()
-                        //.foregroundStyle(Color.navyBlue)
+                        //.foregroundStyle(Color.blue)
                         //.frame(width: circleSize, height: circleSize)
                     
                     VStack(alignment: .leading) {
                         Text("select-preferences")
-                            .foregroundStyle(Color.navyBlue)
+                            .foregroundStyle(Color.blue)
                         ScrollView {
                             VStack(alignment: .leading, spacing: 10) {
                                 ForEach(preferenceList) { preferenceList in
@@ -67,7 +67,7 @@ struct TastesView: View {
                                         HStack {
                                             Text(bigModel.categoryToName(categorie: preferenceList.name))
                                                 .font(.largeTitle)
-                                                .foregroundStyle(Color.navyBlue)
+                                                .foregroundStyle(Color.blue)
                                             Spacer()
                                         }
                                         
@@ -102,7 +102,7 @@ struct TastesView: View {
                                             Spacer()
                                         }
                                         
-                                        Rectangle().fill(Color.navyBlue).frame(height: 1)
+                                        Rectangle().fill(Color.blue).frame(height: 1)
                                     }.onTapGesture {
                                         bigModel.currentView = categoryNameToNextScreen(categorie: preferenceList)
                                         bigModel.screenHistory.append(.TastesView)
@@ -115,7 +115,7 @@ struct TastesView: View {
                                     HStack {
                                         Text("tools")
                                             .font(.largeTitle)
-                                            .foregroundStyle(Color.navyBlue)
+                                            .foregroundStyle(Color.blue)
                                         Spacer()
                                     }
                                     
@@ -144,7 +144,7 @@ struct TastesView: View {
                                         Spacer()
                                     }
                                     
-                                    Rectangle().fill(Color.navyBlue).frame(height: 1)
+                                    Rectangle().fill(Color.blue).frame(height: 1)
                                 }.onTapGesture {
                                     bigModel.currentView = .cookingToolsScreen
                                     bigModel.screenHistory.append(.TastesView)
@@ -171,7 +171,7 @@ struct TastesView: View {
                 ZStack {
                     Rectangle()
                         .frame(height: 60)
-                        .foregroundStyle(Color.navyBlue)
+                        .foregroundStyle(Color.blue)
                     Text("validate")
                         .foregroundColor(.white)
                 }.onTapGesture {

@@ -30,13 +30,13 @@ struct RecipeScreen: View {
                      
                      VStack(spacing: 10) {
                          
-                         BackModel(color: Color.navyBlue, view: .RecipeScreen)
+                         BackModel(color: Color.blue, view: .RecipeScreen)
                          
                          VStack {
                              
                              ZStack {
                                  Circle()
-                                     .foregroundColor(.navyBlue)
+                                     .foregroundColor(.blue)
                                      .frame(width: circleSize, height: circleSize)
                                  image
                                      .resizable()
@@ -46,21 +46,21 @@ struct RecipeScreen: View {
                              HStack {
                                  ScrollView(.horizontal) {
                                      Text(bigModel.selectedMeal.recipe.recipeName)
-                                         .foregroundStyle(Color.navyBlue)
+                                         .foregroundStyle(Color.blue)
                                          .font(.system(size: fontSize))
                                          .bold()
                                      
                                  }
                                  VStack(spacing: 5) {
                                      Image(systemName: "hand.thumbsdown")
-                                         .foregroundColor(.navyBlue)
+                                         .foregroundColor(.blue)
                                          .onTapGesture {
                                              bigModel.currentView = .BlankFile
                                              bigModel.dislikedMeal = bigModel.selectedMeal
                                          }
                                      
                                      Image(systemName: selected ? "heart.fill" : "heart")
-                                         .foregroundColor(.navyBlue)
+                                         .foregroundColor(.blue)
                                          .onTapGesture {
                                              if !isMealInList(meal: bigModel.selectedMeal) && !selected {
                                                  Task {
@@ -86,11 +86,11 @@ struct RecipeScreen: View {
                                      VStack(alignment: .leading, spacing: 10) {
                                          Text("ingredients")
                                              .font(.title2)
-                                             .foregroundStyle(Color.navyBlue)
+                                             .foregroundStyle(Color.blue)
                                              .onTapGesture {
                                                  
                                              }
-                                         Rectangle().fill(Color.navyBlue).frame(height: 1)
+                                         Rectangle().fill(Color.blue).frame(height: 1)
                                      }
                                      
                                      LazyVGrid(columns: columns, spacing: 5) {
@@ -104,7 +104,7 @@ struct RecipeScreen: View {
                                                      VStack(alignment: .leading) {
                                                          Spacer()
                                                          Text(k.name)
-                                                             .foregroundStyle(Color(.navyBlue))
+                                                             .foregroundStyle(Color.blue)
                                                          Text("\(k.quantityWithUnit)")
                                                              .foregroundStyle(Color.gray)
                                                      }
@@ -117,32 +117,32 @@ struct RecipeScreen: View {
                                      HStack {
                                          Text("total-time")
                                              .font(.largeTitle)
-                                             .foregroundStyle(Color.navyBlue)
+                                             .foregroundStyle(Color.blue)
                                          Spacer()
                                          Text("\(bigModel.selectedMeal.recipe.totalDuration)")
-                                             .foregroundStyle(Color.navyBlue)
+                                             .foregroundStyle(Color.blue)
                                      }
-                                     Rectangle().fill(Color.navyBlue).frame(height: 1)
+                                     Rectangle().fill(Color.blue).frame(height: 1)
                                      
                                      HStack {
                                          Text("average-price")
                                              .font(.largeTitle)
-                                             .foregroundStyle(Color.navyBlue)
+                                             .foregroundStyle(Color.blue)
                                          Spacer()
                                          Text(bigModel.selectedMeal.recipe.price)
-                                             .foregroundStyle(Color.navyBlue)
+                                             .foregroundStyle(Color.blue)
                                          Text(bigModel.selectedMeal.recipe.currency)
-                                             .foregroundStyle(Color.navyBlue)
+                                             .foregroundStyle(Color.blue)
                                      }
-                                     Rectangle().fill(Color.navyBlue).frame(height: 1)
+                                     Rectangle().fill(Color.blue).frame(height: 1)
                                      
                                      HStack {
                                          Text("recipe")
                                              .font(.largeTitle)
-                                             .foregroundStyle(Color.navyBlue)
+                                             .foregroundStyle(Color.blue)
                                          Spacer()
                                      }
-                                     //Rectangle().fill(Color.navyBlue).frame(height: 1)
+                                     //Rectangle().fill(Color.blue).frame(height: 1)
                                      
                                      Spacer()
                                      
@@ -196,7 +196,7 @@ struct RecipeScreen: View {
                          ZStack {
                              Rectangle()
                                  .frame(height: 60)
-                                 .foregroundStyle(Color.navyBlue)
+                                 .foregroundStyle(Color.blue)
                              Text("save-in-planner")
                                  .foregroundStyle(Color.white)
                          }.onTapGesture {

@@ -163,7 +163,7 @@ struct UserView: View {
                                         
                                     }
                                 }.padding(20)
-                            }.background(Color.navyBlue)
+                            }.background(Color.blue)
                             
                             VStack(spacing: 0) {
                                 
@@ -189,13 +189,14 @@ struct UserView: View {
                                                 VStack(alignment: .leading) {
                                                     Text("tastes")
                                                         .font(.largeTitle)
-                                                        .foregroundStyle(Color.navyBlue)
+                                                        .foregroundStyle(Color.blue)
                                                     HStack {
                                                         if bigModel.currentUser.items.count != 0 {
                                                             ScrollView(.horizontal) {
                                                                 HStack {
                                                                     ForEach(bigModel.currentUser.items) { item in
                                                                         Text(item.name)
+                                                                            .foregroundStyle(Color.gray)
                                                                     }
                                                                 }
                                                             }
@@ -205,9 +206,9 @@ struct UserView: View {
                                                         }
                                                         Spacer()
                                                         Image(systemName: "arrow.right.circle")
-                                                            .foregroundColor(Color.navyBlue)
+                                                            .foregroundColor(Color.blue)
                                                     }
-                                                    Rectangle().fill(Color.navyBlue).frame(height: 1)
+                                                    Rectangle().fill(Color.blue).frame(height: 1)
                                                 }.onTapGesture {
                                                     bigModel.currentView = .TastesView
                                                     bigModel.screenHistory.append(.UserView)
@@ -216,13 +217,14 @@ struct UserView: View {
                                                 VStack(alignment: .leading) {
                                                     Text("tools")
                                                         .font(.largeTitle)
-                                                        .foregroundStyle(Color.navyBlue)
+                                                        .foregroundStyle(Color.blue)
                                                     HStack {
                                                         if bigModel.currentUser.tools.count != 0 {
                                                             ScrollView(.horizontal) {
                                                                 HStack {
                                                                     ForEach(bigModel.currentUser.tools) { item in
                                                                         Text(item.name)
+                                                                            .foregroundStyle(Color.gray)
                                                                     }
                                                                 }
                                                             }
@@ -232,9 +234,9 @@ struct UserView: View {
                                                         }
                                                         Spacer()
                                                         Image(systemName: "arrow.right.circle")
-                                                            .foregroundColor(Color.navyBlue)
+                                                            .foregroundColor(Color.blue)
                                                     }
-                                                    Rectangle().fill(Color.navyBlue).frame(height: 1)
+                                                    Rectangle().fill(Color.blue).frame(height: 1)
                                                 }.onTapGesture {
                                                     bigModel.currentView = .cookingToolsScreen
                                                     bigModel.screenHistory.append(.UserView)
@@ -244,78 +246,81 @@ struct UserView: View {
                                                     
                                                     Text("budget")
                                                         .font(.largeTitle)
-                                                        .foregroundStyle(Color.navyBlue)
+                                                        .foregroundStyle(Color.blue)
                                                     
                                                     HStack {
                                                         if bigModel.currentUser.budget != 0 {
                                                             Text(String(bigModel.currentUser.budget))
+                                                                .foregroundStyle(Color.gray)
                                                         } else {
                                                             Text("tellus-2")
                                                                 .foregroundColor(.gray)
                                                         }
                                                         Spacer()
                                                         Image(systemName: "arrow.right.circle")
-                                                            .foregroundColor(Color.navyBlue)
+                                                            .foregroundColor(Color.blue)
                                                     }
                                                 }.onTapGesture {
                                                     bigModel.currentView = .budgetScreen
                                                     bigModel.screenHistory.append(.UserView)
                                                 }
                                                 
-                                                Rectangle().fill(Color.navyBlue).frame(height: 1)
+                                                Rectangle().fill(Color.blue).frame(height: 1)
                                                 
                                                 VStack(alignment: .leading) {
                                                     
                                                     Text("number-of-person")
                                                         .font(.largeTitle)
-                                                        .foregroundStyle(Color.navyBlue)
+                                                        .foregroundStyle(Color.blue)
                                                     
                                                     HStack {
                                                         if bigModel.currentUser.numberOfPerson != 0 {
                                                             Text(String(bigModel.currentUser.numberOfPerson))
+                                                                .foregroundStyle(Color.gray)
                                                         } else {
                                                             Text("tellus-3")
                                                                 .foregroundColor(.gray)
                                                         }
                                                         Spacer()
                                                         Image(systemName: "arrow.right.circle")
-                                                            .foregroundColor(Color.navyBlue)
+                                                            .foregroundColor(Color.blue)
                                                     }
                                                 }.onTapGesture {
                                                     bigModel.currentView = .NumberOfPersonScreen
                                                     bigModel.screenHistory.append(.UserView)
                                                 }
                                                 
-                                                Rectangle().fill(Color.navyBlue).frame(height: 1)
+                                                Rectangle().fill(Color.blue).frame(height: 1)
                                                 
                                                 VStack(alignment: .leading) {
                                                     
                                                     Text("spent-time")
                                                         .font(.largeTitle)
-                                                        .foregroundStyle(Color.navyBlue)
+                                                        .foregroundStyle(Color.blue)
                                                     
                                                     HStack {
                                                         if bigModel.currentUser.budget != 0 {
                                                             Text(String(bigModel.currentUser.spendedTime))
+                                                                .foregroundStyle(Color.gray)
                                                         } else {
                                                             Text("tellus-4")
                                                                 .foregroundColor(.gray)
                                                         }
                                                         Spacer()
                                                         Image(systemName: "arrow.right.circle")
-                                                            .foregroundColor(Color.navyBlue)
+                                                            .foregroundColor(Color.blue)
                                                     }
                                                 }.onTapGesture {
                                                     bigModel.currentView = .timeScreen
                                                     bigModel.screenHistory.append(.UserView)
                                                 }
                                                 
-                                                Rectangle().fill(Color.navyBlue).frame(height: 1)
+                                                Rectangle().fill(Color.blue).frame(height: 1)
                                                 
                                                 VStack(alignment: .leading) {
                                                     Text("proposed-meals")
                                                         .font(.largeTitle)
-                                                        .foregroundStyle(Color.navyBlue)
+                                                        .foregroundStyle(Color.blue)
                                                     HStack {
                                                         
                                                         if bigModel.currentUser.proposedMeals.count != 0 {
@@ -323,6 +328,7 @@ struct UserView: View {
                                                                 HStack {
                                                                     ForEach(bigModel.currentUser.proposedMeals) { meal in
                                                                         Text(meal.recipe.recipeName)
+                                                                            .foregroundStyle(Color.gray)
                                                                     }
                                                                 }
                                                             }
@@ -343,9 +349,9 @@ struct UserView: View {
                                                         }
                                                         
                                                         Image(systemName: "arrow.right.circle")
-                                                            .foregroundColor(Color.navyBlue)
+                                                            .foregroundColor(Color.blue)
                                                     }
-                                                    Rectangle().fill(Color.navyBlue).frame(height: 1)
+                                                    Rectangle().fill(Color.blue).frame(height: 1)
                                                 }.onTapGesture {
                                                     
                                                     if bigModel.currentUser.items.count != 0 && bigModel.currentUser.tools.count != 0 && bigModel.currentUser.numberOfPerson != 0 && bigModel.currentUser.budget != 0 && bigModel.currentUser.spendedTime != 0 {
@@ -363,13 +369,14 @@ struct UserView: View {
                                                 VStack(alignment: .leading) {
                                                     Text("fav-meals")
                                                         .font(.largeTitle)
-                                                        .foregroundStyle(Color.navyBlue)
+                                                        .foregroundStyle(Color.blue)
                                                     HStack {
                                                         if bigModel.currentUser.favoriteMeals.count != 0 {
                                                             ScrollView(.horizontal) {
                                                                 HStack {
                                                                     ForEach(bigModel.currentUser.favoriteMeals) { meal in
                                                                         Text(meal.recipe.recipeName)
+                                                                            .foregroundStyle(Color.gray)
                                                                     }
                                                                 }
                                                             }
@@ -381,7 +388,7 @@ struct UserView: View {
                                                             }
                                                         }
                                                         Image(systemName: "arrow.right.circle")
-                                                            .foregroundColor(Color.navyBlue)
+                                                            .foregroundColor(Color.blue)
                                                     }
                                                 }.onTapGesture {
                                                     if bigModel.currentUser.items.count != 0 && bigModel.currentUser.budget != 0 && bigModel.currentUser.numberOfPerson != 0 && bigModel.currentUser.spendedTime != 0 {
@@ -389,13 +396,13 @@ struct UserView: View {
                                                     }
                                                 }
                                                 
-                                                Rectangle().fill(Color.navyBlue).frame(height: 1)
+                                                Rectangle().fill(Color.blue).frame(height: 1)
                                                 
                                                 VStack(alignment: .leading) {
                                                     
                                                     Text("your-meal-planner")
                                                         .font(.largeTitle)
-                                                        .foregroundStyle(Color.navyBlue)
+                                                        .foregroundStyle(Color.blue)
                                                     
                                                     HStack {
                                                         if bigModel.currentUser.events != [] {
@@ -406,7 +413,7 @@ struct UserView: View {
                                                         }
                                                         Spacer()
                                                         Image(systemName: "arrow.right.circle")
-                                                            .foregroundColor(Color.navyBlue)
+                                                            .foregroundColor(Color.blue)
                                                             .onTapGesture {
                                                                 bigModel.currentView = .DailyCalendar
                                                                 bigModel.screenHistory.append(.UserView)

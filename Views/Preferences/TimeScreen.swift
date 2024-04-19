@@ -125,7 +125,7 @@ struct TimeScreen: View {
                                 .foregroundStyle(Color.white)
                             HStack {
                                 Text("-")
-                                    .foregroundStyle(Color.navyBlue)
+                                    .foregroundStyle(Color.blue)
                                     .onTapGesture {
                                         if self.time - 10 > 0 {
                                             self.time -= 10
@@ -139,7 +139,7 @@ struct TimeScreen: View {
                                 
                                 TextField("", text: $timeString)
                                     .multilineTextAlignment(.center)
-                                    .foregroundStyle(Color.navyBlue)
+                                    .foregroundStyle(Color.blue)
                                     .font(.title)
                                     .keyboardType(.decimalPad)
                                     .onChange(of: timeString) { newValue in
@@ -149,7 +149,7 @@ struct TimeScreen: View {
                                 Spacer()
                                 
                                 Text("+")
-                                    .foregroundStyle(Color.navyBlue)
+                                    .foregroundStyle(Color.blue)
                                     .onTapGesture {
                                         self.time += 10
                                     }
@@ -169,7 +169,7 @@ struct TimeScreen: View {
                             .frame(height: 60)
                             .foregroundStyle(Color.white)
                         Text("validate")
-                            .foregroundStyle(Color.navyBlue)
+                            .foregroundStyle(Color.blue)
                     }.onTapGesture {
                         
                         Task {

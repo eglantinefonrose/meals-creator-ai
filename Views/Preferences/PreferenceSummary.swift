@@ -52,7 +52,7 @@ struct PreferenceSummary: View {
                                                             Spacer()
                                                             HStack {
                                                                 Text(item.name)
-                                                                    .foregroundStyle(Color.navyBlue)
+                                                                    .foregroundStyle(Color.blue)
                                                                 Spacer()
                                                             }
                                                         }.padding(10)
@@ -73,7 +73,7 @@ struct PreferenceSummary: View {
                                                         Spacer()
                                                         HStack {
                                                             Text(item.name)
-                                                                .foregroundStyle(Color.navyBlue)
+                                                                .foregroundStyle(Color.blue)
                                                             Spacer()
                                                         }
                                                     }.padding(10)
@@ -110,7 +110,7 @@ struct PreferenceSummary: View {
                             .frame(height: 60)
                             .foregroundStyle(Color.white)
                         Text("validate")
-                            .foregroundStyle(Color.navyBlue)
+                            .foregroundStyle(Color.blue)
                     }.onTapGesture {
                         bigModel.screenHistory.append(.preferencesSummary)
                         bigModel.currentView = .budgetScreen

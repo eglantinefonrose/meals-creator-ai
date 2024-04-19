@@ -17,10 +17,10 @@ struct SeasonSelection: View {
         VStack {
             
             VStack {
-                BackModel(color: .navyBlue, view: .MealTypeView)
+                BackModel(color: .blue, view: .MealTypeView)
                 
                 Text("season")
-                    .foregroundStyle(Color.navyBlue)
+                    .foregroundStyle(Color.blue)
                     .font(.largeTitle)
                 
                 HStack {
@@ -28,7 +28,7 @@ struct SeasonSelection: View {
                     VStack {
                         ZStack {
                             Rectangle()
-                                .foregroundColor(seasonTags["Hiver"]! ? .navyBlue : .gray)
+                                .foregroundColor(seasonTags["Hiver"]! ? .blue : .gray)
                                 .cornerRadius(20)
                             Text("winter")
                                 .foregroundStyle(Color.white)
@@ -43,7 +43,7 @@ struct SeasonSelection: View {
                         
                         ZStack {
                             Rectangle()
-                                .foregroundColor(seasonTags["Printemps"]! ? .navyBlue : .gray)
+                                .foregroundColor(seasonTags["Printemps"]! ? .blue : .gray)
                                 .cornerRadius(20)
                             Text("spring")
                                 .foregroundStyle(Color.white)
@@ -60,7 +60,7 @@ struct SeasonSelection: View {
                     VStack {
                         ZStack {
                             Rectangle()
-                                .foregroundColor(seasonTags["Été"]! ? .navyBlue : .gray)
+                                .foregroundColor(seasonTags["Été"]! ? .blue : .gray)
                                 .cornerRadius(20)
                             Text("summer")
                                 .foregroundStyle(Color.white)
@@ -75,7 +75,7 @@ struct SeasonSelection: View {
                         
                         ZStack {
                             Rectangle()
-                                .foregroundColor(seasonTags["Automne"]! ? .navyBlue : .gray)
+                                .foregroundColor(seasonTags["Automne"]! ? .blue : .gray)
                                 .cornerRadius(20)
                             Text("autumn")
                                 .foregroundStyle(Color.white)
@@ -98,7 +98,7 @@ struct SeasonSelection: View {
             ZStack {
                 Rectangle()
                     .frame(height: 60)
-                    .foregroundStyle(Color.navyBlue)
+                    .foregroundStyle(Color.blue)
                 Text("validate")
                     .foregroundStyle(Color.white)
             }.onTapGesture {

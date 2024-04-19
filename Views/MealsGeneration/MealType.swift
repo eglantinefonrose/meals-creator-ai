@@ -23,10 +23,10 @@ struct MealType: View {
             VStack {
                 VStack {
                         
-                        BackModel(color: .navyBlue, view: .MealTypeView)
+                        BackModel(color: .blue, view: .MealTypeView)
                         
                         Text("meal-type")
-                            .foregroundStyle(Color.navyBlue)
+                            .foregroundStyle(Color.blue)
                             .font(.largeTitle)
                         
                         HStack {
@@ -34,7 +34,7 @@ struct MealType: View {
                             VStack {
                                 ZStack {
                                     Rectangle()
-                                        .foregroundColor(seasonTags["Breakfast"]! ? .navyBlue : .gray)
+                                        .foregroundColor(seasonTags["Breakfast"]! ? .blue : .gray)
                                         .cornerRadius(20)
                                     Text("breakfast")
                                         .foregroundStyle(Color.white)
@@ -49,7 +49,7 @@ struct MealType: View {
                                 
                                 ZStack {
                                     Rectangle()
-                                        .foregroundColor(seasonTags["Dessert"]! ? .navyBlue : .gray)
+                                        .foregroundColor(seasonTags["Dessert"]! ? .blue : .gray)
                                         .cornerRadius(20)
                                     Text("dessert")
                                         .foregroundStyle(Color.white)
@@ -66,7 +66,7 @@ struct MealType: View {
                             VStack {
                                 ZStack {
                                     Rectangle()
-                                        .foregroundColor(seasonTags["Main course"]! ? .navyBlue : .gray)
+                                        .foregroundColor(seasonTags["Main course"]! ? .blue : .gray)
                                         .cornerRadius(20)
                                     Text("main-course")
                                         .foregroundStyle(Color.white)
@@ -81,7 +81,7 @@ struct MealType: View {
                                 
                                 ZStack {
                                     Rectangle()
-                                        .foregroundColor(seasonTags["Starter"]! ? .navyBlue : .gray)
+                                        .foregroundColor(seasonTags["Starter"]! ? .blue : .gray)
                                         .cornerRadius(20)
                                     Text("starter")
                                         .foregroundStyle(Color.white)
@@ -104,7 +104,7 @@ struct MealType: View {
                 ZStack {
                     Rectangle()
                         .frame(height: 60)
-                        .foregroundStyle(Color.navyBlue)
+                        .foregroundStyle(Color.blue)
                     Text("validate")
                         .foregroundStyle(Color.white)
                         .onTapGesture {

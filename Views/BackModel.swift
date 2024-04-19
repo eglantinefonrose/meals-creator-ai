@@ -122,6 +122,6 @@ struct BackModel: View {
 
 struct BackModel_Previews: PreviewProvider {
     static var previews: some View {
-        BackModel(color: Color.navyBlue, view: .FruitsScreen)
+        BackModel(color: Color.blue, view: .FruitsScreen)
     }
 }

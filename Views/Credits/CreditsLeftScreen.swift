@@ -15,7 +15,7 @@ struct CreditsLeftScreen: View {
         
         ZStack {
             
-            Color(.navyBlue)
+            Color.blue
                 .edgesIgnoringSafeArea(.all)
             
             ZStack {
@@ -30,18 +30,18 @@ struct CreditsLeftScreen: View {
                         
                         Text("credits left")
                             .font(.system(size: 50))
-                            .foregroundStyle(Color(.midGray))
+                            .foregroundStyle(Color.white)
                             .fontWeight(.none)
                     }
                     
                     ZStack {
                         Rectangle()
                             .cornerRadius(20)
-                            .foregroundColor(Color(.midGray))
+                            .foregroundColor(Color.white)
                             .frame(width: 300, height: 50)
                         Text("Buy credits")
                             .font(.title3)
-                            .foregroundStyle(Color(.navyBlue))
+                            .foregroundStyle(Color(.blue))
                     }
                     
                 }

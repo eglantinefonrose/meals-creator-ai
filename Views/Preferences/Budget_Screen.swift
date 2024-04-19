@@ -108,7 +108,7 @@ struct Budget_Screen: View {
                                     .foregroundStyle(Color.white)
                                 HStack {
                                     Text("-")
-                                        .foregroundStyle(Color.navyBlue)
+                                        .foregroundStyle(Color.blue)
                                         .onTapGesture {
                                             if self.budget-10>0 {
                                                 self.budget -= 10
@@ -122,7 +122,7 @@ struct Budget_Screen: View {
                                     
                                     TextField("", text: $budgetString)
                                         .multilineTextAlignment(.center)
-                                        .foregroundStyle(Color.navyBlue)
+                                        .foregroundStyle(Color.blue)
                                         .font(.title)
                                         .keyboardType(.decimalPad)
                                         .onChange(of: budgetString) { newValue in
@@ -136,7 +136,7 @@ struct Budget_Screen: View {
                                     Spacer()
                                                                     
                                     Text("+")
-                                        .foregroundStyle(Color.navyBlue)
+                                        .foregroundStyle(Color.blue)
                                         .onTapGesture {
                                             self.budget += 10
                                         }
@@ -157,7 +157,7 @@ struct Budget_Screen: View {
                             .frame(height: 60)
                             .foregroundStyle(Color.white)
                         Text("validate")
-                            .foregroundStyle(Color.navyBlue)
+                            .foregroundStyle(Color.blue)
                     }.onTapGesture {
                         Task {
                             var user = bigModel.currentUser

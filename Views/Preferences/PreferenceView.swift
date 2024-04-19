@@ -30,10 +30,10 @@ struct PreferenceView: View {
             
             VStack(spacing: 5) {
                 
-                BackModel(color: Color.navyBlue, view: bigModel.categoryToScreenName(categorie: categorie))
+                BackModel(color: Color.blue, view: bigModel.categoryToScreenName(categorie: categorie))
                 
                 Text(bigModel.categoryName(categorie: categorie))
-                    .foregroundStyle(Color.navyBlue)
+                    .foregroundStyle(Color.blue)
                     .font(.system(size: 78))
                 
                 ZStack {
@@ -54,7 +54,7 @@ struct PreferenceView: View {
                         ZStack {
                             Rectangle()
                                 .cornerRadius(10)
-                                .foregroundColor(season == "All" ? Color.navyBlue : Color.gray)
+                                .foregroundColor(season == "All" ? Color.blue : Color.gray)
                                 .frame(height: 50)
                             Text("all")
                                 .foregroundColor(season == "All" ? Color.white : Color.black)
@@ -67,7 +67,7 @@ struct PreferenceView: View {
                         ZStack {
                             Rectangle()
                                 .cornerRadius(10)
-                                .foregroundColor(season == "Hiver" ? Color.navyBlue : Color.gray)
+                                .foregroundColor(season == "Hiver" ? Color.blue : Color.gray)
                                 .frame(height: 50)
                             Text("winter")
                                 .foregroundColor(season == "Hiver" ? Color.white : Color.black)
@@ -80,7 +80,7 @@ struct PreferenceView: View {
                         ZStack {
                             Rectangle()
                                 .cornerRadius(10)
-                                .foregroundColor(season == "Printemps" ? Color.navyBlue : Color.gray)
+                                .foregroundColor(season == "Printemps" ? Color.blue : Color.gray)
                                 .frame(height: 50)
                             Text("spring")
                                 .foregroundColor(season == "Printemps" ? Color.white : Color.black)
@@ -93,7 +93,7 @@ struct PreferenceView: View {
                         ZStack {
                             Rectangle()
                                 .cornerRadius(10)
-                                .foregroundColor(season == "Été" ? Color.navyBlue : Color.gray)
+                                .foregroundColor(season == "Été" ? Color.blue : Color.gray)
                                 .frame(height: 50)
                             Text("summer")
                                 .foregroundColor(season == "Été" ? Color.white : Color.black)
@@ -106,7 +106,7 @@ struct PreferenceView: View {
                         ZStack {
                             Rectangle()
                                 .cornerRadius(10)
-                                .foregroundColor(season == "Automne" ? Color.navyBlue : Color.gray)
+                                .foregroundColor(season == "Automne" ? Color.blue : Color.gray)
                                 .frame(height: 50)
                             Text("autumn")
                                 .foregroundColor(season == "Automne" ? Color.white : Color.black)
@@ -139,7 +139,7 @@ struct PreferenceView: View {
                 ZStack {
                     Rectangle()
                         .frame(height: 60)
-                        .foregroundStyle(Color.navyBlue)
+                        .foregroundStyle(Color.blue)
                     Text("validate")
                         .foregroundColor(.white)
                 }.onTapGesture {
@@ -258,7 +258,7 @@ struct TagButton: View {
             Rectangle()
                 .cornerRadius(10)
                 .frame(minWidth: 150, minHeight: 150)
-                .foregroundColor(selected ? .navyBlue : .gray)
+                .foregroundColor(selected ? .blue : .gray)
             Text(txt)
                 .foregroundColor(.white)
         }.onTapGesture {

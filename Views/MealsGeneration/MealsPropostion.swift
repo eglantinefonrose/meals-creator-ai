@@ -42,7 +42,7 @@ struct MealsPropostion: View {
                         if !bigModel.currentUser.isUsingPersonnalKey {
                             HStack {
                                 Text("\(bigModel.currentUser.credits) credits")
-                                    .foregroundStyle(Color.navyBlue)
+                                    .foregroundStyle(Color.blue)
                                     .onTapGesture {
                                         bigModel.screenHistory.append(.mealsPropositionScreen)
                                         bigModel.currentView = .InformationsScreen
@@ -50,23 +50,23 @@ struct MealsPropostion: View {
                             }
                         }
                         
-                        BackModel(color: Color.navyBlue, view: .mealsPropositionScreen)
+                        BackModel(color: Color.blue, view: .mealsPropositionScreen)
                     }
                     
                     Text("meals")
-                        .foregroundStyle(Color.navyBlue)
+                        .foregroundStyle(Color.blue)
                         .font(.system(size: 100))
                         .onTapGesture {
                             print("")
                         }
                     
                     //Circle()
-                        //.foregroundStyle(Color.navyBlue)
+                        //.foregroundStyle(Color.blue)
                     
                     VStack {
                         
                         Text("select-meal-recipe")
-                            .foregroundStyle(Color.navyBlue)
+                            .foregroundStyle(Color.blue)
                         
                         ScrollView(.horizontal) {
                             HStack {
@@ -75,7 +75,7 @@ struct MealsPropostion: View {
                                     ZStack {
                                         Rectangle()
                                             .cornerRadius(10)
-                                            .foregroundColor(season == seasonValue.season ? Color.navyBlue : Color.gray)
+                                            .foregroundColor(season == seasonValue.season ? Color.blue : Color.gray)
                                             .frame(height: 50)
                                         Text(seasonValue.seasonName)
                                             .foregroundColor(season == seasonValue.season ? Color.white : Color.black)
@@ -95,7 +95,7 @@ struct MealsPropostion: View {
                                     ZStack {
                                         Rectangle()
                                             .cornerRadius(10)
-                                            .foregroundColor(type == typeValue.type ? Color.navyBlue : Color.gray)
+                                            .foregroundColor(type == typeValue.type ? Color.blue : Color.gray)
                                             .frame(height: 50)
                                         Text(typeValue.typeName)
                                             .foregroundColor(type == typeValue.type ? Color.white : Color.black)
@@ -138,7 +138,7 @@ struct MealsPropostion: View {
                 ZStack {
                     Rectangle()
                         .frame(height: 60)
-                        .foregroundStyle(bigModel.currentUser.credits != 0 ? Color.navyBlue : Color.gray)
+                        .foregroundStyle(bigModel.currentUser.credits != 0 ? Color.blue : Color.gray)
                     Text(bigModel.currentUser.credits != 0 ? "generate-new-meals" : "buy-credits")
                         .foregroundStyle(Color.white)
                 }.onTapGesture {
@@ -219,7 +219,7 @@ struct MealsViewModel : View {
                     
                     Text(item.recipe.recipeName)
                         .font(.largeTitle)
-                        .foregroundStyle(Color.navyBlue)
+                        .foregroundStyle(Color.blue)
                         .onTapGesture {
                             
                             if bigModel.screenHistory.last == .DailyCalendar {
@@ -236,7 +236,7 @@ struct MealsViewModel : View {
                     Spacer()
                     
                     Image(systemName: liked ? "heart.fill" : "heart")
-                        .foregroundColor(.navyBlue)
+                        .foregroundColor(.blue)
                         .onTapGesture {
                             Task {
                                 if !isMealInList(meal: item) && !liked {
@@ -253,7 +253,7 @@ struct MealsViewModel : View {
                         }
                     
                     Image(systemName: "hand.thumbsdown")
-                        .foregroundColor(.navyBlue)
+                        .foregroundColor(.blue)
                         .onTapGesture {
                             bigModel.currentView = .BlankFile
                             bigModel.dislikedMeal = item
@@ -263,7 +263,7 @@ struct MealsViewModel : View {
                 
                 Rectangle()
                     .frame(height: 1)
-                    .foregroundColor(Color.navyBlue)
+                    .foregroundColor(Color.blue)
                 
             }
         }
@@ -276,7 +276,7 @@ struct MealsViewModel : View {
                     
                     Text(item.recipe.recipeName)
                         .font(.largeTitle)
-                        .foregroundStyle(Color.navyBlue)
+                        .foregroundStyle(Color.blue)
                         .onTapGesture {
                             
                             if bigModel.screenHistory.last == .DailyCalendar {
@@ -293,7 +293,7 @@ struct MealsViewModel : View {
                     Spacer()
                     
                     Image(systemName: liked ? "heart.fill" : "heart")
-                        .foregroundColor(.navyBlue)
+                        .foregroundColor(.blue)
                         .onTapGesture {
                             Task {
                                 
@@ -314,7 +314,7 @@ struct MealsViewModel : View {
                         }
                     
                     Image(systemName: "hand.thumbsdown")
-                        .foregroundColor(.navyBlue)
+                        .foregroundColor(.blue)
                         .onTapGesture {
                             bigModel.currentView = .BlankFile
                             bigModel.dislikedMeal = item
@@ -324,7 +324,7 @@ struct MealsViewModel : View {
                 
                 Rectangle()
                     .frame(height: 1)
-                    .foregroundColor(Color.navyBlue)
+                    .foregroundColor(Color.blue)
                 
             }
         }
@@ -337,7 +337,7 @@ struct MealsViewModel : View {
                     
                     Text(item.recipe.recipeName)
                         .font(.largeTitle)
-                        .foregroundStyle(Color.navyBlue)
+                        .foregroundStyle(Color.blue)
                         .onTapGesture {
                             
                             if bigModel.screenHistory.last == .DailyCalendar {
@@ -354,7 +354,7 @@ struct MealsViewModel : View {
                     Spacer()
                     
                     Image(systemName: liked ? "heart.fill" : "heart")
-                        .foregroundColor(.navyBlue)
+                        .foregroundColor(.blue)
                         .onTapGesture {
                             Task {
                                 
@@ -375,7 +375,7 @@ struct MealsViewModel : View {
                         }
                     
                     Image(systemName: "hand.thumbsdown")
-                        .foregroundColor(.navyBlue)
+                        .foregroundColor(.blue)
                         .onTapGesture {
                             bigModel.currentView = .BlankFile
                             bigModel.dislikedMeal = item
@@ -385,7 +385,7 @@ struct MealsViewModel : View {
                 
                 Rectangle()
                     .frame(height: 1)
-                    .foregroundColor(Color.navyBlue)
+                    .foregroundColor(Color.blue)
                 
             }
         }
@@ -398,7 +398,7 @@ struct MealsViewModel : View {
                     
                     Text(item.recipe.recipeName)
                         .font(.largeTitle)
-                        .foregroundStyle(Color.navyBlue)
+                        .foregroundStyle(Color.blue)
                         .onTapGesture {
                             
                             if bigModel.screenHistory.last == .DailyCalendar {
@@ -415,7 +415,7 @@ struct MealsViewModel : View {
                     Spacer()
                     
                     Image(systemName: liked ? "heart.fill" : "heart")
-                        .foregroundColor(.navyBlue)
+                        .foregroundColor(.blue)
                         .onTapGesture {
                             Task {
                                 
@@ -436,7 +436,7 @@ struct MealsViewModel : View {
                         }
                     
                     Image(systemName: "hand.thumbsdown")
-                        .foregroundColor(.navyBlue)
+                        .foregroundColor(.blue)
                         .onTapGesture {
                             bigModel.currentView = .BlankFile
                             bigModel.dislikedMeal = item
@@ -446,7 +446,7 @@ struct MealsViewModel : View {
                 
                 Rectangle()
                     .frame(height: 1)
-                    .foregroundColor(Color.navyBlue)
+                    .foregroundColor(Color.blue)
                 
             }
         }

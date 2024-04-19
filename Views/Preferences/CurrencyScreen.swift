@@ -21,14 +21,14 @@ struct CurrencyScreen: View {
             
             VStack(spacing: 30) {
                 
-                BackModel(color: Color.navyBlue, view: ViewEnum.CurrencyScreen)
+                BackModel(color: Color.blue, view: ViewEnum.CurrencyScreen)
                 
                 VStack(alignment: .leading, spacing: 30) {
                     
                     HStack {
                         Text("Currency")
                             .font(.system(size: 60, weight: .semibold))
-                        .foregroundColor(Color.navyBlue)
+                        .foregroundColor(Color.blue)
                     }
                     
                     ScrollView {
@@ -39,10 +39,10 @@ struct CurrencyScreen: View {
                                     if item.string == bigModel.currentUser.currency {
                                         RoundedRectangle(cornerRadius: 15)
                                             .frame(height: 65)
-                                            .foregroundStyle(Color(.navyBlue))
+                                            .foregroundStyle(Color(.blue))
                                     } else {
                                         RoundedRectangle(cornerRadius: 15)
-                                            .stroke(Color(.navyBlue), lineWidth: 1)
+                                            .stroke(Color(.blue), lineWidth: 1)
                                             .frame(height: 65)
                                     }
                                     
@@ -58,7 +58,7 @@ struct CurrencyScreen: View {
                                         }
                                         Text(item.string)
                                             .font(.title3)
-                                            .foregroundStyle(item.string == bigModel.currentUser.currency ? Color(.lightGray) : Color.navyBlue)
+                                            .foregroundStyle(item.string == bigModel.currentUser.currency ? Color(.lightGray) : Color.blue)
                                         Spacer()
                                     }.padding(.horizontal, 10)
                                 }.onTapGesture {

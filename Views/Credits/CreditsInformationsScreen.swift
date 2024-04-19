@@ -19,16 +19,16 @@ struct CreditsInformationsScreen: View {
                 .edgesIgnoringSafeArea(.all)
             
             VStack {
-                BackModel(color: Color.navyBlue, view: .UserView)
+                BackModel(color: Color.blue, view: .UserView)
                 
                 //Text("Credits informatiions")
                     //.font(.largeTitle)
-                    //.foregroundStyle(Color.navyBlue)
+                    //.foregroundStyle(Color.blue)
                 
                 ZStack {
                     Rectangle()
                         .cornerRadius(25)
-                        .foregroundStyle(Color.navyBlue)
+                        .foregroundStyle(Color.blue)
                     VStack {
                         VStack {
                             

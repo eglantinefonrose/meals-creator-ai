@@ -18,7 +18,7 @@ struct OpenAIKeyScreen: View {
         
         ZStack {
             
-            Color(.midGray)
+            Color.gray
                 .edgesIgnoringSafeArea(.all)
             
             VStack {
