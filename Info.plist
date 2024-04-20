@@ -10,7 +10,7 @@
 		<dict>
 			<key>CFBundleIconFiles</key>
 			<array>
-				<string></string>
+				<string>shop-planner-icon-120</string>
 			</array>
 			<key>CFBundleIconName</key>
 			<string>shop-planner-icon-1024</string>
